@@ -1,0 +1,45 @@
+<!-- src/components/HelloDecorator.vue -->
+<!-- This is an alternative way to define the Hello component using decorators -->
+<template>
+    <div>
+        See console...
+    </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import axios from "axios"; //TODO
+import { HTTP } from "../http-common";
+
+@Component
+export default class HelloDecorator extends Vue {
+    
+    created() {
+        // load photos
+        let identifier = "root"
+        HTTP.get('aggregated-power-consumption/' + identifier)
+        .then(response => {
+            // JSON responses are automatically parsed.
+            console.log(response.data);
+        })
+        .catch(e => {
+            console.log(e);
+        });
+
+        // async / await version (created() becomes async created())
+        //
+        // try {
+        //   const response = await axios.get(`http://jsonplaceholder.typicode.com/posts`)
+        //   this.posts = response.data
+        // } catch (e) {
+        //   this.errors.push(e)
+        // }
+    }
+}
+</script>
+
+<style>
+.greeting {
+    font-size: 20px;
+}
+</style>
