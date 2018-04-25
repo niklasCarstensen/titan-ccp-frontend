@@ -4,15 +4,15 @@ The Titan CCP frontend uses Typescript and Vue.js.
 
 To work with this project, clone this repository and execute:
 
-````bash
+```shell
 npm install
-````
+```
 
 To start a development server execute:
 
-````bash
+```shell
 npm run dev
-````
+```
 
 A good tool for working on this software is [Visual Studio Code](https://code.visualstudio.com/).
 In order to get things like autocomletion for `.vue` files, you need to install the [vetur](https://vuejs.github.io/vetur/) plugin.
