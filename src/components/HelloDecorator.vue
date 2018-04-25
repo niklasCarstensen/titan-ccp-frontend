@@ -16,10 +16,8 @@ export default class HelloDecorator extends Vue {
     @Prop({ required: true }) name!: string
     @Prop({ required: true }) initialEnthusiasm!: number
 
-    myVar!: string
-
-    //enthusiasm = this.initialEnthusiasm;
-    enthusiasm = 5;
+    enthusiasm = this.initialEnthusiasm;
+    //enthusiasm = 5;
 
 
     increment() {
