@@ -4,27 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --mode development",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sören Henning <post@soeren-henning.de>",
   "license": "Apache v2",
   "dependencies": {
-    "axios": "^0.17.1",
-    "vue": "^2.5.2"
+    "@types/d3": "^5.0.0",
+    "axios": "^0.18.0",
+    "d3": "^5.1.0",
+    "vue": "^2.5.16"
   },
   "devDependencies": {
     "cross-env": "^5.1.1",
     "css-loader": "^0.28.9",
-    "ts-loader": "^3.5.0",
-    "typescript": "^2.7.1",
-    "vue": "^2.5.13",
+    "ts-loader": "^4.2.0",
+    "typescript": "^2.8.3",
+    "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
-    "vue-loader": "^14.1.1",
-    "vue-template-compiler": "^2.5.13",
+    "vue-loader": "^15.0.2",
     "vue-property-decorator": "^6.0.0",
-    "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.9.3"
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.3"
   }
 }

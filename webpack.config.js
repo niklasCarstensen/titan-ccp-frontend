@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   entry: './src/index.ts',
@@ -33,6 +34,21 @@ module.exports = {
         }
       },
       {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'vue-style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[local]_[hash:base64:8]'
+            }
+          }
+        ]
+      },
+      {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
@@ -54,6 +70,9 @@ module.exports = {
   performance: {
     hints: false
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   devtool: '#eval-source-map'
 }
 
