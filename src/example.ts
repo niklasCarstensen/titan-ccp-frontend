@@ -1,15 +1,5 @@
-//import * as D3 from 'd3';
-//import { hey } from "./test.ts";
-//declare var hey: any; 
-//import * as canvasplot from "./canvasplot";
-//import './canvasplot.js';
-//import { MyClass } from './myclass';
 // @ts-ignore
-import { file, parse, CanvasTimeSeriesPlot } from './globals.js';
-//import CanvasDataPlot from './canvasplot';
-//declare var MyClass: any;
-// @ts-ignore
-//import { CanvasDataPlot } from 'canvasplot.exec.js';
+import { CanvasTimeSeriesPlot } from './globals.js';
 
 declare var d3: any;
 
@@ -24,19 +14,10 @@ function test() {
     //let x = D3.select("body");
     //console.log(x);
     console.log("test 5.0");
-    console.log("file:");
-    console.log(file);
 
     console.log("CanvasTimeSeriesPlot:");
     console.log(CanvasTimeSeriesPlot);
 
-    let firstDate = new Date();
-    let secondDate = new Date(firstDate.getTime());
-
-    //hey();
-    //new MyClass();
-
-    console.log("sshh");
 
     let y = new Example();
     y.test2();

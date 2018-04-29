@@ -35,7 +35,7 @@ module.exports = {
       },
       {
         test: require.resolve('./src/globals.js'),
-        use: 'exports-loader?file,parse=helpers.parse,CanvasDataPlot,CanvasTimeSeriesPlot'
+        use: 'exports-loader?CanvasDataPlot,CanvasTimeSeriesPlot,CanvasVectorSeriesPlot,CanvasDataPlotGroup'
       },
       {
         test: /\.css$/,
