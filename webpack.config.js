@@ -34,6 +34,10 @@ module.exports = {
         }
       },
       {
+        test: require.resolve('./src/globals.js'),
+        use: 'exports-loader?file,parse=helpers.parse,CanvasDataPlot,CanvasTimeSeriesPlot'
+      },
+      {
         test: /\.css$/,
         use: [
           {
@@ -58,7 +62,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.exec.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
@@ -71,7 +75,10 @@ module.exports = {
     hints: false
   },
   plugins: [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new webpack.ProvidePlugin({
+      join: ['lodash', 'join']
+    })
   ],
   devtool: '#eval-source-map'
 }
