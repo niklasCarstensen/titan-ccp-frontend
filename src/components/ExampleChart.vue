@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { greeter } from "../example";
+import { Example } from "../example";
 //import * as D3 from 'd3';
 //import '../canvasplot.js';
 //declare var CanvasTimeSeriesPlot: any; 
@@ -15,7 +15,7 @@ import { greeter } from "../example";
 export default class ExampleChart extends Vue {
     
     mounted() {
-        greeter();
+        Example.create();
 
         let ts1 = [];
         let ts2 = [];

@@ -2,23 +2,10 @@
 import { CanvasTimeSeriesPlot } from './globals.js';
 declare var d3: any;
 
-export function greeter() {
-    test();
-}
+//TODO rename
+export class Example {
 
-function test() {
-    console.log("CanvasTimeSeriesPlot:");
-    console.log(CanvasTimeSeriesPlot);
-
-
-    let y = new Example();
-    y.test2();
-    
-}
-
-export default class Example {
-
-    public test2() {
+    public static create() {
         var ts1 = [];
         var ts2 = [];
         var now = new Date();
