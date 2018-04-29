@@ -1,27 +1,20 @@
 <template>
     <div>
-        Chart
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { ExamplePlot } from "../example"; //TODO remove
 // @ts-ignore
-import { CanvasTimeSeriesPlot } from '../globals.js';
+import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 declare var d3: any;
-//import * as D3 from 'd3';
-//import '../canvasplot.js';
-//declare var CanvasTimeSeriesPlot: any; 
 
 @Component
 export default class CanvasPlotExample extends Vue {
     
     mounted() {
-        console.log(this.$el);
-        console.log(d3.select("#plot"));
-        
         let container = d3.select(this.$el);
+
         var ts1 = [];
         var ts2 = [];
         var now = new Date();

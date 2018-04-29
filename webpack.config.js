@@ -34,7 +34,7 @@ module.exports = {
         }
       },
       {
-        test: require.resolve('./src/globals.js'),
+        test: require.resolve('./src/canvasplot.js'),
         use: 'exports-loader?CanvasDataPlot,CanvasTimeSeriesPlot,CanvasVectorSeriesPlot,CanvasDataPlotGroup'
       },
       {
@@ -77,7 +77,6 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
-      join: ['lodash', 'join']
     })
   ],
   devtool: '#eval-source-map'
