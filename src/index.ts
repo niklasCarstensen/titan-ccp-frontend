@@ -1,14 +1,7 @@
-
 import Vue from "vue";
 import HelloDecorator from "./components/HelloDecorator.vue";
 import HelloDecorator1 from "./components/HelloDecorator.1.vue";
 import ExampleChart from "./components/ExampleChart.vue";
-import { greeter } from "./example";
-
-console.log("Start");
-
-console.log(greeter("John"));
-
 
 let v = new Vue({
     el: "#app",
