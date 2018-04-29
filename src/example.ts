@@ -3,7 +3,7 @@ import { CanvasTimeSeriesPlot } from './globals.js';
 declare var d3: any;
 
 //TODO rename
-export class Example {
+export class ExamplePlot {
 
     public static create() {
         var ts1 = [];

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import HelloDecorator from "./components/HelloDecorator.vue";
 import HelloDecorator1 from "./components/HelloDecorator.1.vue";
-import ExampleChart from "./components/ExampleChart.vue";
+import CanvasPlotExample from "./components/CanvasPlotExample.vue";
 
 let v = new Vue({
     el: "#app",
@@ -12,14 +12,14 @@ let v = new Vue({
             <hello-decorator :name="name" :initialEnthusiasm="5" />
         </div>
         <hello-decorator-1 />
-        <example-chart />
+        <canvas-plot-example />
     </div>
     `,
     data: { name: "World" },
     components: {
         HelloDecorator,
         HelloDecorator1,
-        ExampleChart
+        CanvasPlotExample
     }
 });
 
