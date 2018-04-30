@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="canvasplot-container">
     </div>
 </template>
 
@@ -10,21 +10,24 @@ import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 declare var d3: any;
 
 @Component
-export default class CanvasPlotExample extends Vue {
+export default class CanvasTimeSeriesPlotExample extends Vue {
     
     mounted() {
         let container = d3.select(this.$el);
+        let width = this.$el.clientWidth;
+        //let height = this.$el.clientHeight;
+        let height = 500;
 
-        var ts1 = [];
-        var ts2 = [];
-        var now = new Date();
+        let ts1 = [];
+        let ts2 = [];
+        let now = new Date();
         for(var i=0; i<3*48; ++i) {
-            var time = new Date(now.getTime());
+            let time = new Date(now.getTime());
             time.setHours(i);
             ts1.push([time, Math.sin(Math.PI * i/48) + 0.2*(Math.random()-0.5)]);
             ts2.push([time, Math.cos(Math.PI * i/48) + 0.2*(Math.random()-0.5)]);
         }
-        var tsPlot = new CanvasTimeSeriesPlot(container, [750,400], {
+        var tsPlot = new CanvasTimeSeriesPlot(container, [width, height], {
             yAxisLabel: "Voltage [V]"
         });
         tsPlot.addDataSet("ds1", "Signal 1", ts1, "orange", false);
@@ -35,4 +38,7 @@ export default class CanvasPlotExample extends Vue {
 </script>
 
 <style>
+    .canvasplot-container {
+        height: 500px;
+    }
 </style>
