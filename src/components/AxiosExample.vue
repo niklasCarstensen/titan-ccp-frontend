@@ -1,5 +1,3 @@
-<!-- src/components/HelloDecorator.vue -->
-<!-- This is an alternative way to define the Hello component using decorators -->
 <template>
     <div>
         See console...
@@ -8,11 +6,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import axios from "axios"; //TODO
+//import axios from "axios"; //TODO
 import { HTTP } from "../http-common";
 
 @Component
-export default class HelloDecorator extends Vue {
+export default class AxiosExample extends Vue {
     
     created() {
         // load photos
