@@ -4,21 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --mode development",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules --mode production",
+    "dev": "webpack-dev-server --open --hot --mode development",
+    "build": "webpack --progress --hide-modules --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sören Henning <post@soeren-henning.de>",
   "license": "Apache v2",
   "dependencies": {
-    "@types/d3": "^5.0.0",
     "axios": "^0.18.0",
-    "d3": "^5.1.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {
-    "cross-env": "^5.1.1",
     "css-loader": "^0.28.9",
+    "exports-loader": "^0.7.0",
     "ts-loader": "^4.2.0",
     "typescript": "^2.8.3",
     "vue": "^2.5.16",
@@ -27,7 +25,7 @@
     "vue-property-decorator": "^6.0.0",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^4.6.0",
-    "webpack-cli": "^2.0.15",
+    "webpack-cli": "^2.1.2",
     "webpack-dev-server": "^3.1.3"
   }
 }

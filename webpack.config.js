@@ -19,8 +19,8 @@ module.exports = {
             // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
             // the "scss" and "sass" values for the lang attribute to the right configs here.
             // other preprocessors should work out of the box, no loader config like this necessary.
-            'scss': 'vue-style-loader!css-loader!sass-loader',
-            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+            //'scss': 'vue-style-loader!css-loader!sass-loader',
+            //'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
           }
           // other vue-loader options go here
         }
@@ -34,11 +34,16 @@ module.exports = {
         }
       },
       {
+        test: require.resolve('./src/canvasplot.js'),
+        use: 'exports-loader?CanvasDataPlot,CanvasTimeSeriesPlot,CanvasVectorSeriesPlot,CanvasDataPlotGroup'
+      },
+      {
         test: /\.css$/,
         use: [
-          {
-            loader: 'vue-style-loader'
-          },
+          'vue-style-loader',
+          'css-loader'
+        ]
+          /*
           {
             loader: 'css-loader',
             options: {
@@ -46,7 +51,7 @@ module.exports = {
               localIdentName: '[local]_[hash:base64:8]'
             }
           }
-        ]
+          */
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -58,7 +63,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.exec.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
@@ -71,7 +76,10 @@ module.exports = {
     hints: false
   },
   plugins: [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new webpack.ProvidePlugin({
+    }),
+    new webpack.HotModuleReplacementPlugin() //TODO helpful?
   ],
   devtool: '#eval-source-map'
 }
