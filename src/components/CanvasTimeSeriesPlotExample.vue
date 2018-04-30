@@ -15,8 +15,7 @@ export default class CanvasTimeSeriesPlotExample extends Vue {
     mounted() {
         let container = d3.select(this.$el);
         let width = this.$el.clientWidth;
-        //let height = this.$el.clientHeight;
-        let height = 500;
+        let height = this.$el.clientHeight;
 
         let ts1 = [];
         let ts2 = [];
