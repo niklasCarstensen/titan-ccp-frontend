@@ -36,8 +36,5 @@ export default class AxiosExample extends Vue {
 }
 </script>
 
-<style>
-.greeting {
-    font-size: 20px;
-}
+<style scoped>
 </style>

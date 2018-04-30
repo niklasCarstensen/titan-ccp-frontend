@@ -36,7 +36,7 @@ export default class CanvasTimeSeriesPlotExample extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
     .canvasplot-container {
         height: 500px;
     }

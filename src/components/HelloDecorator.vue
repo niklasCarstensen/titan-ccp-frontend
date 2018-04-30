@@ -40,7 +40,7 @@ export default class HelloDecorator extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .greeting {
     font-size: 20px;
 }
