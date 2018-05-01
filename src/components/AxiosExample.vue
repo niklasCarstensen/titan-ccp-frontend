@@ -18,7 +18,7 @@ export default class AxiosExample extends Vue {
         HTTP.get('aggregated-power-consumption/' + identifier)
         .then(response => {
             // JSON responses are automatically parsed.
-            console.log(response.data);
+            //console.log(response.data);
         })
         .catch(e => {
             console.log(e);

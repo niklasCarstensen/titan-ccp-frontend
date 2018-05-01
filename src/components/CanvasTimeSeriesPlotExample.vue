@@ -1,5 +1,5 @@
 <template>
-    <div class="canvasplot-container">
+    <div class="card canvasplot-container">
     </div>
 </template>
 
