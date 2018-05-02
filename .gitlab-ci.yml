@@ -13,4 +13,4 @@ build:
   stage: build
   tags:
     - dockerex
-  script: npm run build
+  script: npm run build --no-progress
