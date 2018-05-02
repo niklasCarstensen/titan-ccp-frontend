@@ -10,18 +10,69 @@ import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExampl
 
 Vue.use(BootstrapVue);
 
-let v = new Vue({
+let v = new Vue({   
     el: "#app",
     template: `
-    <div class="container-fluid">
-        <div>
-            Name: <input v-model="name" type="text">
-            <hello-decorator :name="name" :initialEnthusiasm="5" />
+    <div>
+        <b-container class="">
+            <b-row>
+                <b-col>
+                    <b-card title="Card Title"
+                            img-src="https://lorempixel.com/600/300/food/5/"
+                            img-alt="Image"
+                            img-top 
+                            tag="article"
+                            class="mb-2">
+                        <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                        </p>
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </b-col>
+                <b-col>
+                    <b-card title="Card Title"
+                            img-src="https://lorempixel.com/600/300/food/5/"
+                            img-alt="Image"
+                            img-top 
+                            tag="article"
+                            class="mb-2">
+                        <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                        </p>
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </b-col>
+                <b-col>
+                    <b-card title="Card Title"
+                            img-src="https://lorempixel.com/600/300/food/5/"
+                            img-alt="Image"
+                            img-top 
+                            tag="article"
+                            class="mb-2">
+                        <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                        </p>
+                        <b-button href="#" variant="primary">Go somewhere</b-button>
+                    </b-card>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <!--<sensor-history-plot />-->
+                    <moving-time-series-plot-example />
+                </b-col>
+            </b-row>
+        </b-container>
+        <div class="container-fluid">
+            <div>
+                Name: <input v-model="name" type="text">
+                <hello-decorator :name="name" :initialEnthusiasm="5" />
+            </div>
+            <!--<axios-example />-->
+            <!--<canvas-time-series-plot-example />-->
+            <sensor-history-plot />
+            <!--<moving-time-series-plot-example />-->
         </div>
-        <!--<axios-example />-->
-        <!--<canvas-time-series-plot-example />-->
-        <!--<sensor-history-plot />-->
-        <moving-time-series-plot-example />
     </div>
     `,
     data: { name: "World" },
