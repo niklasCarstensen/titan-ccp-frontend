@@ -17,8 +17,6 @@ export class MovingTimeSeriesPlot {
 	private dataPoints: Array<Array<Date|number>>
 	private plot: CanvasTimeSeriesPlot
 
-
-
 	constructor(domContainer: HTMLElement,
 		config?: any) {
 		config = config || {};
