@@ -6,6 +6,7 @@ import HelloDecorator from "./components/HelloDecorator.vue";
 import AxiosExample from "./components/AxiosExample.vue";
 import CanvasTimeSeriesPlotExample from "./components/CanvasTimeSeriesPlotExample.vue";
 import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
+import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExample.vue";
 
 Vue.use(BootstrapVue);
 
@@ -17,9 +18,10 @@ let v = new Vue({
             Name: <input v-model="name" type="text">
             <hello-decorator :name="name" :initialEnthusiasm="5" />
         </div>
-        <axios-example />
+        <!--<axios-example />-->
         <!--<canvas-time-series-plot-example />-->
-        <sensor-history-plot />
+        <!--<sensor-history-plot />-->
+        <moving-time-series-plot-example />
     </div>
     `,
     data: { name: "World" },
@@ -27,7 +29,8 @@ let v = new Vue({
         HelloDecorator,
         AxiosExample,
         CanvasTimeSeriesPlotExample,
-        SensorHistoryPlot
+        SensorHistoryPlot,
+        MovingTimeSeriesPlotExample
     }
 });
 

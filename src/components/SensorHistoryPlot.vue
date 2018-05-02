@@ -14,22 +14,12 @@ declare var d3: any;
 @Component
 export default class SensorHistoryPlot extends Vue {
     
-    private dataPoints = new Array<Array<any>>()
+    //private dataPoints = new Array<Array<any>>()
+    private identifier = "root" //TODO property
+    private latest = 0
 
     created() {
-        let identifier = "root"
-        HTTP.get('aggregated-power-consumption/' + identifier)
-        .then(response => {
-            // JSON responses are automatically parsed.
-            //console.log(response.data);
-            for (let dataPoint of response.data) {
-                this.dataPoints.push([new Date(dataPoint.timestamp), dataPoint.sum])
-            }
-            //console.log(this.dataPoints)
-        })
-        .catch(e => {
-            console.error(e);
-        });
+
     }
 
     mounted() {
@@ -37,16 +27,42 @@ export default class SensorHistoryPlot extends Vue {
 
         var last = Math.random() * 100
 
-        let ts2 = new Array<DataPoint>();
-        ts2.push(new DataPoint(new Date(), last));
-        plot.setDataPoints(ts2);
+        //let ts2 = new Array<DataPoint>();
+        //ts2.push(new DataPoint(new Date(), last));
+        /*
+        let identifier = "root"
+        HTTP.get('aggregated-power-consumption/' + identifier)
+        .then(response => {
+            // JSON responses are automatically parsed.
+            //console.log(response.data);
+            for (let dataPoint of response.data) {
+                //this.dataPoints.push([new Date(dataPoint.timestamp), dataPoint.sum])
+                ts2.push(new DataPoint(new Date(dataPoint.timestamp), dataPoint.sum))
+            }
+            //console.log(this.dataPoints)
+            plot.setDataPoints(ts2);
+        })
+        .catch(e => {
+            console.error(e);
+        });
+        */
+        // TODO fetch already earlier and then wait for mount
+        this.fetchNewData().then(dataPoints => plot.setDataPoints(dataPoints))
+        //console.log(ts2)
+        //plot.setDataPoints(ts2);
 
         setInterval(() => {
+            
+            this.fetchNewData().then(dataPoints => plot.addDataPoints(dataPoints))
+
+            /*
             let dps = new Array<DataPoint>()
             let newValue = last + (Math.random() * 10) - 5            
             dps.push(new DataPoint(new Date(), newValue))
             plot.addDataPoints(dps)
             last = newValue
+            */
+            
         }, 500);
 
 
@@ -70,19 +86,19 @@ export default class SensorHistoryPlot extends Vue {
         */
     }
 
-    private fetchNewData() {
-        let identifier = "root" //TODO property
-        let x = HTTP.get('aggregated-power-consumption/' + identifier)
+    private fetchNewData(): Promise<DataPoint[]> {   
+        return HTTP.get('aggregated-power-consumption/' + this.identifier + '?after=' + this.latest)
         .then(response => {
             // JSON responses are automatically parsed.
-            console.log(response.data);
-            for (let dataPoint of response.data) {
-                this.dataPoints.push([new Date(dataPoint.timestamp), dataPoint.sum])
+            if (response.data.length > 0) {
+                this.latest = response.data[response.data.length - 1].timestamp
             }
-            console.log(this.dataPoints)
+            // TODO access sum generically
+            return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), x.sum));
         })
         .catch(e => {
             console.error(e);
+            return []
         });
     }
 }

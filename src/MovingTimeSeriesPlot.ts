@@ -73,7 +73,7 @@ export class MovingTimeSeriesPlot {
 			else {
 				xDomain = new Domain(afterCalculatedXDomain.end - this.defaultTimeSpan, afterCalculatedXDomain.end);
 			}
-			this.plot.updateDomains(xDomain, this.plot.getYDomain(), false);
+			this.plot.updateDomains(xDomain.toArray(), this.plot.getYDomain(), false);
 		}
 		else {
 			if (beforeCalculatedXDomain.end <= beforeActualXDomain.end && afterCalculatedXDomain.end > afterActualXDomain.end) {
