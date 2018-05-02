@@ -7,6 +7,7 @@ export class MovingTimeSeriesPlot {
 	private width: number
 	private height: number
 	private yAxisLabel: string
+	private datasetId: string
 	private color: string
 	private plotStartsWithZero: boolean
 	private defaultTimeSpan: number
@@ -24,9 +25,9 @@ export class MovingTimeSeriesPlot {
 		this.width = config.width || domContainer.clientWidth; // in px
 		this.height = config.height ||domContainer.clientHeight; // in px
 		this.yAxisLabel = config.yAxisLabel || "Measurement";
+		this.datasetId = config.datasetId || "measurement";
 		this.color = config.color || "orange";
 		this.plotStartsWithZero = config.plotStartsWithZero || false;
-		//this.yAxisSpacing = config.yAxisSpacing || 65; // in px
 		this.defaultTimeSpan = config.defaultTimeSpan || 60 * 1000; // one minute
 		this.defaultStartTime = config.defaultStartTime || new Date();
 		this.defaultYDomain = config.defaultYDomain || [0, 1];
@@ -47,8 +48,8 @@ export class MovingTimeSeriesPlot {
 		for (let dataPoint of dataPoints) {
 			this.dataPoints.push(dataPoint.toArray());
 		}
-		this.plot.removeDataSet("measurements"); //TODO "measurements"
-		this.plot.addDataSet("measurements", "", this.dataPoints, this.color, false, false); //TODO "measurements"
+		this.plot.removeDataSet(this.datasetId);
+		this.plot.addDataSet(this.datasetId, "", this.dataPoints, this.color, false, false);
 		if (this.dataPoints.length != 0) {
 			this.plot.updateDomains(this.plot.calculateXDomain(), this.plot.getYDomain(), true);
 			this.updateDomains();
@@ -61,7 +62,7 @@ export class MovingTimeSeriesPlot {
 		let beforeEmpty = (this.dataPoints.length == 0);
 		for (let dataPoint of dataPoints) {
 			// Updates also this.dataPoints
-			this.plot.addDataPoint("measurements", dataPoint.toArray(), false, false); //TODO "measurements"
+			this.plot.addDataPoint(this.datasetId, dataPoint.toArray(), false, false);
 		}
 		let afterCalculatedXDomain = Domain.of(this.plot.calculateXDomain());
 		let afterActualXDomain = Domain.of(this.plot.getXDomain());
@@ -74,24 +75,16 @@ export class MovingTimeSeriesPlot {
 				xDomain = new Domain(afterCalculatedXDomain.end - this.defaultTimeSpan, afterCalculatedXDomain.end);
 			}
 			this.plot.updateDomains(xDomain.toArray(), this.plot.getYDomain(), false);
-		}
-		else {
+		} else {
 			if (beforeCalculatedXDomain.end <= beforeActualXDomain.end && afterCalculatedXDomain.end > afterActualXDomain.end) {
 				let shifting = afterCalculatedXDomain.end - beforeCalculatedXDomain.end;
 				//TODO rework this
-				var xDomain = [this.plot.getXDomain()[0] * 1 + shifting, this.plot.getXDomain()[1] * 1 + shifting];
-				this.plot.updateDomains(xDomain, this.plot.getYDomain(), false);
+				var xDomain = new Domain(afterActualXDomain.start * 1 + shifting, afterActualXDomain.end * 1 + shifting);
+				this.plot.updateDomains(xDomain.toDateArray(), this.plot.getYDomain(), false);
 			}
 		}
 		this.updateDomains();
 	}
-
-	//TODO Does this work?
-	/*
-	private setViews(xDomain: Array<number>) {
-		this.plot.updateDomains(xDomain, this.plot.getYDomain(), false);
-	}
-	*/
 
 	private updateDomains() {
 		let yDomain = Domain.of(this.plot.calculateYDomain());
@@ -114,7 +107,7 @@ export class DataPoint {
 	}
 }
 
-export class Domain {
+class Domain {
 	public constructor(public start: number, public end: number){}
 
 	public getLength() {
@@ -123,6 +116,10 @@ export class Domain {
 
 	public toArray() {
 		return [this.start, this.end]
+	}
+
+	public toDateArray() {
+		return [new Date(this.start), new Date(this.end)]
 	}
 
 	public static of(domain: Array<number>) {
