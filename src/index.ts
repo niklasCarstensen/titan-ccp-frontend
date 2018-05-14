@@ -7,6 +7,8 @@ import AxiosExample from "./components/AxiosExample.vue";
 import CanvasTimeSeriesPlotExample from "./components/CanvasTimeSeriesPlotExample.vue";
 import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
 import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExample.vue";
+import BritechartsExample from "./components/BritechartsExample.vue";
+import C3Example from "./components/C3Example.vue";
 
 Vue.use(BootstrapVue);
 
@@ -58,8 +60,13 @@ let v = new Vue({
             </b-row>
             <b-row>
                 <b-col>
-                    <sensor-history-plot />
+                    <!--<sensor-history-plot />-->
                     <!--<moving-time-series-plot-example />-->
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <c3-example />
                 </b-col>
             </b-row>
         </b-container>
@@ -81,7 +88,9 @@ let v = new Vue({
         AxiosExample,
         CanvasTimeSeriesPlotExample,
         SensorHistoryPlot,
-        MovingTimeSeriesPlotExample
+        MovingTimeSeriesPlotExample,
+        BritechartsExample,
+        C3Example,
     }
 });
 
