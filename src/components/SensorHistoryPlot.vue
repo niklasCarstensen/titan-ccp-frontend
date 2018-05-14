@@ -37,6 +37,7 @@ export default class SensorHistoryPlot extends Vue {
     private fetchNewData(): Promise<DataPoint[]> {   
         return HTTP.get('aggregated-power-consumption/' + this.identifier + '?after=' + this.latest)
         .then(response => {
+            console.log(response.data)
             // JSON responses are automatically parsed.
             if (response.data.length > 0) {
                 this.latest = response.data[response.data.length - 1].timestamp

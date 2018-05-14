@@ -58,8 +58,8 @@ let v = new Vue({
             </b-row>
             <b-row>
                 <b-col>
-                    <!--<sensor-history-plot />-->
-                    <moving-time-series-plot-example />
+                    <sensor-history-plot />
+                    <!--<moving-time-series-plot-example />-->
                 </b-col>
             </b-row>
         </b-container>
@@ -70,7 +70,7 @@ let v = new Vue({
             </div>
             <!--<axios-example />-->
             <!--<canvas-time-series-plot-example />-->
-            <sensor-history-plot />
+            <!--<sensor-history-plot />-->
             <!--<moving-time-series-plot-example />-->
         </div>
     </div>
