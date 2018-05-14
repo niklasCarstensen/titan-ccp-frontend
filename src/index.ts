@@ -10,6 +10,7 @@ import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExampl
 import BritechartsExample from "./components/BritechartsExample.vue";
 import C3Example from "./components/C3Example.vue";
 import C3PieExample from "./components/C3PieExample.vue";
+import DistributionPlot from "./components/DistributionPlot.vue";
 
 Vue.use(BootstrapVue);
 
@@ -67,7 +68,8 @@ let v = new Vue({
             </b-row>
             <b-row>
                 <b-col cols="6">
-                    <c3-example />
+                    <!--<c3-example />-->
+                    <distribution-plot />
                 </b-col>
                 <b-col cols="6">
                     <c3-pie-example />
@@ -95,7 +97,8 @@ let v = new Vue({
         MovingTimeSeriesPlotExample,
         BritechartsExample,
         C3Example,
-        C3PieExample
+        C3PieExample,
+        DistributionPlot
     }
 });
 
