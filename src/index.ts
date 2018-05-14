@@ -9,6 +9,7 @@ import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
 import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExample.vue";
 import BritechartsExample from "./components/BritechartsExample.vue";
 import C3Example from "./components/C3Example.vue";
+import C3PieExample from "./components/C3PieExample.vue";
 
 Vue.use(BootstrapVue);
 
@@ -65,8 +66,11 @@ let v = new Vue({
                 </b-col>
             </b-row>
             <b-row>
-                <b-col>
+                <b-col cols="6">
                     <c3-example />
+                </b-col>
+                <b-col cols="6">
+                    <c3-pie-example />
                 </b-col>
             </b-row>
         </b-container>
@@ -91,6 +95,7 @@ let v = new Vue({
         MovingTimeSeriesPlotExample,
         BritechartsExample,
         C3Example,
+        C3PieExample
     }
 });
 
