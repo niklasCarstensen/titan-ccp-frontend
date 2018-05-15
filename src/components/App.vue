@@ -112,7 +112,6 @@ import C3PieExample from "./examples/C3PieExample.vue";
         AxiosExample,
         CanvasTimeSeriesPlotExample,
         MovingTimeSeriesPlotExample,
-        BritechartsExample,
         C3Example,
         C3PieExample
     }
