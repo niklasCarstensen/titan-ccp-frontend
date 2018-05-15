@@ -7,3 +7,11 @@ export const HTTP = axios.create({
     Authorization: 'Bearer {token}'
   }
 })
+
+export const HTTP_CONFIGURATION = axios.create({
+  //baseURL: `http://jsonplaceholder.typicode.com/`,
+  baseURL: `http://localhost:8082/`,
+  headers: {
+    Authorization: 'Bearer {token}'
+  }
+})

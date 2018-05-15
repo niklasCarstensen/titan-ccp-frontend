@@ -9,6 +9,7 @@ import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
 import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExample.vue";
 import BritechartsExample from "./components/BritechartsExample.vue";
 import C3Example from "./components/C3Example.vue";
+import C3PieExample2 from "./components/C3PieExample2.vue";
 import C3PieExample from "./components/C3PieExample.vue";
 import DistributionPlot from "./components/DistributionPlot.vue";
 
@@ -75,6 +76,7 @@ let v = new Vue({
                     <c3-pie-example />
                 </b-col>
             </b-row>
+            <c3-pie-example-2 />
         </b-container>
         <div class="container-fluid">
             <div>
@@ -88,7 +90,9 @@ let v = new Vue({
         </div>
     </div>
     `,
-    data: { name: "World" },
+    data: {
+        name: "World"
+    },
     components: {
         HelloDecorator,
         AxiosExample,
@@ -98,6 +102,7 @@ let v = new Vue({
         BritechartsExample,
         C3Example,
         C3PieExample,
+        C3PieExample2,
         DistributionPlot
     }
 });
