@@ -2,16 +2,18 @@ import Vue from "vue";
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import HelloDecorator from "./components/HelloDecorator.vue";
-import AxiosExample from "./components/AxiosExample.vue";
-import CanvasTimeSeriesPlotExample from "./components/CanvasTimeSeriesPlotExample.vue";
-import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
-import MovingTimeSeriesPlotExample from "./components/MovingTimeSeriesPlotExample.vue";
-import BritechartsExample from "./components/BritechartsExample.vue";
-import C3Example from "./components/C3Example.vue";
-import C3PieExample2 from "./components/C3PieExample2.vue";
-import C3PieExample from "./components/C3PieExample.vue";
+
+import HelloDecorator from "./components/examples/HelloDecorator.vue";
+import AxiosExample from "./components/examples/AxiosExample.vue";
+import CanvasTimeSeriesPlotExample from "./components/examples/CanvasTimeSeriesPlotExample.vue";
+import MovingTimeSeriesPlotExample from "./components/examples/MovingTimeSeriesPlotExample.vue";
+import BritechartsExample from "./components/examples/BritechartsExample.vue";
+import C3Example from "./components/examples/C3Example.vue";
+import C3PieExample from "./components/examples/C3PieExample.vue";
+
 import DistributionPlot from "./components/DistributionPlot.vue";
+import C3PieExample2 from "./components/C3PieExample2.vue";
+import SensorHistoryPlot from "./components/SensorHistoryPlot.vue";
 
 Vue.use(BootstrapVue);
 

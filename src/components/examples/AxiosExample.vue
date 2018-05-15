@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 //import axios from "axios"; //TODO
-import { HTTP } from "../http-common";
+import { HTTP } from "../../http-common";
 
 @Component
 export default class AxiosExample extends Vue {

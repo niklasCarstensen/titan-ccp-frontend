@@ -11,7 +11,7 @@ import { generate } from 'c3';
 import 'c3/c3.css';
 
 @Component
-export default class C3PieExample2 extends Vue {
+export default class C3PieExample2 extends Vue { //TODO rename
     
     //@Prop({ required: true }) sensorRegistry!: Promise<SensorRegistry>
 
