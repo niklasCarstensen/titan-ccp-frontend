@@ -4,15 +4,9 @@ import App from "./components/App.vue";
 
 Vue.use(BootstrapVue);
 
-let v = new Vue({   
-    el: "#app",
-    template: `
-    <div>
-        <app />
-    </div>
-    `,
-    components: {
-        App
-    }
+new Vue({   
+    el: '#app',
+    template: '<app />',
+    components: { App }
 });
 
