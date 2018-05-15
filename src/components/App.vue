@@ -57,7 +57,16 @@
                     <c3-pie-example />
                 </b-col>
             </b-row>
-            <c3-pie-example-2 />
+            <b-row>
+                <b-col>
+                    <c3-pie-example-2 :sensor-registry="sensorRegistry" />
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <pre>{{ sensorRegistryAsString }}</pre>
+                </b-col>
+            </b-row>
         </b-container>
         <div class="container-fluid">
             <div>
@@ -78,6 +87,8 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+import { SensorRegistryRequester } from '../SensorRegistryRequester'
 
 import HelloDecorator from "./examples/HelloDecorator.vue";
 import AxiosExample from "./examples/AxiosExample.vue";
@@ -108,6 +119,15 @@ import SensorHistoryPlot from "./SensorHistoryPlot.vue";
 export default class App extends Vue {
 
     readonly name = "World"
+
+    private sensorRegistry = new SensorRegistryRequester().request()
+    private sensorRegistryAsString = ""
+
+    created() {
+        this.sensorRegistry.then(registry => {
+            this.sensorRegistryAsString = JSON.stringify(registry, null, '\t')
+        })
+    }
 
 }
 </script>

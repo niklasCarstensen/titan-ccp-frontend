@@ -13,11 +13,15 @@ import 'c3/c3.css';
 @Component
 export default class C3PieExample2 extends Vue { //TODO rename
     
-    //@Prop({ required: true }) sensorRegistry!: Promise<SensorRegistry>
+    @Prop({
+        type: Promise,
+        required: true
+
+    })
+    sensorRegistry!: Promise<SensorRegistry>
 
     mounted() {
-        //this.sensorRegistry.then(registry => {
-        new SensorRegistryRequester().request().then(registry => {
+        this.sensorRegistry.then(registry => {
             if (registry.topLevelSensor instanceof AggregatedSensor) {
                 return registry.topLevelSensor.children
             } else {
