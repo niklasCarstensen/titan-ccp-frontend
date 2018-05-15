@@ -88,7 +88,7 @@ import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-import { SensorRegistryRequester } from '../SensorRegistryRequester'
+import { SensorRegistryRequester } from '../SensorRegistry'
 
 import HelloDecorator from "./examples/HelloDecorator.vue";
 import AxiosExample from "./examples/AxiosExample.vue";

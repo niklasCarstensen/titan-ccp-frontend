@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { SensorRegistryRequester, AggregatedSensor, Sensor, SensorRegistry } from '../SensorRegistryRequester'
+import { SensorRegistryRequester, AggregatedSensor, Sensor, SensorRegistry } from '../SensorRegistry'
 import { HTTP } from "../http-common";
 import { generate } from 'c3';
 import 'c3/c3.css';
