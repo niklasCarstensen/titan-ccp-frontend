@@ -59,7 +59,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <c3-pie-example-2 :sensor-registry="sensorRegistry" />
+                    <composition-pie-chart :sensor-registry="sensorRegistry" />
                 </b-col>
             </b-row>
             <b-row>
@@ -90,6 +90,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import { SensorRegistryRequester } from '../SensorRegistry'
 
+import DistributionPlot from "./DistributionPlot.vue";
+import CompositionPieChart from "./CompositionPieChart.vue";
+import SensorHistoryPlot from "./SensorHistoryPlot.vue";
+
 import HelloDecorator from "./examples/HelloDecorator.vue";
 import AxiosExample from "./examples/AxiosExample.vue";
 import CanvasTimeSeriesPlotExample from "./examples/CanvasTimeSeriesPlotExample.vue";
@@ -98,22 +102,19 @@ import BritechartsExample from "./examples/BritechartsExample.vue";
 import C3Example from "./examples/C3Example.vue";
 import C3PieExample from "./examples/C3PieExample.vue";
 
-import DistributionPlot from "./DistributionPlot.vue";
-import C3PieExample2 from "./C3PieExample2.vue";
-import SensorHistoryPlot from "./SensorHistoryPlot.vue";
-
 @Component({
     components: {
+        SensorHistoryPlot,
+        CompositionPieChart,
+        DistributionPlot,
+
         HelloDecorator,
         AxiosExample,
         CanvasTimeSeriesPlotExample,
-        SensorHistoryPlot,
         MovingTimeSeriesPlotExample,
         BritechartsExample,
         C3Example,
-        C3PieExample,
-        C3PieExample2,
-        DistributionPlot
+        C3PieExample
     }
 })
 export default class App extends Vue {
