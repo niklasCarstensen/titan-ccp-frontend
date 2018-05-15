@@ -5,7 +5,11 @@
 <body>
     <div id="app"></div>
 </body>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js" charset="utf-8"></script>
+<script>
+    d3version3 = d3
+    window.d3 = null
+</script>
 <script src="./dist/build.js"></script>
 <style>
     .cvpChart {

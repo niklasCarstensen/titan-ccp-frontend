@@ -1,6 +1,6 @@
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from './canvasplot.js';
-declare var d3: any;
+declare var d3version3: any;
 
 export class MovingTimeSeriesPlot {
 
@@ -32,7 +32,7 @@ export class MovingTimeSeriesPlot {
 		this.yDomainEnlargement = config.yDomainEnlargement || 0.1;
 
 		this.dataPoints = [];
-		this.plot = new CanvasTimeSeriesPlot(d3.select(domContainer), [this.width, this.height], {
+		this.plot = new CanvasTimeSeriesPlot(d3version3.select(domContainer), [this.width, this.height], {
 			yAxisLabel: this.yAxisLabel,
 			disableLegend: true,
 			//plotMargins: { top: 20, right: 20, bottom: 30, left: this.yAxisSpacing },

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Fix to support D3-based CanvasPlot in our app
+var d3 = d3version3;
+
 function CanvasDataPlot(parentElement, canvasDimensions, config) {
 	config = config || {};
 

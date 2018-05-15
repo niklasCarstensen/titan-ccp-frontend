@@ -44,7 +44,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <!--<sensor-history-plot />-->
+                    <sensor-history-plot />
                     <!--<moving-time-series-plot-example />-->
                 </b-col>
             </b-row>

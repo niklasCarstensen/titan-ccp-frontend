@@ -9,7 +9,6 @@ import { HTTP } from "../http-common";
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
-declare var d3: any;
 
 @Component
 export default class SensorHistoryPlot extends Vue {
@@ -19,7 +18,6 @@ export default class SensorHistoryPlot extends Vue {
     private latest = 0
 
     created() {
-
     }
 
     mounted() {
