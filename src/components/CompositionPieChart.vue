@@ -12,22 +12,16 @@ import 'c3/c3.css';
 
 @Component
 export default class CompositionPieChart extends Vue {
-    
+
     @Prop({
-        type: Promise,
         required: true
     })
-    sensorRegistry!: Promise<SensorRegistry>
+    sensor!: Sensor //AggregatedSensor
 
     mounted() {
-        this.sensorRegistry.then(registry => {
-            if (registry.topLevelSensor instanceof AggregatedSensor) {
-                return registry.topLevelSensor.children
-            } else {
-                return []
-            }
-        }).then(children => {
-            return Promise.all(children.map(child => {
+        //TODO only accept AggregatedSensor
+        if (this.sensor instanceof AggregatedSensor) {
+            Promise.all(this.sensor.children.map(child => {
                 let resource = child instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
                 return HTTP.get(resource + '/' + child.identifier + '/latest')
                     .then(response => {
@@ -46,21 +40,19 @@ export default class CompositionPieChart extends Vue {
                         console.error(e);
                         return <[string, number]> [child.identifier, 0];
                     });
-            }))
-        }).then(columns => {
-            let chart = generate({
-                bindto: this.$el,
-                data: {
-                    columns: columns,
-                    type : 'pie'
-                },
-                tooltip: {
-                    show: false
-                }
-            });
-        });
-
-        
+                })).then(columns => {
+                    let chart = generate({
+                        bindto: this.$el,
+                        data: {
+                            columns: columns,
+                            type : 'pie'
+                        },
+                        tooltip: {
+                            show: false
+                        }
+                    });
+                });
+        }
     }
 
 }

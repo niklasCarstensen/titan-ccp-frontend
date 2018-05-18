@@ -6,6 +6,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
+import { Sensor } from '../SensorRegistry'
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
@@ -14,7 +15,7 @@ import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 export default class SensorHistoryPlot extends Vue {
     
     //private dataPoints = new Array<Array<any>>()
-    private identifier = "root" //TODO property
+    @Prop({ required: true }) sensor!: Sensor
     private latest = 0
 
     created() {
@@ -33,9 +34,8 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private fetchNewData(): Promise<DataPoint[]> {   
-        return HTTP.get('aggregated-power-consumption/' + this.identifier + '?after=' + this.latest)
+        return HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '?after=' + this.latest)
         .then(response => {
-            console.log(response.data)
             // JSON responses are automatically parsed.
             if (response.data.length > 0) {
                 this.latest = response.data[response.data.length - 1].timestamp

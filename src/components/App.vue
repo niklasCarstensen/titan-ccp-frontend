@@ -44,14 +44,14 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <sensor-history-plot />
+                    <sensor-history-plot :sensor="rootSensor" />
                     <!--<moving-time-series-plot-example />-->
                 </b-col>
             </b-row>
             <b-row>
                 <b-col cols="6">
                     <!--<c3-example />-->
-                    <distribution-plot />
+                    <distribution-plot :sensor="rootSensor" />
                 </b-col>
                 <b-col cols="6">
                     <c3-pie-example />
@@ -59,7 +59,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <composition-pie-chart :sensor-registry="sensorRegistry" />
+                    <composition-pie-chart :sensor="rootSensor" :sensor-registry="sensorRegistry" />
                 </b-col>
             </b-row>
             <b-row>
@@ -82,25 +82,26 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
 
-import BootstrapVue from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import { SensorRegistryRequester } from '../SensorRegistry'
 
-import DistributionPlot from "./DistributionPlot.vue";
-import CompositionPieChart from "./CompositionPieChart.vue";
-import SensorHistoryPlot from "./SensorHistoryPlot.vue";
+import DistributionPlot from "./DistributionPlot.vue"
+import CompositionPieChart from "./CompositionPieChart.vue"
+import SensorHistoryPlot from "./SensorHistoryPlot.vue"
 
-import HelloDecorator from "./examples/HelloDecorator.vue";
-import AxiosExample from "./examples/AxiosExample.vue";
-import CanvasTimeSeriesPlotExample from "./examples/CanvasTimeSeriesPlotExample.vue";
-import MovingTimeSeriesPlotExample from "./examples/MovingTimeSeriesPlotExample.vue";
-import BritechartsExample from "./examples/BritechartsExample.vue";
-import C3Example from "./examples/C3Example.vue";
-import C3PieExample from "./examples/C3PieExample.vue";
+import HelloDecorator from "./examples/HelloDecorator.vue"
+import AxiosExample from "./examples/AxiosExample.vue"
+import CanvasTimeSeriesPlotExample from "./examples/CanvasTimeSeriesPlotExample.vue"
+import MovingTimeSeriesPlotExample from "./examples/MovingTimeSeriesPlotExample.vue"
+import BritechartsExample from "./examples/BritechartsExample.vue"
+import C3Example from "./examples/C3Example.vue"
+import C3PieExample from "./examples/C3PieExample.vue"
 
 @Component({
     components: {
@@ -123,9 +124,12 @@ export default class App extends Vue {
     private sensorRegistry = new SensorRegistryRequester().request()
     private sensorRegistryAsString = ""
 
+    private rootSensor: Sensor = new MachineSensor("--PENDING--")
+
     created() {
         this.sensorRegistry.then(registry => {
             this.sensorRegistryAsString = JSON.stringify(registry, null, '\t')
+            this.rootSensor = registry.topLevelSensor
         })
     }
 

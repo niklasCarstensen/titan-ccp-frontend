@@ -6,21 +6,30 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
+import { Sensor } from '../SensorRegistry'
 import { generate } from 'c3';
 import 'c3/c3.css';
 
 @Component
 export default class DistributionPlot extends Vue {
-    
-    private identifier = "root";
+
+    @Prop({ required: true }) sensor!: Sensor
 
     mounted() {
-         HTTP.get('aggregated-power-consumption/' + this.identifier + '/distribution?buckets=4')
+         this.createPlot();
+    }
+
+    @Watch('sensor')
+    onSensorChanged(sensor: Sensor) {
+        this.createPlot();
+    }
+
+    private createPlot() {
+        HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '/distribution?buckets=4')
             .then(response => {
-                console.log(response.data)
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
-                let values: Array<string|number> = [this.identifier]
+                let values: Array<string|number> = [this.sensor.identifier]
                 for (let bucket of response.data) {
                     labels.push("" + bucket.lower + " - " + bucket.upper)
                     values.push(bucket.elements)
@@ -30,12 +39,12 @@ export default class DistributionPlot extends Vue {
             .catch(e => {
                 console.error(e);
                 return [[],[]];
-            }).then(data2 => {
+            }).then(data => {
                 let chart = generate({
                     bindto: this.$el,
                     data: {
                         x : 'x',
-                        columns: data2,
+                        columns: data,
                         type: 'bar'
                     },
                     legend: {
@@ -51,9 +60,7 @@ export default class DistributionPlot extends Vue {
                     }
                 });
             });
-
     }
-
 }
 </script>
 
