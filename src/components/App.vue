@@ -54,12 +54,13 @@
                     <distribution-plot :sensor="rootSensor" />
                 </b-col>
                 <b-col cols="6">
-                    <c3-pie-example />
+                    <!-- <c3-pie-example /> -->
+                    <composition-pie-chart :sensor="rootSensor" />
                 </b-col>
             </b-row>
             <b-row>
                 <b-col>
-                    <composition-pie-chart :sensor="rootSensor" :sensor-registry="sensorRegistry" />
+                    <!-- <composition-pie-chart :sensor="rootSensor" /> -->
                 </b-col>
             </b-row>
             <b-row>

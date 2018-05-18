@@ -7,7 +7,7 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
 import { Sensor } from '../SensorRegistry'
-import { generate } from 'c3';
+import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
 
 @Component
@@ -15,8 +15,31 @@ export default class DistributionPlot extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
 
+    @Prop({ default: 4}) buckets!: number
+
+    private chart!: ChartAPI
+
     mounted() {
-         this.createPlot();
+        this.chart = generate({
+            bindto: this.$el,
+            data: {
+                x : 'x',
+                columns: [],
+                type: 'bar'
+            },
+            legend: {
+                show: false
+            },
+            axis: {
+                x: {
+                    type: 'category' // this needed to load string x value
+                }
+            },
+            tooltip: {
+                show: false
+            }
+        });
+        this.createPlot();
     }
 
     @Watch('sensor')
@@ -25,7 +48,7 @@ export default class DistributionPlot extends Vue {
     }
 
     private createPlot() {
-        HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '/distribution?buckets=4')
+        HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '/distribution?buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
@@ -40,24 +63,8 @@ export default class DistributionPlot extends Vue {
                 console.error(e);
                 return [[],[]];
             }).then(data => {
-                let chart = generate({
-                    bindto: this.$el,
-                    data: {
-                        x : 'x',
-                        columns: data,
-                        type: 'bar'
-                    },
-                    legend: {
-                        show: false
-                    },
-                    axis: {
-                        x: {
-                            type: 'category' // this needed to load string x value
-                        }
-                    },
-                    tooltip: {
-                        show: false
-                    }
+                this.chart.load({
+                    columns: data
                 });
             });
     }

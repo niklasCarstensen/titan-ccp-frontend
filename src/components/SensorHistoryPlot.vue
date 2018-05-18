@@ -6,7 +6,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
-import { Sensor } from '../SensorRegistry'
+import { Sensor, AggregatedSensor } from '../SensorRegistry'
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
@@ -34,19 +34,20 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private fetchNewData(): Promise<DataPoint[]> {   
-        return HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '?after=' + this.latest)
-        .then(response => {
-            // JSON responses are automatically parsed.
-            if (response.data.length > 0) {
-                this.latest = response.data[response.data.length - 1].timestamp
-            }
-            // TODO access sum generically
-            return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), x.sum));
-        })
-        .catch(e => {
-            console.error(e);
-            return []
-        });
+        let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
+        return HTTP.get(resource + '/' + this.sensor.identifier + '?after=' + this.latest)
+            .then(response => {
+                // JSON responses are automatically parsed.
+                if (response.data.length > 0) {
+                    this.latest = response.data[response.data.length - 1].timestamp
+                }
+                // TODO access sum generically
+                return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), this.sensor instanceof AggregatedSensor ? x.sum : x.powerConsumptionInWh));
+            })
+            .catch(e => {
+                console.error(e);
+                return []
+            });
     }
 }
 </script>

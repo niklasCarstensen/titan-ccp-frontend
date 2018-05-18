@@ -7,22 +7,40 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { SensorRegistryRequester, AggregatedSensor, Sensor, SensorRegistry } from '../SensorRegistry'
 import { HTTP } from "../http-common";
-import { generate } from 'c3';
+import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
 
 @Component
 export default class CompositionPieChart extends Vue {
 
-    @Prop({
-        required: true
-    })
-    sensor!: Sensor //AggregatedSensor
+    @Prop({ required: true }) sensor!: Sensor //AggregatedSensor
+
+    private chart!: ChartAPI
 
     mounted() {
+        this.chart = generate({
+            bindto: this.$el,
+            data: {
+                columns: [],
+                type : 'pie'
+            },
+            tooltip: {
+                show: false
+            }
+        })
+        this.updateChart();
+    }
+
+    @Watch('sensor')
+    onSensorChanged() {
+        this.updateChart();
+    }
+
+    private updateChart() {
         //TODO only accept AggregatedSensor
         if (this.sensor instanceof AggregatedSensor) {
             Promise.all(this.sensor.children.map(child => {
-                let resource = child instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
+                let resource = child instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
                 return HTTP.get(resource + '/' + child.identifier + '/latest')
                     .then(response => {
                         // JSON responses are automatically parsed.
@@ -40,18 +58,11 @@ export default class CompositionPieChart extends Vue {
                         console.error(e);
                         return <[string, number]> [child.identifier, 0];
                     });
-                })).then(columns => {
-                    let chart = generate({
-                        bindto: this.$el,
-                        data: {
-                            columns: columns,
-                            type : 'pie'
-                        },
-                        tooltip: {
-                            show: false
-                        }
-                    });
+            })).then(columns => {
+                this.chart.load({
+                    columns: columns
                 });
+            });
         }
     }
 
