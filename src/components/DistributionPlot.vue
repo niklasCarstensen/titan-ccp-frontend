@@ -6,7 +6,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
-import { Sensor } from '../SensorRegistry'
+import { Sensor, AggregatedSensor } from '../SensorRegistry'
 import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
 
@@ -48,7 +48,8 @@ export default class DistributionPlot extends Vue {
     }
 
     private createPlot() {
-        HTTP.get('aggregated-power-consumption/' + this.sensor.identifier + '/distribution?buckets=' + this.buckets)
+        let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
+        HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]

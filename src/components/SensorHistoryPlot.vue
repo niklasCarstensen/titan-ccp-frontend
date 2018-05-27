@@ -24,6 +24,7 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     mounted() {
+        //TODO Handle sensor changed
         let plot = new MovingTimeSeriesPlot(this.$el);
 
         // TODO fetch already earlier and then wait for mount
@@ -31,7 +32,7 @@ export default class SensorHistoryPlot extends Vue {
 
         this.intervalId = setInterval(() => {
             this.fetchNewData().then(dataPoints => plot.addDataPoints(dataPoints))     
-        }, 500);
+        }, 500)
     }
 
     destroyed() {
