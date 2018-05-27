@@ -29,7 +29,9 @@ export class SensorRegistry {
     private static parseSensor(sensor: JsonSensor) : Sensor {
         if (sensor.children) {
             let children = sensor.children.map(child => this.parseSensor(child))
-            return new AggregatedSensor(sensor.identifier, children)
+            let parsedSensor = new AggregatedSensor(sensor.identifier, children)
+            children.forEach(child => child.parent = parsedSensor)
+            return parsedSensor
         } else {
             return new MachineSensor(sensor.identifier)
         }
@@ -43,11 +45,15 @@ export class AggregatedSensor {
 
     constructor(readonly identifier: string, readonly children: Array<Sensor>) {}
 
+    public parent?: AggregatedSensor //TODO make nicer
+
 }
 
 export class MachineSensor {
     
     constructor(readonly identifier: string) {}
+
+    parent?: AggregatedSensor //TODO make nicer
 
 }
 

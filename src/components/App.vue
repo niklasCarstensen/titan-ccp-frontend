@@ -1,83 +1,85 @@
 <template>
     <div>
-        <b-container class="">
-            <b-row>
-                <b-col>
-                    <b-card title="Card Title"
-                            img-src="https://lorempixel.com/600/300/food/5/"
-                            img-alt="Image"
-                            img-top 
-                            tag="article"
-                            class="mb-2">
-                        <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </p>
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
-                </b-col>
-                <b-col>
-                    <b-card title="Card Title"
-                            img-src="https://lorempixel.com/600/300/food/5/"
-                            img-alt="Image"
-                            img-top 
-                            tag="article"
-                            class="mb-2">
-                        <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </p>
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
-                </b-col>
-                <b-col>
-                    <b-card title="Card Title"
-                            img-src="https://lorempixel.com/600/300/food/5/"
-                            img-alt="Image"
-                            img-top 
-                            tag="article"
-                            class="mb-2">
-                        <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the card's content.
-                        </p>
-                        <b-button href="#" variant="primary">Go somewhere</b-button>
-                    </b-card>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <sensor-history-plot :sensor="rootSensor" />
-                    <!--<moving-time-series-plot-example />-->
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col cols="6">
-                    <!--<c3-example />-->
-                    <distribution-plot :sensor="rootSensor" />
-                </b-col>
-                <b-col cols="6">
-                    <!-- <c3-pie-example /> -->
-                    <composition-pie-chart :sensor="rootSensor" />
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <!-- <composition-pie-chart :sensor="rootSensor" /> -->
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <pre>{{ sensorRegistryAsString }}</pre>
-                </b-col>
-            </b-row>
-        </b-container>
+        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Titan Control Center</a>
+            <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+                <a class="nav-link" href="#">Sign out</a>
+                </li>
+            </ul>
+        </nav>
         <div class="container-fluid">
-            <div>
-                Name: <input v-model="name" type="text">
-                <hello-decorator :name="name" :initialEnthusiasm="5" />
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" v-on:click="makeActive('dashboard')">
+                                    <span data-feather="home"></span>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" v-on:click="makeActive('sensor-details')">
+                                    <span data-feather="home"></span>
+                                    Sensor Details
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" v-on:click="makeActive('examples')">
+                                    <span data-feather="home"></span>
+                                    Examples
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">
+                                <span data-feather="home"></span>
+                                Dashboard <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="file"></span>
+                                Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="shopping-cart"></span>
+                                Products
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="users"></span>
+                                Customers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2"></span>
+                                Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                <span data-feather="layers"></span>
+                                Integrations
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <div v-if="show">
+                        <dashboard v-if="isActive('dashboard')" :sensor="rootSensor" />
+                        <sensor-details v-if="isActive('sensor-details')" :sensor="rootSensor" />
+                        <examples v-if="isActive('examples')" />
+                    </div>
+                    <div v-if="!show" >Loading...</div>
+                </main>
             </div>
-            <!--<axios-example />-->
-            <!--<canvas-time-series-plot-example />-->
-            <!--<sensor-history-plot />-->
-            <!--<moving-time-series-plot-example />-->
         </div>
     </div>
 </template>
@@ -92,46 +94,44 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import { SensorRegistryRequester } from '../SensorRegistry'
 
-import DistributionPlot from "./DistributionPlot.vue"
-import CompositionPieChart from "./CompositionPieChart.vue"
-import SensorHistoryPlot from "./SensorHistoryPlot.vue"
-
-import HelloDecorator from "./examples/HelloDecorator.vue"
-import AxiosExample from "./examples/AxiosExample.vue"
-import CanvasTimeSeriesPlotExample from "./examples/CanvasTimeSeriesPlotExample.vue"
-import MovingTimeSeriesPlotExample from "./examples/MovingTimeSeriesPlotExample.vue"
-import BritechartsExample from "./examples/BritechartsExample.vue"
-import C3Example from "./examples/C3Example.vue"
-import C3PieExample from "./examples/C3PieExample.vue"
+import Dashboard from "./Dashboard.vue"
+import SensorDetails from "./SensorDetails.vue"
+import Examples from "./Examples.vue"
 
 @Component({
     components: {
-        SensorHistoryPlot,
-        CompositionPieChart,
-        DistributionPlot,
-
-        HelloDecorator,
-        AxiosExample,
-        CanvasTimeSeriesPlotExample,
-        MovingTimeSeriesPlotExample,
-        C3Example,
-        C3PieExample
+        Dashboard,
+        SensorDetails,
+        Examples,
     }
 })
 export default class App extends Vue {
 
-    readonly name = "World"
-
     private sensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistryAsString = ""
 
     private rootSensor: Sensor = new MachineSensor("--PENDING--")
+    private show = false;
+
+    private activePage = "dashboard"
 
     created() {
         this.sensorRegistry.then(registry => {
-            this.sensorRegistryAsString = JSON.stringify(registry, null, '\t')
+            //this.sensorRegistryAsString = JSON.stringify(registry, null, '\t')
+            setTimeout(() => {
+                //this.rootSensor = registry.topLevelSensor
+                //this.show = true
+            }, 5000);
             this.rootSensor = registry.topLevelSensor
+            this.show = true  
         })
+    }
+
+    private makeActive(page: string) {
+        this.activePage = page
+    }
+    
+    private isActive(page: string) {
+        return this.activePage === page
     }
 
 }

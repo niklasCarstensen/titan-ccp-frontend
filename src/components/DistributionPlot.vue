@@ -63,9 +63,11 @@ export default class DistributionPlot extends Vue {
                 console.error(e);
                 return [[],[]];
             }).then(data => {
+                this.chart.unload()
                 this.chart.load({
-                    columns: data
-                });
+                    columns: data,
+                    unload: true
+                })
             });
     }
 }

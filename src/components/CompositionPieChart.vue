@@ -1,6 +1,5 @@
 <template>
-    <div class="card c3-container">
-    </div>
+    <div class="card c3-container"></div>
 </template>
 
 <script lang="ts">
@@ -13,7 +12,7 @@ import 'c3/c3.css';
 @Component
 export default class CompositionPieChart extends Vue {
 
-    @Prop({ required: true }) sensor!: Sensor //AggregatedSensor
+    @Prop({ required: true }) sensor!: AggregatedSensor
 
     private chart!: ChartAPI
 
@@ -28,42 +27,40 @@ export default class CompositionPieChart extends Vue {
                 show: false
             }
         })
-        this.updateChart();
+        this.updateChart()
     }
 
     @Watch('sensor')
     onSensorChanged() {
-        this.updateChart();
+        this.updateChart()
     }
 
     private updateChart() {
-        //TODO only accept AggregatedSensor
-        if (this.sensor instanceof AggregatedSensor) {
-            Promise.all(this.sensor.children.map(child => {
-                let resource = child instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-                return HTTP.get(resource + '/' + child.identifier + '/latest')
-                    .then(response => {
-                        // JSON responses are automatically parsed.
-                        let value
-                        if (response.data.length <= 0) {
-                            value = 0
-                        } else if (child instanceof AggregatedSensor) {
-                            value = response.data[0].sum
-                        } else {
-                            value = response.data[0].powerConsumptionInWh
-                        }
-                        return <[string, number]> [child.identifier, value];
-                    })
-                    .catch(e => {
-                        console.error(e);
-                        return <[string, number]> [child.identifier, 0];
-                    });
-            })).then(columns => {
-                this.chart.load({
-                    columns: columns
+        Promise.all(this.sensor.children.map(child => {
+            let resource = child instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
+            return HTTP.get(resource + '/' + child.identifier + '/latest')
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    let value
+                    if (response.data.length <= 0) {
+                        value = 0
+                    } else if (child instanceof AggregatedSensor) {
+                        value = response.data[0].sum
+                    } else {
+                        value = response.data[0].powerConsumptionInWh
+                    }
+                    return <[string, number]> [child.identifier, value]
+                })
+                .catch(e => {
+                    console.error(e)
+                    return <[string, number]> [child.identifier, 0]
                 });
-            });
-        }
+        })).then(columns => {
+            this.chart.load({
+                columns: columns,
+                unload: true
+            })
+        })
     }
 
 }
