@@ -18,6 +18,8 @@ export default class SensorHistoryPlot extends Vue {
     @Prop({ required: true }) sensor!: Sensor
     private latest = 0
 
+    private intervalId?: number
+
     created() {
     }
 
@@ -27,10 +29,15 @@ export default class SensorHistoryPlot extends Vue {
         // TODO fetch already earlier and then wait for mount
         this.fetchNewData().then(dataPoints => plot.setDataPoints(dataPoints))
 
-        setInterval(() => {
+        this.intervalId = setInterval(() => {
             this.fetchNewData().then(dataPoints => plot.addDataPoints(dataPoints))     
         }, 500);
+    }
 
+    destroyed() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId)
+        }
     }
 
     private fetchNewData(): Promise<DataPoint[]> {   
