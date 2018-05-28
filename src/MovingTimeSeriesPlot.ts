@@ -84,6 +84,10 @@ export class MovingTimeSeriesPlot {
 		this.updateDomains();
 	}
 
+	public destroy() {
+		this.plot.destroy();
+	}
+
 	private updateDomains() {
 		let yDomain = Domain.of(this.plot.calculateYDomain());
 		let enlargement = yDomain.getLength() * this.yDomainEnlargement

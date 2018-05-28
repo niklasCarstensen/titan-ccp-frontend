@@ -14,9 +14,14 @@ import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 @Component
 export default class SensorHistoryPlot extends Vue {
     
+    private refreshIntervalinMs = 2000
+
     //private dataPoints = new Array<Array<any>>()
     @Prop({ required: true }) sensor!: Sensor
+
     private latest = 0
+
+    private plot!: MovingTimeSeriesPlot // Will definitely assigned in mounted
 
     private intervalId?: number
 
@@ -24,21 +29,37 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     mounted() {
-        //TODO Handle sensor changed
-        let plot = new MovingTimeSeriesPlot(this.$el);
-
-        // TODO fetch already earlier and then wait for mount
-        this.fetchNewData().then(dataPoints => plot.setDataPoints(dataPoints))
-
-        this.intervalId = setInterval(() => {
-            this.fetchNewData().then(dataPoints => plot.addDataPoints(dataPoints))     
-        }, 500)
+        this.createPlot()
     }
 
     destroyed() {
         if (this.intervalId) {
             clearInterval(this.intervalId)
         }
+    }
+
+    @Watch('sensor')
+    onSensorChanged(sensor: Sensor) {
+        this.destroyPlot()
+        this.createPlot()
+    }
+
+    private createPlot() {
+        this.plot = new MovingTimeSeriesPlot(this.$el)
+        // BETTER fetch already earlier and then wait for mount
+        this.fetchNewData().then(dataPoints => this.plot.setDataPoints(dataPoints))
+
+        this.intervalId = setInterval(() => {
+            this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))     
+        }, this.refreshIntervalinMs)
+    }
+
+    private destroyPlot() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId)
+        }
+        this.latest = 0
+        this.plot.destroy()
     }
 
     private fetchNewData(): Promise<DataPoint[]> {   
