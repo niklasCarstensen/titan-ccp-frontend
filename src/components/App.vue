@@ -26,45 +26,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#" v-on:click="makeActive('configuration')">
+                                    <span data-feather="home"></span>
+                                    Configuration
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" v-on:click="makeActive('examples')">
                                     <span data-feather="home"></span>
                                     Examples
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">
-                                <span data-feather="home"></span>
-                                Dashboard <span class="sr-only">(current)</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                <span data-feather="file"></span>
-                                Orders
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart"></span>
-                                Products
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                Customers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                <span data-feather="bar-chart-2"></span>
-                                Reports
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                <span data-feather="layers"></span>
-                                Integrations
                                 </a>
                             </li>
                         </ul>
@@ -75,6 +45,7 @@
                     <div v-if="show">
                         <dashboard v-if="isActive('dashboard')" :sensor="rootSensor" />
                         <sensor-details v-if="isActive('sensor-details')" :sensor="rootSensor" />
+                        <configuration v-if="isActive('configuration')" :sensorRegistry="sensorRegistry2" />
                         <examples v-if="isActive('examples')" />
                     </div>
                     <div v-if="!show" >Loading...</div>
@@ -96,18 +67,21 @@ import { SensorRegistryRequester } from '../SensorRegistry'
 
 import Dashboard from "./Dashboard.vue"
 import SensorDetails from "./SensorDetails.vue"
+import Configuration from "./Configuration.vue"
 import Examples from "./Examples.vue"
 
 @Component({
     components: {
         Dashboard,
         SensorDetails,
+        Configuration,
         Examples,
     }
 })
 export default class App extends Vue {
 
     private sensorRegistry = new SensorRegistryRequester().request()
+    private sensorRegistry2 = new SensorRegistry(new MachineSensor("--PENDING--"))
 
     private rootSensor: Sensor = new MachineSensor("--PENDING--")
     private show = false;
@@ -122,6 +96,7 @@ export default class App extends Vue {
                 //this.show = true
             }, 5000);
             this.rootSensor = registry.topLevelSensor
+            this.sensorRegistry2 = registry
             this.show = true  
         })
     }

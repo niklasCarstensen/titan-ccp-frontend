@@ -14,14 +14,14 @@ import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 @Component
 export default class SensorHistoryPlot extends Vue {
     
-    private refreshIntervalinMs = 2000
+    private refreshIntervalinMs = 1000
 
     //private dataPoints = new Array<Array<any>>()
     @Prop({ required: true }) sensor!: Sensor
 
     private latest = 0
 
-    private plot!: MovingTimeSeriesPlot // Will definitely assigned in mounted
+    private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
     private intervalId?: number
 
@@ -45,7 +45,9 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private createPlot() {
-        this.plot = new MovingTimeSeriesPlot(this.$el)
+        this.plot = new MovingTimeSeriesPlot(this.$el, {
+            plotStartsWithZero: true,
+        })
         // BETTER fetch already earlier and then wait for mount
         this.fetchNewData().then(dataPoints => this.plot.setDataPoints(dataPoints))
 
