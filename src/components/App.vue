@@ -15,25 +15,25 @@
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="#" v-on:click="makeActive('dashboard')">
-                                    <span data-feather="home"></span>
+                                    <font-awesome-icon icon="tachometer-alt" fixed-width class="feather" />
                                     Dashboard
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" v-on:click="makeActive('sensor-details')">
-                                    <span data-feather="home"></span>
+                                    <font-awesome-icon icon="chart-bar" fixed-width class="feather" />
                                     Sensor Details
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" v-on:click="makeActive('configuration')">
-                                    <span data-feather="home"></span>
+                                    <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" v-on:click="makeActive('examples')">
-                                    <span data-feather="home"></span>
+                                    <font-awesome-icon icon="play" fixed-width class="feather" />
                                     Examples
                                 </a>
                             </li>
@@ -63,6 +63,17 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+// @ts-ignore
+import fontawesome from '@fortawesome/fontawesome';
+// @ts-ignore
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+// @ts-ignore
+import fasliders from '@fortawesome/fontawesome-free-solid';
+
+fontawesome.library.add(fasliders);
+
+//Vue.component(FontAwesomeIcon.name, FontAwesomeIcon);
+
 import { SensorRegistryRequester } from '../SensorRegistry'
 
 import Dashboard from "./Dashboard.vue"
@@ -72,6 +83,8 @@ import Examples from "./Examples.vue"
 
 @Component({
     components: {
+        FontAwesomeIcon,
+
         Dashboard,
         SensorDetails,
         Configuration,
@@ -150,8 +163,8 @@ export default class App extends Vue {
 }
 
 .sidebar .nav-link .feather {
-  margin-right: 4px;
   color: #999;
+  margin-right: 4px;
 }
 
 .sidebar .nav-link.active {
