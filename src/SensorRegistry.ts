@@ -37,6 +37,19 @@ export class SensorRegistry {
         }
     }
 
+    public static flatCopy(sensorRegistry: SensorRegistry): SensorRegistry {
+        return new SensorRegistry(this.flatCopySensor(sensorRegistry.topLevelSensor))
+    }
+
+    private static flatCopySensor(sensor: Sensor): Sensor {
+        if (sensor instanceof AggregatedSensor) {
+            let children = sensor.children.map(child => this.flatCopySensor(child))
+            return new AggregatedSensor(sensor.identifier, children)
+        } else {
+            return new MachineSensor(sensor.identifier)
+        }
+    }
+
 }
 
 export type Sensor = AggregatedSensor | MachineSensor;
