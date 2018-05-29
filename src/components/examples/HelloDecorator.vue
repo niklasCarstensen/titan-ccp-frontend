@@ -13,7 +13,7 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class HelloDecorator extends Vue {
-    name = "Horst"
+    @Prop({ required: true }) name!: string
     @Prop({ required: true }) initialEnthusiasm!: number
 
     enthusiasm = this.initialEnthusiasm;
@@ -21,7 +21,6 @@ export default class HelloDecorator extends Vue {
 
 
     increment() {
-        this.name = this.name + "+"
         this.enthusiasm++;
     }
     decrement() {
