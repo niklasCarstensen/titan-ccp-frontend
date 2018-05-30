@@ -81,7 +81,7 @@ export default class Configuration extends Vue {
 
     save() {
         this.saving = true
-        HTTP_CONFIGURATION.put('sensor-registry/', this.modifiableSensorRegistry.toJson())  //TODO remove slash
+        HTTP_CONFIGURATION.put('sensor-registry', this.modifiableSensorRegistry.toJson())
             .catch(e => {
                 console.error(e)
             }).then(() => {

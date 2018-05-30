@@ -3,7 +3,7 @@ import { HTTP_CONFIGURATION } from "./http-common";
 export class SensorRegistryRequester {
     
     public request() {
-        return HTTP_CONFIGURATION.get('sensor-registry/') //TODO remove slash
+        return HTTP_CONFIGURATION.get('sensor-registry')
         .then(response => {
             // JSON responses are automatically parsed.
             //console.log(response.data);
