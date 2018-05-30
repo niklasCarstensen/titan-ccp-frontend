@@ -64,11 +64,11 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // @ts-ignore
-import fontawesome from '@fortawesome/fontawesome';
+import fontawesome from '@fortawesome/fontawesome'
 // @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 // @ts-ignore
-import fasliders from '@fortawesome/fontawesome-free-solid';
+import fasliders from '@fortawesome/fontawesome-free-solid'
 
 fontawesome.library.add(fasliders);
 

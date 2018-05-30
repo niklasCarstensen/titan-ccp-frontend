@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
-import { HTTP_CONFIGURATION } from "../http-common";
+import { HTTP_CONFIGURATION } from "../http-common"
 
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
