@@ -4,8 +4,8 @@
             <b-col>
                 <ul>   
                     <li>
-                        <div>{{ mySensorRegistry.topLevelSensor.identifier }}</div>
-                        <dragable-sensor-list :sensors="mySensorRegistry.topLevelSensor.children" />
+                        <div>{{ modifiableSensorRegistry.topLevelSensor.identifier }}</div>
+                        <dragable-sensor-list :sensors="modifiableSensorRegistry.topLevelSensor.children" />
                     </li>
                 </ul>
             </b-col>
@@ -20,10 +20,16 @@
             </b-col>
         </b-row>
         <b-row>
-            <pre><code>{{ sensorRegistryAsString }}</code></pre>
+            <b-button :disabled="saving" variant="success" @click="save">
+                <font-awesome-icon v-if="saving" icon="spinner" spin />
+                <template v-else>Save</template>
+            </b-button>
+        </b-row>    
+        <b-row>
+            <pre><code>{{ sensorRegistry.toPrettyJson() }}</code></pre>
         </b-row>
         <b-row>
-            <pre><code>{{ mySensorRegistryAsString }}</code></pre>
+            <pre><code>{{ modifiableSensorRegistry.toPrettyJson() }}</code></pre>
         </b-row>
     </b-container>
 </template>
@@ -31,10 +37,14 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
+import { HTTP_CONFIGURATION } from "../http-common";
 
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+// @ts-ignore
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
 
 // @ts-ignore
 import draggable from 'vuedraggable'
@@ -43,40 +53,44 @@ import DragableSensorList from './DragableSensorList.vue'
 
 @Component({
     components: {
+        DragableSensorList,
         draggable,
-        DragableSensorList
+        FontAwesomeIcon
     }
 })
 export default class Configuration extends Vue {
 
     @Prop({ required: true }) sensorRegistry!: SensorRegistry
 
-    mySensorRegistry: SensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry) //TODO
+    modifiableSensorRegistry: SensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry) //TODO
 
-    @Watch("sensorRegistry") //TODO
-    updateMySensorRegistry() {
-        return SensorRegistry.flatCopy(this.sensorRegistry)
-    }
+    saving = false
 
-    //TODO
+    // TODO
     unselectedSensors = [
         new MachineSensor("unused1"),
         new MachineSensor("unused2"),
         new MachineSensor("unused3")
     ]
 
-    get sensorRegistryAsString() {
-        return JSON.stringify(this.sensorRegistry, (key, val) => key != "parent" ? val : undefined, '\t');
+    
+    @Watch("sensorRegistry") //TODO
+    updateModifiableSensorRegistry() {
+        this.modifiableSensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry)
     }
 
-    get mySensorRegistryAsString() {
-        return JSON.stringify(this.mySensorRegistry, (key, val) => key != "parent" ? val : undefined, '\t');
+    save() {
+        this.saving = true
+        HTTP_CONFIGURATION.put('sensor-registry/', this.modifiableSensorRegistry.toJson())  //TODO remove slash
+            .catch(e => {
+                console.error(e)
+            }).then(() => {
+                    this.saving = false
+            })
     }
 
 }
 </script>
 
 <style scoped>
-
-
 </style>

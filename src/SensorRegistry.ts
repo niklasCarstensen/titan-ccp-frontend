@@ -3,7 +3,7 @@ import { HTTP_CONFIGURATION } from "./http-common";
 export class SensorRegistryRequester {
     
     public request() {
-        return HTTP_CONFIGURATION.get('sensor-registry/')
+        return HTTP_CONFIGURATION.get('sensor-registry/') //TODO remove slash
         .then(response => {
             // JSON responses are automatically parsed.
             //console.log(response.data);
@@ -24,6 +24,14 @@ export class SensorRegistry {
 
     public static parse(sensor: JsonSensor) : SensorRegistry {
         return new SensorRegistry(this.parseSensor(sensor))
+    }
+
+    public toJson(pretty?: boolean) {
+        return JSON.stringify(this.topLevelSensor, (key, val) => key != "parent" ? val : undefined, pretty ? '\t' : undefined)
+    }
+
+    public toPrettyJson() {
+        return this.toJson(true)
     }
 
     private static parseSensor(sensor: JsonSensor) : Sensor {
