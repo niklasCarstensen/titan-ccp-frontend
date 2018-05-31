@@ -80,6 +80,7 @@ export default class SensorHistoryPlot extends Vue {
                 return []
             });
     }
+
 }
 </script>
 

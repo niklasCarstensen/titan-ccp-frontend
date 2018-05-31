@@ -30,15 +30,6 @@ export default class SensorParents extends Vue {
     select(sensor: AggregatedSensor) {
     }
 
-    show(x: any) {
-        console.log(x)
-    }
-
-    print(x: any) {
-        console.log("hej")
-        console.log(x)
-    }
-
 }
 </script>
 

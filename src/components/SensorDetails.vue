@@ -61,7 +61,7 @@ export default class SensorDetails extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
 
-    get isAggregated() {
+    get isAggregated2() {
         return this.sensor instanceof AggregatedSensor
     }
 
