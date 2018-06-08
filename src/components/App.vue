@@ -103,11 +103,6 @@ export default class App extends Vue {
 
     created() {
         this.sensorRegistry.then(registry => {
-            //this.sensorRegistryAsString = JSON.stringify(registry, null, '\t')
-            setTimeout(() => {
-                //this.rootSensor = registry.topLevelSensor
-                //this.show = true
-            }, 5000);
             this.rootSensor = registry.topLevelSensor
             this.sensorRegistry2 = registry
             this.show = true  
@@ -163,7 +158,7 @@ export default class App extends Vue {
 }
 
 .sidebar .nav-link .feather {
-  color: #999;
+  color: #AAA;
   margin-right: 4px;
 }
 

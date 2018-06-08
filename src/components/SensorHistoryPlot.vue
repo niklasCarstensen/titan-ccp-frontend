@@ -19,7 +19,9 @@ export default class SensorHistoryPlot extends Vue {
     //private dataPoints = new Array<Array<any>>()
     @Prop({ required: true }) sensor!: Sensor
 
-    private latest = new Date().getTime() - (3600 * 1000) //TODO = 0
+    // TODO
+    private latest = 0
+    //private latest = new Date().getTime() - (3600 * 1000)
 
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
@@ -60,6 +62,8 @@ export default class SensorHistoryPlot extends Vue {
         if (this.intervalId) {
             clearInterval(this.intervalId)
         }
+        // TODO
+        //this.latest = 0
         this.latest = new Date().getTime() - (3600 * 1000)
         this.plot.destroy()
     }
