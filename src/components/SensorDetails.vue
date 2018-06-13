@@ -8,6 +8,17 @@
             </b-row>
             <b-row>
                 <b-col>
+                    <trend-arrow :sensor="sensor" />
+                </b-col>
+                <b-col>
+                    <trend-arrow :sensor="sensor" />
+                </b-col>
+                <b-col>
+                    <trend-arrow :sensor="sensor" />
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
                     <sensor-history-plot :sensor="sensor" />
                 </b-col>
             </b-row>
@@ -47,6 +58,7 @@ import SensorParents from "./SensorParents.vue"
 import DistributionPlot from "./DistributionPlot.vue"
 import CompositionPieChart from "./CompositionPieChart.vue"
 import SensorHistoryPlot from "./SensorHistoryPlot.vue"
+import TrendArrow from "./TrendArrow.vue"
 
 
 @Component({
@@ -55,6 +67,7 @@ import SensorHistoryPlot from "./SensorHistoryPlot.vue"
         SensorHistoryPlot,
         CompositionPieChart,
         DistributionPlot,
+        TrendArrow
     }
 })
 export default class SensorDetails extends Vue {
