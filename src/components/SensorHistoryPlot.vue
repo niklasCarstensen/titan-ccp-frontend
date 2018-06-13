@@ -21,7 +21,7 @@ export default class SensorHistoryPlot extends Vue {
 
     // TODO
     //private latest = 0
-    private latest = new Date().getTime() - (3600 * 1000)
+    private latest = new Date().getTime() - (48 * 3600 * 1000)
 
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
@@ -64,7 +64,7 @@ export default class SensorHistoryPlot extends Vue {
         }
         // TODO
         //this.latest = 0
-        this.latest = new Date().getTime() - (3600 * 1000)
+        this.latest = new Date().getTime() - (48 * 3600 * 1000)
         this.plot.destroy()
     }
 
@@ -77,7 +77,7 @@ export default class SensorHistoryPlot extends Vue {
                     this.latest = response.data[response.data.length - 1].timestamp
                 }
                 // TODO access sum generically
-                return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), this.sensor instanceof AggregatedSensor ? x.sumInWh : x.valueInWh));
+                return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), this.sensor instanceof AggregatedSensor ? x.sumInW : x.valueInW));
             })
             .catch(e => {
                 console.error(e);

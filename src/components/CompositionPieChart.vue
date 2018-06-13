@@ -45,9 +45,9 @@ export default class CompositionPieChart extends Vue {
                     if (response.data.length <= 0) {
                         value = 0
                     } else if (child instanceof AggregatedSensor) {
-                        value = response.data[0].sum
+                        value = response.data[0].sumInW
                     } else {
-                        value = response.data[0].powerConsumptionInWh
+                        value = response.data[0].valueInW
                     }
                     return <[string, number]> [child.identifier, value]
                 })

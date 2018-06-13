@@ -1,16 +1,24 @@
 <template>
-    <div class="card c3-container">
+    <div class="card">
+        <loading-spinner :is-loading="isLoading">
+            <div class="c3-container"></div>
+        </loading-spinner>
     </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import LoadingSpinner from "./LoadingSpinner.vue"
 import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from '../SensorRegistry'
 import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
 
-@Component
+@Component({
+    components: {
+        LoadingSpinner
+    }
+})
 export default class DistributionPlot extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
@@ -19,9 +27,11 @@ export default class DistributionPlot extends Vue {
 
     private chart!: ChartAPI
 
+    private isLoading = true
+
     mounted() {
         this.chart = generate({
-            bindto: this.$el,
+            bindto: this.$el.querySelector(".c3-container") as HTMLElement,
             data: {
                 x : 'x',
                 columns: [],
@@ -55,7 +65,7 @@ export default class DistributionPlot extends Vue {
                 let labels: string[] = ["x"]
                 let values: Array<string|number> = [this.sensor.identifier]
                 for (let bucket of response.data) {
-                    labels.push("" + bucket.lower + " - " + bucket.upper)
+                    labels.push("" + bucket.lower.toFixed(1) + " - " + bucket.upper.toFixed(1))
                     values.push(bucket.elements)
                 }
                 return [labels, values];
@@ -69,6 +79,7 @@ export default class DistributionPlot extends Vue {
                     columns: data,
                     unload: true
                 })
+                this.isLoading = false
             });
     }
 }
