@@ -14,14 +14,14 @@ import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 @Component
 export default class SensorHistoryPlot extends Vue {
     
-    private refreshIntervalinMs = 1000
+    private refreshIntervalInMs = 1000
 
     //private dataPoints = new Array<Array<any>>()
     @Prop({ required: true }) sensor!: Sensor
 
     // TODO
     //private latest = 0
-    private latest = new Date().getTime() - (48 * 3600 * 1000)
+    private latest = new Date().getTime() - (3600 * 1000)
 
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
@@ -51,11 +51,14 @@ export default class SensorHistoryPlot extends Vue {
             plotStartsWithZero: true,
         })
         // BETTER fetch already earlier and then wait for mount
-        this.fetchNewData().then(dataPoints => this.plot.setDataPoints(dataPoints))
-
-        this.intervalId = setInterval(() => {
-            this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))     
-        }, this.refreshIntervalinMs)
+        this.fetchNewData()
+            .then(dataPoints => this.plot.setDataPoints(dataPoints))
+            .then(() => {
+                this.intervalId = setInterval(() => {
+                    this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))     
+                }, this.refreshIntervalInMs)
+            })
+        
     }
 
     private destroyPlot() {
@@ -64,7 +67,7 @@ export default class SensorHistoryPlot extends Vue {
         }
         // TODO
         //this.latest = 0
-        this.latest = new Date().getTime() - (48 * 3600 * 1000)
+        this.latest = new Date().getTime() - (3600 * 1000)
         this.plot.destroy()
     }
 
