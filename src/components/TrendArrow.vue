@@ -30,8 +30,7 @@ export default class TrendArrow extends Vue {
 
     trendValue = -1
 
-    mounted() {
-        console.log("Sensor " + this.sensor.identifier)
+    created() {
         this.updateChart()
     }
 
@@ -42,8 +41,7 @@ export default class TrendArrow extends Vue {
 
     private updateChart() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        let after = new Date().getTime() - (3600 * 1000)
-        HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after.toMillis())
+        return HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after.toMillis())
             .then(response => {
                 this.trendValue = response.data as number
             })
@@ -118,9 +116,3 @@ export enum Timespan {
 }
 
 </script>
-
-<style scoped>
-    .c3-container {
-        height: 300px;
-    }
-</style>
