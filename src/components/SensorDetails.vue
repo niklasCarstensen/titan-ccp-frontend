@@ -8,13 +8,13 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <trend-arrow :sensor="sensor" />
+                    <trend-arrow :sensor="sensor" :timespan="trendLastHour" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="sensor" />
+                    <trend-arrow :sensor="sensor" :timespan="trendLastDay" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="sensor" />
+                    <trend-arrow :sensor="sensor" :timespan="trendLastWeek" />
                 </b-col>
             </b-row>
             <b-row>
@@ -59,6 +59,7 @@ import DistributionPlot from "./DistributionPlot.vue"
 import CompositionPieChart from "./CompositionPieChart.vue"
 import SensorHistoryPlot from "./SensorHistoryPlot.vue"
 import TrendArrow from "./TrendArrow.vue"
+import { Timespan } from "./TrendArrow.vue"
 
 
 @Component({
@@ -73,6 +74,10 @@ import TrendArrow from "./TrendArrow.vue"
 export default class SensorDetails extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
+
+    readonly trendLastHour = Timespan.LastHour
+    readonly trendLastDay = Timespan.LastDay
+    readonly trendLastWeek = Timespan.LastWeek
 
     get isAggregated() {
         return this.sensor instanceof AggregatedSensor

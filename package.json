@@ -17,11 +17,13 @@
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.9",
     "c3": "^0.6.0",
+    "luxon": "^1.2.1",
     "vue": "^2.5.16",
     "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "@types/c3": "^0.6.0",
+    "@types/luxon": "^0.5.3",
     "css-loader": "^0.28.9",
     "exports-loader": "^0.7.0",
     "ts-loader": "^4.2.0",
