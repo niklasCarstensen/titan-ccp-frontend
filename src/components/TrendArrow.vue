@@ -1,7 +1,8 @@
 <template>
     <div class="card text-center">
         <div class="card-body">
-            <font-awesome-icon icon="arrow-right" :transform="{ rotate: rotation }" size="4x" :class="color" />
+            <font-awesome-icon v-if="trendValue == -1" icon="minus" size="4x" class="text-muted" />
+            <font-awesome-icon v-else icon="arrow-right" :transform="{ rotate: rotation }" size="4x" :class="color" />
             <div class="text-muted">{{ text }}</div>
         </div>
     </div>
@@ -44,7 +45,7 @@ export default class TrendArrow extends Vue {
         let after = new Date().getTime() - (3600 * 1000)
         HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after.toMillis())
             .then(response => {
-                this.trendValue = 1 / response.data as number //TODO Temporary
+                this.trendValue = response.data as number
             })
             .catch(e => {
                 console.error(e)
