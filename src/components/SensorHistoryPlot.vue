@@ -21,7 +21,7 @@ export default class SensorHistoryPlot extends Vue {
 
     // TODO
     //private latest = 0
-    private latest = new Date().getTime() - (3600 * 1000)
+    private latest = new Date().getTime() - (24 * 3600 * 1000)
 
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 

@@ -14,41 +14,37 @@
                     <div class="sidebar-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="#" v-on:click="makeActive('dashboard')">
+                                <router-link to="/" class="nav-link">
                                     <font-awesome-icon icon="tachometer-alt" fixed-width class="feather" />
                                     Dashboard
-                                </a>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" v-on:click="makeActive('sensor-details')">
+                                <router-link to="/sensor-details" class="nav-link">
                                     <font-awesome-icon icon="chart-bar" fixed-width class="feather" />
                                     Sensor Details
-                                </a>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" v-on:click="makeActive('configuration')">
+                                <router-link to="/configuration" class="nav-link">
                                     <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration
-                                </a>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" v-on:click="makeActive('examples')">
+                                <router-link to="/examples" class="nav-link">
                                     <font-awesome-icon icon="play" fixed-width class="feather" />
                                     Examples
-                                </a>
+                                </router-link>
                             </li>
                         </ul>
                     </div>
                 </nav>
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                    <div v-if="show">
-                        <dashboard v-if="isActive('dashboard')" :sensor="rootSensor" />
-                        <sensor-details v-if="isActive('sensor-details')" :sensor="rootSensor" />
-                        <configuration v-if="isActive('configuration')" :sensorRegistry="sensorRegistry2" />
-                        <examples v-if="isActive('examples')" />
-                    </div>
-                    <div v-if="!show" >Loading...</div>
+                    <loading-spinner :is-loading="isLoading">
+                        <router-view :sensor="rootSensor" :sensorRegistry="sensorRegistry"></router-view>
+                    </loading-spinner>
                 </main>
             </div>
         </div>
@@ -57,6 +53,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import VueRouter from "vue-router"
 import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
 
 import BootstrapVue from 'bootstrap-vue'
@@ -76,6 +73,7 @@ fontawesome.library.add(fasliders);
 
 import { SensorRegistryRequester } from '../SensorRegistry'
 
+import LoadingSpinner from "./LoadingSpinner.vue"
 import Dashboard from "./Dashboard.vue"
 import SensorDetails from "./SensorDetails.vue"
 import Configuration from "./Configuration.vue"
@@ -84,7 +82,7 @@ import Examples from "./Examples.vue"
 @Component({
     components: {
         FontAwesomeIcon,
-
+        LoadingSpinner,
         Dashboard,
         SensorDetails,
         Configuration,
@@ -93,28 +91,18 @@ import Examples from "./Examples.vue"
 })
 export default class App extends Vue {
 
-    private sensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistry2 = new SensorRegistry(new MachineSensor("--PENDING--"))
+    private pendingSensorRegistry = new SensorRegistryRequester().request()
+    private sensorRegistry = new SensorRegistry(new MachineSensor("--PENDING--"))
 
     private rootSensor: Sensor = new MachineSensor("--PENDING--")
-    private show = false;
-
-    private activePage = "dashboard"
+    private isLoading = true;
 
     created() {
-        this.sensorRegistry.then(registry => {
+        this.pendingSensorRegistry.then(registry => {
             this.rootSensor = registry.topLevelSensor
-            this.sensorRegistry2 = registry
-            this.show = true  
+            this.sensorRegistry = registry
+            this.isLoading = false  
         })
-    }
-
-    private makeActive(page: string) {
-        this.activePage = page
-    }
-    
-    private isActive(page: string) {
-        return this.activePage === page
     }
 
 }
@@ -162,12 +150,14 @@ export default class App extends Vue {
   margin-right: 4px;
 }
 
+/*
 .sidebar .nav-link.active {
   color: #007bff;
 }
+*/
 
 .sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
+.sidebar .nav-link.router-link-exact-active .feather {
   color: inherit;
 }
 
