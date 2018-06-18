@@ -12,6 +12,7 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { AggregatedSensor, Sensor } from '../SensorRegistry'
 import { HTTP } from "../http-common";
+import Repeater from "../Repeater";
 import { DateTime } from "luxon"
 
 // @ts-ignore
@@ -30,13 +31,21 @@ export default class TrendArrow extends Vue {
 
     trendValue = -1
 
+    requester = new Repeater(this.updateChart, this.updateChart, 10_000)
+
     created() {
-        this.updateChart()
+        //this.updateChart()
+        this.requester.start()
+    }
+
+    destroyed() {
+        this.requester.stop()
     }
 
     @Watch('sensor')
     onSensorChanged() {
-        this.updateChart()
+        //this.updateChart()
+        this.requester.restart()
     }
 
     private updateChart() {
