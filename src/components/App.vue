@@ -26,6 +26,12 @@
                                 </router-link>
                             </li>
                             <li class="nav-item">
+                                <router-link to="/comparison" class="nav-link">
+                                    <font-awesome-icon icon="chart-bar" fixed-width class="feather" />
+                                    Comparison
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
                                 <router-link to="/configuration" class="nav-link">
                                     <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration

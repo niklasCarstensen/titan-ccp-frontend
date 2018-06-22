@@ -5,6 +5,7 @@ import App from "./components/App.vue"
 
 import Dashboard from "./components/Dashboard.vue"
 import SensorDetails from "./components/SensorDetails.vue"
+import Comparison from "./components/Comparison.vue"
 import Configuration from "./components/Configuration.vue"
 import Examples from "./components/Examples.vue"
 
@@ -23,6 +24,7 @@ Vue.use(VueRouter);
 const routes = [
   { path: '/', component: Dashboard },
   { path: '/sensor-details', component: SensorDetails },
+  { path: '/comparison', component: Comparison },
   { path: '/configuration', component: Configuration },
   { path: '/examples', component: Examples }
 ]
