@@ -1,14 +1,15 @@
 <template>
     <b-row>
-        <b-col>
+        <b-col sm="9">
             <div class="canvasplot-container"></div>
         </b-col>
-        <b-col>
-            <button class="destroy" @click="remove()">X</button>
+        <b-col sm="3">
+            <b-button-close @click="remove()" />
+            Sensors:
             <ul>
                 <li v-for="dataSet in dataSets" :key="dataSet.sensor">
                     {{ dataSet.sensor }}
-                    <button class="destroy" @click="removeDataSet(dataSet)">X</button>
+                    <b-button-close @click="removeDataSet(dataSet)" />
                 </li>
             </ul>
             <input autocomplete="off"

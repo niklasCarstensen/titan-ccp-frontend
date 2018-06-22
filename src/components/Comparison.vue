@@ -7,7 +7,9 @@
             @update-domain-x="updateDomainX"
             />
         <b-row>
-            <button @click="addPlot">Add Plot</button>
+            <b-button variant="success" @click="addPlot">
+                Add Plot
+            </b-button>
         </b-row>
     </b-container>
 </template>
