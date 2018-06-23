@@ -27,7 +27,7 @@
                             </li>
                             <li class="nav-item">
                                 <router-link to="/comparison" class="nav-link">
-                                    <font-awesome-icon icon="chart-bar" fixed-width class="feather" />
+                                    <font-awesome-icon icon="balance-scale" fixed-width class="feather" />
                                     Comparison
                                 </router-link>
                             </li>

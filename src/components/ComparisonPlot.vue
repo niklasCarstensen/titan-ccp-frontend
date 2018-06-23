@@ -8,14 +8,20 @@
             Sensors:
             <ul>
                 <li v-for="dataSet in dataSets" :key="dataSet.sensor">
-                    {{ dataSet.sensor }}
+                    {{ dataSet.sensor.identifier }}
                     <b-button-close @click="removeDataSet(dataSet)" />
                 </li>
             </ul>
-            <input autocomplete="off"
-                    placeholder="Sensor name"
-                    v-model="newDataSet"
-                    @keyup.enter="addDataSet(plot)">
+            <b-button variant="success" v-if="!addDataSetActive" @click="addDataSetActive = true">
+                Add
+            </b-button>
+            <treeselect v-else
+                v-model="newDataSet"
+                :options="[ this.sensorRegistry.topLevelSensor ]"
+                :normalizer="covertSensorToSelectable"
+                :clearable="false"
+                valueFormat="object"
+                @input="addDataSet()" />
         </b-col>
     </b-row>
 </template>
@@ -23,21 +29,39 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
-import { Sensor, AggregatedSensor, MachineSensor } from '../SensorRegistry'
+import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
 import ColorRepository from '../ColorRepository'
+// @ts-ignore
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { DataPoint } from '../MovingTimeSeriesPlot';
 declare var d3version3: any;
 
-@Component
+@Component({
+    components: {
+        Treeselect
+    }
+})
 export default class ComparisonPlot extends Vue {
 
     readonly after = new Date().getTime() - (1 * 3600 * 1000)
 
     readonly dataSets = new Array<DataSet>()
 
-    newDataSet = ""
+    newDataSet: Sensor|null = null
+
+    addDataSetActive = false
+
+    value = null
+
+    get options() {
+        return [ this.sensorRegistry.topLevelSensor ]
+    }
+
+    @Prop({ required: true })
+    sensorRegistry!: SensorRegistry
 
     @Prop() domainX!: Array<Date>
 
@@ -48,6 +72,21 @@ export default class ComparisonPlot extends Vue {
 
     get canvasplotContainer() {
         return this.$el.querySelector(".canvasplot-container")!
+    }
+
+    covertSensorToSelectable(sensor: Sensor) {
+        if (sensor instanceof AggregatedSensor) {
+            return {
+                    id: sensor.identifier,
+                    label: sensor.identifier,
+                    children: sensor.children
+                }
+        } else {
+            return {
+                    id: sensor.identifier,
+                    label: sensor.identifier
+                }
+        }
     }
 
     mounted() {
@@ -68,19 +107,27 @@ export default class ComparisonPlot extends Vue {
 
     removeDataSet(dataSet: DataSet) {
         this.dataSets.splice(this.dataSets.indexOf(dataSet), 1)
-        this.colors.free(dataSet.sensor)
-        this.plot.removeDataSet(dataSet.sensor)
+        this.colors.free(dataSet.sensor.identifier)
+        this.plot.removeDataSet(dataSet.sensor.identifier)
     }
 
     async addDataSet() {
-        let dataSet = new DataSet(this.newDataSet)
-        this.dataSets.push(dataSet)
-        this.newDataSet = ""
+        if (this.newDataSet) {
+            let dataSet = new DataSet(this.newDataSet)
+            this.dataSets.push(dataSet)
+            this.newDataSet = null
+            this.addDataSetActive = false
 
-        let color = this.colors.get(dataSet.sensor)
-        let updateDomains = true
-        let dataPoints = await this.fetchNewData(new MachineSensor(dataSet.sensor))
-        this.plot.addDataSet(dataSet.sensor, dataSet.sensor, dataPoints.map(dataPoint => dataPoint.toArray()), color, updateDomains, false)
+            let color = this.colors.get(dataSet.sensor.identifier)
+            let updateDomains = true
+            let dataPoints = await this.fetchNewData(dataSet.sensor)
+            this.plot.addDataSet(dataSet.sensor.identifier,
+                                dataSet.sensor.identifier,
+                                dataPoints.map(dataPoint => dataPoint.toArray()),
+                                color,
+                                updateDomains,
+                                false)
+        }
     }
 
     updatedView(except: any, xDomain: any, yDomain: any) {
@@ -95,7 +142,7 @@ export default class ComparisonPlot extends Vue {
         }
     }
 
-    private fetchNewData(sensor: Sensor): Promise<DataPoint[]> {   
+    private fetchNewData(sensor: Sensor): Promise<DataPoint[]> {
         let resource = sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
         return HTTP.get(resource + '/' + sensor.identifier + '?after=' + this.after)
             .then(response => {
@@ -113,7 +160,7 @@ export default class ComparisonPlot extends Vue {
 
 class DataSet {
 
-    constructor (readonly sensor: string) {}
+    constructor (readonly sensor: Sensor) {}
 
 }
 

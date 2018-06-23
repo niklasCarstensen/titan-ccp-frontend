@@ -1,6 +1,7 @@
 <template>
     <b-container class="">
         <comparison-plot v-for="plot in plots" :key="plot"
+            :sensorRegistry="sensorRegistry"
             :domainX="domainX"
             :colors="colorRepository"
             @remove="removePlot(plot)"
@@ -31,6 +32,9 @@ import ColorRepository from "../ColorRepository";
     }
 })
 export default class Comparision extends Vue {
+
+    @Prop({ required: true })
+    sensorRegistry!: SensorRegistry
 
     private plots = new Array<number>()
 
