@@ -49,7 +49,7 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <loading-spinner :is-loading="isLoading">
-                        <router-view :sensor="rootSensor" :sensorRegistry="sensorRegistry"></router-view>
+                        <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry"></router-view>
                     </loading-spinner>
                 </main>
             </div>
@@ -98,14 +98,12 @@ import Examples from "./Examples.vue"
 export default class App extends Vue {
 
     private pendingSensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistry = new SensorRegistry(new MachineSensor("--PENDING--", "")) //TODO
+    private sensorRegistry: SensorRegistry | null = null
 
-    private rootSensor: Sensor = new MachineSensor("--PENDING--", "") //TODO
     private isLoading = true;
 
     created() {
         this.pendingSensorRegistry.then(registry => {
-            this.rootSensor = registry.topLevelSensor
             this.sensorRegistry = registry
             this.isLoading = false  
         })

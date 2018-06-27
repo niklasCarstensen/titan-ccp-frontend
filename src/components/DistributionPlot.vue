@@ -19,7 +19,7 @@ import 'c3/c3.css';
         LoadingSpinner
     }
 })
-export default class DistributionPlot extends Vue {
+export default class DistributionPlot extends Vue { //TODO Rename to histogram
 
     @Prop({ required: true }) sensor!: Sensor
 
