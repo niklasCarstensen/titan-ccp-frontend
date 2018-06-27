@@ -68,9 +68,9 @@ export default class Configuration extends Vue {
 
     // TODO
     unselectedSensors = [
-        new MachineSensor("unused1"),
-        new MachineSensor("unused2"),
-        new MachineSensor("unused3")
+        new MachineSensor("unused1", ""),
+        new MachineSensor("unused2", ""),
+        new MachineSensor("unused3", "")
     ]
 
     

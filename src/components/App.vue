@@ -98,9 +98,9 @@ import Examples from "./Examples.vue"
 export default class App extends Vue {
 
     private pendingSensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistry = new SensorRegistry(new MachineSensor("--PENDING--"))
+    private sensorRegistry = new SensorRegistry(new MachineSensor("--PENDING--", "")) //TODO
 
-    private rootSensor: Sensor = new MachineSensor("--PENDING--")
+    private rootSensor: Sensor = new MachineSensor("--PENDING--", "") //TODO
     private isLoading = true;
 
     created() {

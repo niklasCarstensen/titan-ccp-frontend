@@ -59,20 +59,12 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
-import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
 
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import { SensorRegistryRequester } from '../SensorRegistry'
-
 import Main2 from "./Main2.vue"
-
-import SensorDetails from "./SensorDetails.vue"
-import DistributionPlot from "./DistributionPlot.vue"
-import CompositionPieChart from "./CompositionPieChart.vue"
-import SensorHistoryPlot from "./SensorHistoryPlot.vue"
 
 import HelloDecorator from "./examples/HelloDecorator.vue"
 import AxiosExample from "./examples/AxiosExample.vue"
@@ -84,11 +76,6 @@ import C3PieExample from "./examples/C3PieExample.vue"
 
 @Component({
     components: {
-        SensorHistoryPlot,
-        CompositionPieChart,
-        DistributionPlot,
-        SensorDetails,
-
         HelloDecorator,
         AxiosExample,
         CanvasTimeSeriesPlotExample,
@@ -101,10 +88,6 @@ export default class Examples extends Vue {
 
     readonly name = "World"
 
-    private sensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistryAsString = ""
-
-    private rootSensor: Sensor = new MachineSensor("--PENDING--")
     private show = false;
 
 }
