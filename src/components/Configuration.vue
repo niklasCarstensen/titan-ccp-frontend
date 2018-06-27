@@ -2,18 +2,21 @@
     <b-container>
         <b-row>
             <b-col>
-                <ul>   
-                    <li>
-                        <div>{{ modifiableSensorRegistry.topLevelSensor.identifier }}</div>
+                <ul class="list-group list-group-root">   
+                    <li class="list-group-item">
+                        <div>
+                            {{modifiableSensorRegistry.topLevelSensor.name}}
+                            <code>{{modifiableSensorRegistry.topLevelSensor.identifier}}</code>
+                        </div>
                         <dragable-sensor-list :sensors="modifiableSensorRegistry.topLevelSensor.children" />
                     </li>
                 </ul>
             </b-col>
             <b-col>
-                <ul>
+                <ul class="list-group">
                     <draggable v-model="unselectedSensors" class="dragArea" :options="{group:'people'}">
-                        <li v-for="sensor in unselectedSensors" :key="sensor.identifier">
-                            {{sensor.identifier}}
+                        <li v-for="sensor in unselectedSensors" :key="sensor.identifier" class="list-group-item">
+                            {{sensor.name}} <code>{{sensor.identifier}}</code>
                         </li>
                     </draggable>
                 </ul>
@@ -93,4 +96,29 @@ export default class Configuration extends Vue {
 </script>
 
 <style scoped>
+
+.list-group.list-group-root {
+  
+}
+
+.list-group.list-group-root .list-group {
+  
+}
+
+.list-group.list-group-root .list-group-item {
+  
+}
+
+.list-group.list-group-root > .list-group-item:first-child {
+  
+}
+
+.list-group.list-group-root > .list-group > .list-group-item {
+  
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group-item {
+  
+}
+
 </style>

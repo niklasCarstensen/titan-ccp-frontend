@@ -1,8 +1,8 @@
 <template>
-    <ul>
+    <ul class="list-group">
         <draggable :list="sensors" :options="{group:'people'}" @start="drag=true" @end="drag=false" class="dragArea">
-            <li v-for="sensor in sensors" :key="sensor.id">
-                <div>{{sensor.identifier}}</div>
+            <li v-for="sensor in sensors" :key="sensor.id" class="list-group-item">
+                <div>{{sensor.name}} <code>{{sensor.identifier}}</code></div>
                 <div v-if="isAggregatedSensor(sensor)">
                     <DragableSensorList :sensors="sensor.children" />
                 </div>
