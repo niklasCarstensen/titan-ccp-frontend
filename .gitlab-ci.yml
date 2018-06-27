@@ -14,3 +14,20 @@ build:
   tags:
     - dockerex
   script: npm run build
+  
+deploy:
+  stage: deploy
+  tags:
+    - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build --pull -t titan-ccp-frontend .
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:latest
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:$(date +%Y%m%d%H%M%S)
+    - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
+    - docker push industrialdevops/titan-ccp-frontend
+    - docker logout
+  only:
+    - master
