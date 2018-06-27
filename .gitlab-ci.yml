@@ -1,8 +1,5 @@
 image: node:latest
 
-before_script:
-  - npm install --no-progress
-
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
@@ -13,7 +10,14 @@ build:
   stage: build
   tags:
     - dockerex
-  script: npm run build
+  script:
+    - npm install --no-progress
+    - npm run build
+  artifacts:
+    paths:
+    - dist/
+    - index.html
+
   
 deploy:
   stage: deploy
