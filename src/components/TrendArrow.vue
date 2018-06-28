@@ -15,14 +15,7 @@ import { HTTP } from "../http-common";
 import Repeater from "../Repeater";
 import { DateTime } from "luxon"
 
-// @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-
-@Component({
-    components: {
-        FontAwesomeIcon
-    }
-})
+@Component
 export default class TrendArrow extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor

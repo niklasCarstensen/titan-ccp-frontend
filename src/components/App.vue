@@ -66,17 +66,6 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// @ts-ignore
-import fontawesome from '@fortawesome/fontawesome'
-// @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-// @ts-ignore
-import fasliders from '@fortawesome/fontawesome-free-solid'
-
-fontawesome.library.add(fasliders);
-
-//Vue.component(FontAwesomeIcon.name, FontAwesomeIcon);
-
 import { SensorRegistryRequester } from '../SensorRegistry'
 
 import LoadingSpinner from "./LoadingSpinner.vue"
@@ -87,7 +76,6 @@ import Examples from "./Examples.vue"
 
 @Component({
     components: {
-        FontAwesomeIcon,
         LoadingSpinner,
         Dashboard,
         SensorDetails,

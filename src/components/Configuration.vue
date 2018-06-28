@@ -33,9 +33,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-
-// @ts-ignore
 import draggable from 'vuedraggable'
 
 import DragableSensorList from './DragableSensorList.vue'
@@ -45,8 +42,7 @@ import SensorRegistryEntry from './SensorRegistryEntry.vue'
     components: {
         DragableSensorList,
         SensorRegistryEntry,
-        draggable,
-        FontAwesomeIcon
+        draggable
     }
 })
 export default class Configuration extends Vue {

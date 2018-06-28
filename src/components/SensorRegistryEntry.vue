@@ -8,7 +8,7 @@
         <span v-else-if="sensor.name != ''" class="mr-3">{{sensor.name}}</span>
         <code class="mr-auto">{{sensor.identifier}}</code>
         <b-button v-if="!edit" @click="edit = true" :variant="'link'" class="text-muted">
-            <font-awesome-icon icon="edit" />
+            <font-awesome-icon icon="pen" />
         </b-button>
         {{ sensor.parent }}
         <b-button v-if="sensor.identifier" @click="$emit('remove')" :variant="'link'" class="text-muted">
@@ -25,14 +25,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-
-@Component({
-    components: {
-        FontAwesomeIcon
-    }
-})
+@Component
 export default class SensorRegistryEntry extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
