@@ -2,24 +2,10 @@
     <b-container>
         <b-row>
             <b-col>
-                <ul class="list-group list-group-root">   
-                    <li class="list-group-item">
-                        <div>
-                            {{modifiableSensorRegistry.topLevelSensor.name}}
-                            <code>{{modifiableSensorRegistry.topLevelSensor.identifier}}</code>
-                        </div>
-                        <dragable-sensor-list :sensors="modifiableSensorRegistry.topLevelSensor.children" />
-                    </li>
-                </ul>
+                <dragable-sensor-list :sensors="[modifiableSensorRegistry.topLevelSensor]" />
             </b-col>
             <b-col>
-                <ul class="list-group">
-                    <draggable v-model="unselectedSensors" class="dragArea" :options="{group:'people'}">
-                        <li v-for="sensor in unselectedSensors" :key="sensor.identifier" class="list-group-item">
-                            {{sensor.name}} <code>{{sensor.identifier}}</code>
-                        </li>
-                    </draggable>
-                </ul>
+                <dragable-sensor-list :sensors="unselectedSensors" />
             </b-col>
         </b-row>
         <b-row>
@@ -53,10 +39,12 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
 import draggable from 'vuedraggable'
 
 import DragableSensorList from './DragableSensorList.vue'
+import SensorRegistryEntry from './SensorRegistryEntry.vue'
 
 @Component({
     components: {
         DragableSensorList,
+        SensorRegistryEntry,
         draggable,
         FontAwesomeIcon
     }
