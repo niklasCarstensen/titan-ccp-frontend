@@ -9,10 +9,12 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-button :disabled="saving" variant="success" @click="save">
-                <font-awesome-icon v-if="saving" icon="spinner" spin />
-                <template v-else>Save</template>
-            </b-button>
+            <b-col>
+                <b-button :disabled="saving" variant="success" @click="save">
+                    <font-awesome-icon v-if="saving" icon="spinner" spin />
+                    <template v-else>Save</template>
+                </b-button>
+            </b-col>
         </b-row>    
         <b-row>
             <pre><code>{{ sensorRegistry.toPrettyJson() }}</code></pre>
