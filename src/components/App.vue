@@ -104,12 +104,6 @@ export default class App extends Vue {
 
 <style scoped>
 
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
 /*
  * Sidebar
  */
