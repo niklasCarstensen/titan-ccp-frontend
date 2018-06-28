@@ -33,8 +33,6 @@ export default class DragableSensorList extends Vue {
 
     @Prop({ required: true }) sensors!: Sensor[]
 
-    //@Prop() indention
-
     private isAggregatedSensor = (sensor: Sensor)  => sensor instanceof AggregatedSensor
     
     private remove(sensor: Sensor) {

@@ -84,29 +84,4 @@ export default class Configuration extends Vue {
 </script>
 
 <style scoped>
-
-.list-group.list-group-root {
-  
-}
-
-.list-group.list-group-root .list-group {
-  
-}
-
-.list-group.list-group-root .list-group-item {
-  
-}
-
-.list-group.list-group-root > .list-group-item:first-child {
-  
-}
-
-.list-group.list-group-root > .list-group > .list-group-item {
-  
-}
-
-.list-group.list-group-root > .list-group > .list-group > .list-group-item {
-  
-}
-
 </style>
