@@ -50,7 +50,7 @@
                 </nav>
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                    <loading-spinner :is-loading="isLoading">
+                    <loading-spinner :is-loading="isLoading" :is-error="isError">
                         <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry" @update:sensor-registry="loadSensorRegistry"></router-view>
                     </loading-spinner>
                 </main>
@@ -91,10 +91,16 @@ export default class App extends Vue {
 
     private isLoading = false
 
+    private isError = false
+
     created() {
         this.isLoading = true;
         this.loadSensorRegistry().then(_ => {
             this.isLoading = false
+        }).catch(e => {
+            this.isLoading = false
+            this.isError = true
+            console.error(e)
         })
     }
 

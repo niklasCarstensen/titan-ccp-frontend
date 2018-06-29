@@ -1,7 +1,8 @@
 <template>
     <div>
         <span v-if="isLoading">Loading...</span>
-        <div v-show="!isLoading">
+        <span v-else-if="isError">Error</span>
+        <div v-show="!isLoading&&!isError">
             <slot></slot>
         </div>
     </div>
@@ -18,6 +19,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default class LoadingSpinner extends Vue {
 
     @Prop({ required: true }) isLoading!: Boolean
+
+    @Prop() isError: Boolean = false
 
 }
 </script>

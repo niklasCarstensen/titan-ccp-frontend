@@ -4,17 +4,11 @@ export class SensorRegistryRequester {
     
     public request() {
         return HTTP.get('sensor-registry')
-        .then(response => {
-            // JSON responses are automatically parsed.
-            //console.log(response.data);
-            return SensorRegistry.parse(<JsonSensor> response.data)
-        })
-        .catch(e => {
-            console.error(e)
-            // TODO
-            return new SensorRegistry(new MachineSensor("", ""))
-        });
-
+            .then(response => {
+                // JSON responses are automatically parsed.
+                //console.log(response.data);
+                return SensorRegistry.parse(<JsonSensor> response.data)
+            })
     }
 
 }
