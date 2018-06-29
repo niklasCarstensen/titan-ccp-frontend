@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
-import { HTTP_CONFIGURATION } from "../http-common"
+import { HTTP } from "../http-common"
 
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -70,11 +70,11 @@ export default class Configuration extends Vue {
 
     save() {
         this.saving = true
-        HTTP_CONFIGURATION.put('sensor-registry', this.modifiableSensorRegistry.toJson())
+        HTTP.put('sensor-registry', this.modifiableSensorRegistry.toJson())
             .catch(e => {
                 console.error(e)
             }).then(() => {
-                    this.saving = false
+                this.saving = false
             })
     }
 

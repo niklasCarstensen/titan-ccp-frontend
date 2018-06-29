@@ -1,9 +1,9 @@
-import { HTTP_CONFIGURATION } from "./http-common";
+import { HTTP } from "./http-common";
 
 export class SensorRegistryRequester {
     
     public request() {
-        return HTTP_CONFIGURATION.get('sensor-registry')
+        return HTTP.get('sensor-registry')
         .then(response => {
             // JSON responses are automatically parsed.
             //console.log(response.data);
@@ -11,6 +11,7 @@ export class SensorRegistryRequester {
         })
         .catch(e => {
             console.error(e)
+            // TODO
             return new SensorRegistry(new MachineSensor("", ""))
         });
 
