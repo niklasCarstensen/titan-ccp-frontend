@@ -74,6 +74,7 @@ export default class Configuration extends Vue {
             .catch(e => {
                 console.error(e)
             }).then(() => {
+                this.$emit('update:sensor-registry')
                 this.saving = false
             })
     }

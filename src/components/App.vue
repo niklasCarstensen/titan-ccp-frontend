@@ -51,7 +51,7 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <loading-spinner :is-loading="isLoading">
-                        <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry"></router-view>
+                        <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry" @update:sensor-registry="loadSensorRegistry"></router-view>
                     </loading-spinner>
                 </main>
             </div>
@@ -87,15 +87,21 @@ import Examples from "./Examples.vue"
 })
 export default class App extends Vue {
 
-    private pendingSensorRegistry = new SensorRegistryRequester().request()
     private sensorRegistry: SensorRegistry | null = null
 
-    private isLoading = true;
+    private isLoading = false
 
     created() {
-        this.pendingSensorRegistry.then(registry => {
+        this.isLoading = true;
+        this.loadSensorRegistry().then(_ => {
+            this.isLoading = false
+        })
+    }
+
+    loadSensorRegistry() {
+        return new SensorRegistryRequester().request().then(registry => {
             this.sensorRegistry = registry
-            this.isLoading = false  
+            return registry
         })
     }
 
