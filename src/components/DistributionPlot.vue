@@ -19,7 +19,7 @@ import 'c3/c3.css';
         LoadingSpinner
     }
 })
-export default class DistributionPlot extends Vue {
+export default class DistributionPlot extends Vue { //TODO Rename to histogram
 
     @Prop({ required: true }) sensor!: Sensor
 
@@ -59,7 +59,8 @@ export default class DistributionPlot extends Vue {
 
     private createPlot() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?buckets=' + this.buckets)
+        let after = new Date().getTime() - (24 * 3600 * 1000)
+        HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?after=' + after + '&buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]

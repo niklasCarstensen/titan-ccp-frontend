@@ -5,12 +5,27 @@ import App from "./components/App.vue"
 
 import Dashboard from "./components/Dashboard.vue"
 import SensorDetails from "./components/SensorDetails.vue"
+import Comparison from "./components/Comparison.vue"
 import Configuration from "./components/Configuration.vue"
 import Examples from "./components/Examples.vue"
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 Vue.use(BootstrapVue);
 
+library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+//Vue.config.productionTip = false
+
 Vue.use(VueRouter);
+
+Vue.directive('focus', {
+  inserted: function (el) {
+    el.focus()
+  }
+})
 
 // 0. If using a module system (e.g. via vue-cli), import Vue and VueRouter
 // and then call `Vue.use(VueRouter)`.
@@ -23,6 +38,7 @@ Vue.use(VueRouter);
 const routes = [
   { path: '/', component: Dashboard },
   { path: '/sensor-details', component: SensorDetails },
+  { path: '/comparison', component: Comparison },
   { path: '/configuration', component: Configuration },
   { path: '/examples', component: Examples }
 ]

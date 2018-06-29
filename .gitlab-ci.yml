@@ -1,8 +1,5 @@
 image: node:latest
 
-before_script:
-  - npm install --no-progress
-
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
@@ -13,4 +10,28 @@ build:
   stage: build
   tags:
     - dockerex
-  script: npm run build
+  script:
+    - npm install --no-progress
+    - npm run build
+  artifacts:
+    paths:
+    - dist/
+    - index.html
+
+  
+deploy:
+  stage: deploy
+  tags:
+    - dockerex
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build --pull -t titan-ccp-frontend .
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:latest
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:$(date +%Y%m%d%H%M%S)
+    - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
+    - docker push industrialdevops/titan-ccp-frontend
+    - docker logout
+  only:
+    - master

@@ -1,7 +1,9 @@
 <template>
     <div>
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Titan Control Center</a>
+            <router-link to="/" class="navbar-brand col-sm-3 col-md-2 mr-0">
+                Titan Control Center
+            </router-link>
             <ul class="navbar-nav px-3">
                 <li class="nav-item text-nowrap">
                 <a class="nav-link" href="#">Sign out</a>
@@ -26,6 +28,12 @@
                                 </router-link>
                             </li>
                             <li class="nav-item">
+                                <router-link to="/comparison" class="nav-link">
+                                    <font-awesome-icon icon="balance-scale" fixed-width class="feather" />
+                                    Comparison
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
                                 <router-link to="/configuration" class="nav-link">
                                     <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration
@@ -43,7 +51,7 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <loading-spinner :is-loading="isLoading">
-                        <router-view :sensor="rootSensor" :sensorRegistry="sensorRegistry"></router-view>
+                        <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry"></router-view>
                     </loading-spinner>
                 </main>
             </div>
@@ -60,17 +68,6 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-// @ts-ignore
-import fontawesome from '@fortawesome/fontawesome'
-// @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-// @ts-ignore
-import fasliders from '@fortawesome/fontawesome-free-solid'
-
-fontawesome.library.add(fasliders);
-
-//Vue.component(FontAwesomeIcon.name, FontAwesomeIcon);
-
 import { SensorRegistryRequester } from '../SensorRegistry'
 
 import LoadingSpinner from "./LoadingSpinner.vue"
@@ -81,7 +78,6 @@ import Examples from "./Examples.vue"
 
 @Component({
     components: {
-        FontAwesomeIcon,
         LoadingSpinner,
         Dashboard,
         SensorDetails,
@@ -92,14 +88,12 @@ import Examples from "./Examples.vue"
 export default class App extends Vue {
 
     private pendingSensorRegistry = new SensorRegistryRequester().request()
-    private sensorRegistry = new SensorRegistry(new MachineSensor("--PENDING--"))
+    private sensorRegistry: SensorRegistry | null = null
 
-    private rootSensor: Sensor = new MachineSensor("--PENDING--")
     private isLoading = true;
 
     created() {
         this.pendingSensorRegistry.then(registry => {
-            this.rootSensor = registry.topLevelSensor
             this.sensorRegistry = registry
             this.isLoading = false  
         })
@@ -109,12 +103,6 @@ export default class App extends Vue {
 </script>
 
 <style scoped>
-
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
 
 /*
  * Sidebar

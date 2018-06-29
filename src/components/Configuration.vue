@@ -2,28 +2,19 @@
     <b-container>
         <b-row>
             <b-col>
-                <ul>   
-                    <li>
-                        <div>{{ modifiableSensorRegistry.topLevelSensor.identifier }}</div>
-                        <dragable-sensor-list :sensors="modifiableSensorRegistry.topLevelSensor.children" />
-                    </li>
-                </ul>
+                <dragable-sensor-list :sensors="[modifiableSensorRegistry.topLevelSensor]" />
             </b-col>
             <b-col>
-                <ul>
-                    <draggable v-model="unselectedSensors" class="dragArea" :options="{group:'people'}">
-                        <li v-for="sensor in unselectedSensors" :key="sensor.identifier">
-                            {{sensor.identifier}}
-                        </li>
-                    </draggable>
-                </ul>
+                <dragable-sensor-list :sensors="unselectedSensors" />
             </b-col>
         </b-row>
         <b-row>
-            <b-button :disabled="saving" variant="success" @click="save">
-                <font-awesome-icon v-if="saving" icon="spinner" spin />
-                <template v-else>Save</template>
-            </b-button>
+            <b-col>
+                <b-button :disabled="saving" variant="success" @click="save">
+                    <font-awesome-icon v-if="saving" icon="spinner" spin />
+                    <template v-else>Save</template>
+                </b-button>
+            </b-col>
         </b-row>    
         <b-row>
             <pre><code>{{ sensorRegistry.toPrettyJson() }}</code></pre>
@@ -44,18 +35,16 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // @ts-ignore
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
-
-// @ts-ignore
 import draggable from 'vuedraggable'
 
 import DragableSensorList from './DragableSensorList.vue'
+import SensorRegistryEntry from './SensorRegistryEntry.vue'
 
 @Component({
     components: {
         DragableSensorList,
-        draggable,
-        FontAwesomeIcon
+        SensorRegistryEntry,
+        draggable
     }
 })
 export default class Configuration extends Vue {
@@ -68,9 +57,9 @@ export default class Configuration extends Vue {
 
     // TODO
     unselectedSensors = [
-        new MachineSensor("unused1"),
-        new MachineSensor("unused2"),
-        new MachineSensor("unused3")
+        new MachineSensor("unused1", ""),
+        new MachineSensor("unused2", ""),
+        new MachineSensor("unused3", "")
     ]
 
     
