@@ -29,7 +29,7 @@
                 <b-col cols="6">
                     <b-list-group>
                         <b-list-group-item href="#" v-for="child in sensor.children" :key="child.identifier" v-on:click="sensor = child" >
-                            {{ child.identifier}}
+                            {{ child.title}}
                         </b-list-group-item>
                     </b-list-group>
                 </b-col>

@@ -8,7 +8,7 @@
             Sensors:
             <ul>
                 <li v-for="dataSet in dataSets" :key="dataSet.sensor">
-                    {{ dataSet.sensor.identifier }}
+                    {{ dataSet.sensor.title }}
                     <b-button-close @click="removeDataSet(dataSet)" />
                 </li>
             </ul>
@@ -78,13 +78,13 @@ export default class ComparisonPlot extends Vue {
         if (sensor instanceof AggregatedSensor) {
             return {
                     id: sensor.identifier,
-                    label: sensor.identifier,
+                    label: sensor.title,
                     children: sensor.children
                 }
         } else {
             return {
                     id: sensor.identifier,
-                    label: sensor.identifier
+                    label: sensor.title
                 }
         }
     }
@@ -122,7 +122,7 @@ export default class ComparisonPlot extends Vue {
             let updateDomains = true
             let dataPoints = await this.fetchNewData(dataSet.sensor)
             this.plot.addDataSet(dataSet.sensor.identifier,
-                                dataSet.sensor.identifier,
+                                dataSet.sensor.title,
                                 dataPoints.map(dataPoint => dataPoint.toArray()),
                                 color,
                                 updateDomains,

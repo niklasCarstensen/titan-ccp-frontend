@@ -1,7 +1,7 @@
 <template>
     <b-breadcrumb>
-        <b-breadcrumb-item v-for="sensor in parents" :key="sensor.identifier" @click="select(sensor)" href="#" :text="sensor.identifier" />
-        <b-breadcrumb-item active :text="sensor.identifier" />
+        <b-breadcrumb-item v-for="sensor in parents" :key="sensor.identifier" @click="select(sensor)" href="#" :text="sensor.title" />
+        <b-breadcrumb-item active :text="sensor.title" />
     </b-breadcrumb>
 </template>
 

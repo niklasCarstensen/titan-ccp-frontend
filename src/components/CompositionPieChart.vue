@@ -49,11 +49,11 @@ export default class CompositionPieChart extends Vue {
                     } else {
                         value = response.data[0].valueInW
                     }
-                    return <[string, number]> [child.identifier, value]
+                    return <[string, number]> [child.title, value]
                 })
                 .catch(e => {
                     console.error(e)
-                    return <[string, number]> [child.identifier, 0]
+                    return <[string, number]> [child.title, 0]
                 });
         })).then(columns => {
             this.chart.load({

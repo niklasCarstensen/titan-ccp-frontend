@@ -63,6 +63,10 @@ export class AggregatedSensor {
 
     public parent?: AggregatedSensor //TODO make nicer
 
+    get title() {
+        return this.name != '' ? this.name : this.identifier;
+    }
+
 }
 
 export class MachineSensor {
@@ -70,6 +74,10 @@ export class MachineSensor {
     constructor(readonly identifier: string, readonly name: string) {}
 
     parent?: AggregatedSensor //TODO make nicer
+
+    get title() {
+        return this.name != '' ? this.name : this.identifier;
+    }
 
 }
 
