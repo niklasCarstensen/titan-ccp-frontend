@@ -2,6 +2,17 @@
     <b-container class="">
         <b-row class="mb-4">
             <b-col>
+                <trend-arrow :sensor="sensor" :timespan="trendLastHour" />
+            </b-col>
+            <b-col>
+                <trend-arrow :sensor="sensor" :timespan="trendLastDay" />
+            </b-col>
+            <b-col>
+                <trend-arrow :sensor="sensor" :timespan="trendLastWeek" />
+            </b-col>
+        </b-row>
+        <b-row class="mb-4">
+            <b-col>
                 <sensor-history-plot :sensor="sensor" />
             </b-col>
         </b-row>
@@ -31,6 +42,8 @@ import SensorDetails from "./SensorDetails.vue"
 import DistributionPlot from "./DistributionPlot.vue"
 import CompositionPieChart from "./CompositionPieChart.vue"
 import SensorHistoryPlot from "./SensorHistoryPlot.vue"
+import TrendArrow from "./TrendArrow.vue"
+import { Timespan } from "./TrendArrow.vue"
 
 import Examples from "./Examples.vue"
 
@@ -39,11 +52,16 @@ import Examples from "./Examples.vue"
         SensorHistoryPlot,
         CompositionPieChart,
         DistributionPlot,
+        TrendArrow
     }
 })
 export default class App extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
+
+    readonly trendLastHour = Timespan.LastHour
+    readonly trendLastDay = Timespan.LastDay
+    readonly trendLastWeek = Timespan.LastWeek
 
 }
 </script>
