@@ -147,8 +147,9 @@ export default class ComparisonPlot extends Vue {
     }
 
     private fetchNewData(sensor: Sensor): Promise<DataPoint[]> {
-        let resource = sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
-        return HTTP.get(resource + '/' + sensor.identifier + '?after=' + this.after)
+        let resource = sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
+        let after = sensor.identifier == '46' ? 1530372100000 : this.after // Temporary hack to reduce amount of data in live demo
+        return HTTP.get(resource + '/' + sensor.identifier + '?after=' + after)
             .then(response => {
                 // JSON responses are automatically parsed.
                 // TODO access sum generically
