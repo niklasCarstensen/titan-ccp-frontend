@@ -1,5 +1,11 @@
 <template>
-    <div class="card canvasplot-container">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Active Power Consumption</h5>
+            <loading-spinner :is-loading="isLoading" :is-error="isError">
+                <div class="canvasplot-container"></div>
+            </loading-spinner>
+        </div>
     </div>
 </template>
 
@@ -7,11 +13,16 @@
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from '../SensorRegistry'
+import LoadingSpinner from "./LoadingSpinner.vue"
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 
-@Component
+@Component({
+    components: {
+        LoadingSpinner
+    }
+})
 export default class SensorHistoryPlot extends Vue {
     
     private refreshIntervalInMs = 1000
@@ -23,9 +34,16 @@ export default class SensorHistoryPlot extends Vue {
     //private latest = 0
     private latest = new Date().getTime() - (3600 * 1000)
 
+    private isLoading = false
+    private isError = false
+
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
     private intervalId?: number
+
+    get canvasplotContainer() {
+        return this.$el.querySelector(".canvasplot-container")! as HTMLElement
+    }
 
     created() {
     }
@@ -47,13 +65,22 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private createPlot() {
-        this.plot = new MovingTimeSeriesPlot(this.$el, {
+        this.plot = new MovingTimeSeriesPlot(this.canvasplotContainer, {
             plotStartsWithZero: true,
+            yAxisLabel: "Active Power in Watt"
         })
         // BETTER fetch already earlier and then wait for mount
+        this.isLoading = true
         this.fetchNewData()
-            .then(dataPoints => this.plot.setDataPoints(dataPoints))
-            .then(() => {
+            .catch(e => {
+                console.error(e);
+                this.isError = true
+                return []
+            })
+            .then(dataPoints => {
+                this.isLoading = false
+                this.plot.setDataPoints(dataPoints)
+            }).then(() => {
                 this.intervalId = setInterval(() => {
                     this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))     
                 }, this.refreshIntervalInMs)
@@ -82,10 +109,6 @@ export default class SensorHistoryPlot extends Vue {
                 // TODO access sum generically
                 return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), this.sensor instanceof AggregatedSensor ? x.sumInW : x.valueInW));
             })
-            .catch(e => {
-                console.error(e);
-                return []
-            });
     }
 
 }
@@ -93,6 +116,6 @@ export default class SensorHistoryPlot extends Vue {
 
 <style scoped>
     .canvasplot-container {
-        height: 500px;
+        height: 400px;
     }
 </style>

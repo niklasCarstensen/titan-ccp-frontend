@@ -1,12 +1,19 @@
 <template>
     <div>
-        <b-container class="">
-            <b-row>
-                <b-col>
+        <b-container>
+            <b-row class="mb-4">
+                <b-col :cols="isAggregated ? 10 : 12">
                     <sensor-parents :sensor="sensor" v-on:select="setSensor"/>
                 </b-col>
+                <b-col v-if="isAggregated" cols ="2">
+                    <b-dropdown right text="Children" variant="secondary" size="lg" block class="children-dropdown">
+                        <b-dropdown-item v-for="child in sensor.children" :key="child.identifier" v-on:click="sensor = child">
+                                {{ child.title }}
+                        </b-dropdown-item>
+                    </b-dropdown>
+                </b-col>
             </b-row>
-            <b-row>
+            <b-row class="mb-4">
                 <b-col>
                     <trend-arrow :sensor="sensor" :timespan="trendLastHour" />
                 </b-col>
@@ -17,29 +24,17 @@
                     <trend-arrow :sensor="sensor" :timespan="trendLastWeek" />
                 </b-col>
             </b-row>
-            <b-row>
+            <b-row class="mb-4">
                 <b-col>
                     <sensor-history-plot :sensor="sensor" />
                 </b-col>
             </b-row>
-            <b-row v-if="isAggregated">
-                <b-col cols="6">
-                    <composition-pie-chart :sensor="sensor" />
-                </b-col>
-                <b-col cols="6">
-                    <b-list-group>
-                        <b-list-group-item href="#" v-for="child in sensor.children" :key="child.identifier" v-on:click="sensor = child" >
-                            {{ child.title}}
-                        </b-list-group-item>
-                    </b-list-group>
-                </b-col>
-            </b-row>
-            <b-row>
+            <b-row class="mb-4">
                 <b-col cols="6">
                     <distribution-plot :sensor="sensor" />
                 </b-col>
-                <b-col cols="6">
-                    
+                <b-col v-if="isAggregated" cols="6">
+                    <composition-pie-chart :sensor="sensor" />
                 </b-col>
             </b-row>
         </b-container>
@@ -91,5 +86,18 @@ export default class SensorDetails extends Vue {
 </script>
 
 <style scoped>
+    
+    .children-dropdown {
+        width: 100%;
+    }
+</style>
 
+<style>
+    /* Hack */
+    .children-dropdown button {
+        display: block;
+        width: 100%;
+        padding: 0.68rem 1rem;
+        font-size: 1rem;
+    }
 </style>

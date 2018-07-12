@@ -1,17 +1,25 @@
 <template>
-    <b-container class="">
+    <b-container v-if="plots.length > 0" class="">
         <comparison-plot v-for="plot in plots" :key="plot"
             :sensorRegistry="sensorRegistry"
             :domainX="domainX"
             :colors="colorRepository"
             @remove="removePlot(plot)"
             @update-domain-x="updateDomainX"
+            class="mb-4"
             />
-        <b-row>
-            <b-button variant="success" @click="addPlot">
-                Add Plot
-            </b-button>
+        <b-row class="mb-4">
+            <b-col>
+                <b-button variant="success" @click="addPlot">
+                    Add Plot
+                </b-button>
+            </b-col>
         </b-row>
+    </b-container>
+    <b-container v-else class="empty-container text-center">
+        <font-awesome-icon icon="chart-line" class="empty-icon" />
+        <br />
+        <b-button variant="success" size="lg" @click="addPlot">Add Plot</b-button>
     </b-container>
 </template>
 
@@ -80,5 +88,11 @@ class DataSet {
 </script>
 
 <style scoped>
-
+    .empty-container {
+        padding-top: 4em;
+    }
+    .empty-icon {
+        color: rgba(0, 0, 0, 0.2);
+        font-size: 16em;
+    }
 </style>

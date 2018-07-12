@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <b-row>
+        <b-row class="mb-4">
             <b-col>
                 <dragable-sensor-list :sensors="[modifiableSensorRegistry.topLevelSensor]" />
             </b-col>
@@ -8,19 +8,13 @@
                 <dragable-sensor-list :sensors="unselectedSensors" />
             </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-4">
             <b-col>
                 <b-button :disabled="saving" variant="success" @click="save">
                     <font-awesome-icon v-if="saving" icon="spinner" spin />
                     <template v-else>Save</template>
                 </b-button>
             </b-col>
-        </b-row>    
-        <b-row>
-            <pre><code>{{ sensorRegistry.toPrettyJson() }}</code></pre>
-        </b-row>
-        <b-row>
-            <pre><code>{{ modifiableSensorRegistry.toPrettyJson() }}</code></pre>
         </b-row>
     </b-container>
 </template>
@@ -61,7 +55,6 @@ export default class Configuration extends Vue {
         new MachineSensor("unused2", ""),
         new MachineSensor("unused3", "")
     ]
-
     
     @Watch("sensorRegistry") //TODO
     updateModifiableSensorRegistry() {

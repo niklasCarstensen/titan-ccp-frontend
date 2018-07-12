@@ -4,11 +4,6 @@
             <router-link to="/" class="navbar-brand col-sm-3 col-md-2 mr-0">
                 Titan Control Center
             </router-link>
-            <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap">
-                <a class="nav-link" href="#">Sign out</a>
-                </li>
-            </ul>
         </nav>
         <div class="container-fluid">
             <div class="row">

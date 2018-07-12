@@ -1,8 +1,11 @@
 <template>
     <div class="card">
-        <loading-spinner :is-loading="isLoading">
-            <div class="c3-container"></div>
-        </loading-spinner>
+        <div class="card-body">
+            <h5 class="card-title">Histogram</h5>
+            <loading-spinner :is-loading="isLoading" :is-error="isError">
+                <div class="c3-container"></div>
+            </loading-spinner>
+        </div>
     </div>
 </template>
 
@@ -23,11 +26,12 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
 
     @Prop({ required: true }) sensor!: Sensor
 
-    @Prop({ default: 4}) buckets!: number
+    @Prop({ default: 8}) buckets!: number
 
     private chart!: ChartAPI
 
     private isLoading = true
+    private isError = false
 
     mounted() {
         this.chart = generate({
@@ -42,7 +46,7 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
             },
             axis: {
                 x: {
-                    type: 'category' // this needed to load string x value
+                    type: 'category', // this needed to load string x value
                 }
             },
             tooltip: {
@@ -59,7 +63,7 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
 
     private createPlot() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        let after = new Date().getTime() - (24 * 3600 * 1000)
+        let after = new Date().getTime() - (1 * 3600 * 1000)
         HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?after=' + after + '&buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
@@ -73,8 +77,10 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
             })
             .catch(e => {
                 console.error(e);
-                return [[],[]];
-            }).then(data => {
+                this.isError = true
+                return [["x"], [this.sensor.identifier]];
+            })
+            .then(data => {
                 this.chart.unload()
                 this.chart.load({
                     columns: data,

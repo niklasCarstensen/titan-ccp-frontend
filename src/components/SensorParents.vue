@@ -1,5 +1,5 @@
 <template>
-    <b-breadcrumb>
+    <b-breadcrumb class="sensor-parents">
         <b-breadcrumb-item v-for="sensor in parents" :key="sensor.identifier" @click="select(sensor)" href="#" :text="sensor.title" />
         <b-breadcrumb-item active :text="sensor.title" />
     </b-breadcrumb>
@@ -34,5 +34,7 @@ export default class SensorParents extends Vue {
 </script>
 
 <style scoped>
-
+    .sensor-parents {
+        margin-bottom: 0;
+    }
 </style>

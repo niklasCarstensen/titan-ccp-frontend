@@ -1,11 +1,11 @@
 <template>
     <b-container class="">
-        <b-row>
+        <b-row class="mb-4">
             <b-col>
                 <sensor-history-plot :sensor="sensor" />
             </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-4">
             <b-col cols="6">
                 <distribution-plot :sensor="sensor" />
             </b-col>

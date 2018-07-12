@@ -1,29 +1,33 @@
-<template>
-    <b-row>
-        <b-col sm="9">
+<template>  
+    <div class="card-group row no-gutters">
+        <div class="card col-9">
             <div class="canvasplot-container"></div>
-        </b-col>
-        <b-col sm="3">
-            <b-button-close @click="remove()" />
-            Sensors:
-            <ul>
-                <li v-for="dataSet in dataSets" :key="dataSet.sensor">
+        </div>
+        <div class="card col-3">
+            <div class="card-header">
+                Data Sets
+                <b-button-close @click="remove()" />
+            </div>
+            <ul class="list-group list-group-flush">
+                <li v-for="dataSet in dataSets" :key="dataSet.sensor" class="list-group-item">
                     {{ dataSet.sensor.title }}
                     <b-button-close @click="removeDataSet(dataSet)" />
                 </li>
+                <li class="list-group-item">
+                    <b-button variant="success" v-if="!addDataSetActive" @click="addDataSetActive = true">
+                        Add Data Set
+                    </b-button>
+                    <treeselect v-else
+                        v-model="newDataSet"
+                        :options="[ this.sensorRegistry.topLevelSensor ]"
+                        :normalizer="covertSensorToSelectable"
+                        :clearable="false"
+                        valueFormat="object"
+                        @input="addDataSet()" />
+                </li>
             </ul>
-            <b-button variant="success" v-if="!addDataSetActive" @click="addDataSetActive = true">
-                Add
-            </b-button>
-            <treeselect v-else
-                v-model="newDataSet"
-                :options="[ this.sensorRegistry.topLevelSensor ]"
-                :normalizer="covertSensorToSelectable"
-                :clearable="false"
-                valueFormat="object"
-                @input="addDataSet()" />
-        </b-col>
-    </b-row>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -169,5 +173,11 @@ class DataSet {
 <style scoped>
     .canvasplot-container {
         height: 300px;
+    }
+    .card-group {
+        width: 100%;
+    }
+    .card-body {
+        width: 100%;
     }
 </style>
