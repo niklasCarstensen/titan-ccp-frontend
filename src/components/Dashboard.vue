@@ -2,18 +2,18 @@
     <b-container class="">
         <b-row class="mb-4">
             <b-col>
-                <trend-arrow :sensor="sensor" :timespan="trendLastHour" />
+                <trend-arrow :sensor="sensor" :timespan="trendLastHour" :auto-loading="autoLoading" />
             </b-col>
             <b-col>
-                <trend-arrow :sensor="sensor" :timespan="trendLastDay" />
+                <trend-arrow :sensor="sensor" :timespan="trendLastDay" :auto-loading="autoLoading" />
             </b-col>
             <b-col>
-                <trend-arrow :sensor="sensor" :timespan="trendLastWeek" />
+                <trend-arrow :sensor="sensor" :timespan="trendLastWeek" :auto-loading="autoLoading" />
             </b-col>
         </b-row>
         <b-row class="mb-4">
             <b-col>
-                <sensor-history-plot :sensor="sensor" />
+                <sensor-history-plot :sensor="sensor" :auto-loading="autoLoading" />
             </b-col>
         </b-row>
         <b-row class="mb-4">
@@ -58,6 +58,8 @@ import Examples from "./Examples.vue"
 export default class App extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
+
+    @Prop() autoLoading: Boolean = true
 
     readonly trendLastHour = Timespan.LastHour
     readonly trendLastDay = Timespan.LastDay

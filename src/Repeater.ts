@@ -3,14 +3,22 @@ export default class Repeater {
     intervalId?: number
 
     constructor(
-        private readonly initialFunction: () => Promise<void>,
-        private readonly repeatingFunction: () => void,
+        private readonly initialFunction: () => Promise<any>,
+        private readonly repeatingFunction: () => any,
         private readonly repeatIntervalInMs: number
     ) {
     }
 
+    // TODO remove
     async start() {
         await this.initialFunction()
+        this.intervalId = setInterval(() => {
+            this.repeatingFunction()     
+        }, this.repeatIntervalInMs)
+    }
+
+    // TODO rename to start
+    continue() {
         this.intervalId = setInterval(() => {
             this.repeatingFunction()     
         }, this.repeatIntervalInMs)

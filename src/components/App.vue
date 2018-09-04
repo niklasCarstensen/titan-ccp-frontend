@@ -1,10 +1,22 @@
 <template>
     <div>
+
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
             <router-link to="/" class="navbar-brand col-sm-3 col-md-2 mr-0">
                 Titan Control Center
             </router-link>
+            <div class="container justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item text-nowrap">
+                        <b-button @click="autoLoading = !autoLoading" variant="link" class="nav-link">
+                            <font-awesome-icon icon="pause" v-if="autoLoading" />
+                            <font-awesome-icon icon="play" v-else />
+                        </b-button>
+                    </li>
+                </ul>
+            </div>
         </nav>
+
         <div class="container-fluid">
             <div class="row">
                 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -48,7 +60,12 @@
 
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <loading-spinner :is-loading="isLoading" :is-error="isError">
-                        <router-view v-if="sensorRegistry != null" :sensor="sensorRegistry.topLevelSensor" :sensorRegistry="sensorRegistry" @update:sensor-registry="loadSensorRegistry"></router-view>
+                        <router-view v-if="sensorRegistry != null"
+                            :sensor="sensorRegistry.topLevelSensor"
+                            :sensorRegistry="sensorRegistry"
+                            :auto-loading="autoLoading"
+                            @update:sensor-registry="loadSensorRegistry">
+                        </router-view>
                     </loading-spinner>
                 </main>
             </div>
@@ -89,6 +106,8 @@ export default class App extends Vue {
     private isLoading = false
 
     private isError = false
+
+    private autoLoading = true
 
     created() {
         this.isLoading = true;

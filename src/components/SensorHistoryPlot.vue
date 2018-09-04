@@ -17,6 +17,7 @@ import LoadingSpinner from "./LoadingSpinner.vue"
 // @ts-ignore
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
+import Repeater from "../Repeater";
 
 @Component({
     components: {
@@ -30,6 +31,8 @@ export default class SensorHistoryPlot extends Vue {
     //private dataPoints = new Array<Array<any>>()
     @Prop({ required: true }) sensor!: Sensor
 
+    @Prop() autoLoading: Boolean = true
+
     // TODO
     //private latest = 0
     private latest = new Date().getTime() - (3600 * 1000)
@@ -39,7 +42,7 @@ export default class SensorHistoryPlot extends Vue {
 
     private plot!: MovingTimeSeriesPlot // Will definitely be assigned in mounted
 
-    private intervalId?: number
+    private requester = new Repeater(this.createPlot, this.updatePlot, this.refreshIntervalInMs)
 
     get canvasplotContainer() {
         return this.$el.querySelector(".canvasplot-container")! as HTMLElement
@@ -49,19 +52,26 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     mounted() {
-        this.createPlot()
+        this.requester.start()
     }
 
     destroyed() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId)
-        }
+        this.requester.stop()
     }
 
     @Watch('sensor')
     onSensorChanged(sensor: Sensor) {
         this.destroyPlot()
-        this.createPlot()
+        this.requester.restart()
+    }
+
+    @Watch('autoLoading')
+    onAutoLoadingChanged() {
+        if (this.autoLoading) {
+            this.requester.continue()
+        } else {
+            this.requester.stop()
+        }
     }
 
     private createPlot() {
@@ -71,7 +81,7 @@ export default class SensorHistoryPlot extends Vue {
         })
         // BETTER fetch already earlier and then wait for mount
         this.isLoading = true
-        this.fetchNewData()
+        return this.fetchNewData()
             .catch(e => {
                 console.error(e);
                 this.isError = true
@@ -80,25 +90,22 @@ export default class SensorHistoryPlot extends Vue {
             .then(dataPoints => {
                 this.isLoading = false
                 this.plot.setDataPoints(dataPoints)
-            }).then(() => {
-                this.intervalId = setInterval(() => {
-                    this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))     
-                }, this.refreshIntervalInMs)
             })
         
     }
 
+    private updatePlot() {
+        this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))
+    }
+
     private destroyPlot() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId)
-        }
         // TODO
         //this.latest = 0
         this.latest = new Date().getTime() - (3600 * 1000)
         this.plot.destroy()
     }
 
-    private fetchNewData(): Promise<DataPoint[]> {   
+    private fetchNewData(): Promise<DataPoint[]> {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
         return HTTP.get(resource + '/' + this.sensor.identifier + '?after=' + this.latest)
             .then(response => {

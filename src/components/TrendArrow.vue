@@ -22,6 +22,8 @@ export default class TrendArrow extends Vue {
 
     @Prop({ required: true }) timespan!: Timespan
 
+    @Prop() autoLoading: Boolean = true
+
     trendValue = -1
 
     requester = new Repeater(this.updateChart, this.updateChart, 10_000)
@@ -39,6 +41,15 @@ export default class TrendArrow extends Vue {
     onSensorChanged() {
         //this.updateChart()
         this.requester.restart()
+    }
+
+    @Watch('autoLoading')
+    onAutoLoadingChanged() {
+        if (this.autoLoading) {
+            this.requester.start()
+        } else {
+            this.requester.stop()
+        }
     }
 
     private updateChart() {
