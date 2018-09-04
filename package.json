@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --open --hot --mode development",
-    "build": "webpack --hide-modules --mode production",
+    "build": "webpack --progress --mode production",
+    "build-silent": "webpack --hide-modules --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sören Henning <post@soeren-henning.de>",

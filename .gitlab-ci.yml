@@ -12,7 +12,7 @@ build:
     - dockerex
   script:
     - npm install --no-progress
-    - npm run build
+    - npm run build-silent
   artifacts:
     paths:
     - dist/
