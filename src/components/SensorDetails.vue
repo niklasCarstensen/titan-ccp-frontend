@@ -3,11 +3,11 @@
         <b-container>
             <b-row class="mb-4">
                 <b-col :cols="isAggregated ? 10 : 12">
-                    <sensor-parents :sensor="sensor" v-on:select="setSensor"/>
+                    <sensor-parents :sensor="internalSensor" v-on:select="setSensor"/>
                 </b-col>
                 <b-col v-if="isAggregated" cols ="2">
                     <b-dropdown right text="Children" variant="secondary" size="lg" block class="children-dropdown">
-                        <b-dropdown-item v-for="child in sensor.children" :key="child.identifier" v-on:click="sensor = child">
+                        <b-dropdown-item v-for="child in internalSensor.children" :key="child.identifier" v-on:click="internalSensor = child">
                                 {{ child.title }}
                         </b-dropdown-item>
                     </b-dropdown>
@@ -15,26 +15,26 @@
             </b-row>
             <b-row class="mb-4">
                 <b-col>
-                    <trend-arrow :sensor="sensor" :timespan="trendLastHour" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastHour" :auto-loading="autoLoading" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="sensor" :timespan="trendLastDay" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastDay" :auto-loading="autoLoading" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="sensor" :timespan="trendLastWeek" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastWeek" :auto-loading="autoLoading" />
                 </b-col>
             </b-row>
             <b-row class="mb-4">
                 <b-col>
-                    <sensor-history-plot :sensor="sensor" :auto-loading="autoLoading" />
+                    <sensor-history-plot :sensor="internalSensor" :auto-loading="autoLoading" />
                 </b-col>
             </b-row>
             <b-row class="mb-4">
                 <b-col cols="6">
-                    <distribution-plot :sensor="sensor" />
+                    <distribution-plot :sensor="internalSensor" />
                 </b-col>
                 <b-col v-if="isAggregated" cols="6">
-                    <composition-pie-chart :sensor="sensor" />
+                    <composition-pie-chart :sensor="internalSensor" />
                 </b-col>
             </b-row>
         </b-container>
@@ -72,16 +72,18 @@ export default class SensorDetails extends Vue {
 
     @Prop() autoLoading: Boolean = true
 
+    private internalSensor = this.sensor
+
     readonly trendLastHour = Timespan.LastHour
     readonly trendLastDay = Timespan.LastDay
     readonly trendLastWeek = Timespan.LastWeek
 
     get isAggregated() {
-        return this.sensor instanceof AggregatedSensor
+        return this.internalSensor instanceof AggregatedSensor
     }
 
     setSensor(sensor: Sensor) {
-        this.sensor = sensor
+        this.internalSensor = sensor
     }
 
 }
