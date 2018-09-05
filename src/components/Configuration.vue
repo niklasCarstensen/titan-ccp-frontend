@@ -6,6 +6,15 @@
             </b-col>
             <b-col>
                 <dragable-sensor-list :sensors="unselectedSensors" />
+                <b-list-group class="mt-3">
+                    <b-list-group-item class="d-flex align-items-center">
+                        <b-input v-model="newAggregatedSensorName"
+                            type="text" class="mr-3 w-auto"
+                            v-focus placeholder="Sensor name"
+                            @keyup.enter.native="addSensor()" />
+                            <code class="mr-auto">{{ newAggregatedSensorIdentifier }}</code>
+                    </b-list-group-item>
+                </b-list-group>
             </b-col>
         </b-row>
         <b-row class="mb-4">
@@ -55,13 +64,15 @@ export default class Configuration extends Vue {
         new MachineSensor("unused2", ""),
         new MachineSensor("unused3", "")
     ]
+
+    newAggregatedSensorName = ""
     
     @Watch("sensorRegistry") //TODO
     updateModifiableSensorRegistry() {
         this.modifiableSensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry)
     }
 
-    save() {
+    private save() {
         this.saving = true
         HTTP.put('sensor-registry', this.modifiableSensorRegistry.toJson())
             .catch(e => {
@@ -71,6 +82,21 @@ export default class Configuration extends Vue {
                 this.saving = false
             })
     }
+
+    private addSensor() {
+        console.log("save")
+    }
+
+    private get newAggregatedSensorIdentifier() {
+        return this.slugify(this.newAggregatedSensorName)
+    }
+
+    private slugify = (text: String) => text.toString().toLowerCase()
+                                    .replace(/\s+/g, '-')       // Replace spaces with -
+                                    .replace(/[^\w\-]+/g, '')   // Remove all non-word chars
+                                    .replace(/\-\-+/g, '-')     // Replace multiple - with single -
+                                    .replace(/^-+/, '')         // Trim - from start of text
+                                    .replace(/-+$/, '')         // Trim - from end of text
 
 }
 </script>
