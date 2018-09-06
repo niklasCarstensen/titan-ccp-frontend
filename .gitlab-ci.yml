@@ -34,4 +34,4 @@ deploy:
     - docker push industrialdevops/titan-ccp-frontend
     - docker logout
   only:
-    - master
+    - master@titan/ControlCenterPrototype/frontend
