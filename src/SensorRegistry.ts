@@ -21,6 +21,15 @@ export class SensorRegistry {
         return new SensorRegistry(this.parseSensor(sensor))
     }
 
+    public get registeredSensors() {
+        let registeredSensors = new Array<Sensor>()
+        registeredSensors.push(this.topLevelSensor)
+        if (this.topLevelSensor instanceof AggregatedSensor) {
+            registeredSensors = registeredSensors.concat(this.topLevelSensor.recursiveChildren)
+        }
+        return registeredSensors
+    }
+
     public toJson(pretty?: boolean) {
         return JSON.stringify(this.topLevelSensor, (key, val) => key != "parent" ? val : undefined, pretty ? '\t' : undefined)
     }
@@ -65,6 +74,17 @@ export class AggregatedSensor {
 
     get title() {
         return this.name != '' ? this.name : this.identifier;
+    }
+
+    get recursiveChildren() {
+        let children = new Array<Sensor>()
+        for (let child of this.children) {
+            children.push(child)
+            if (child instanceof AggregatedSensor) {
+                children = children.concat(child.recursiveChildren)
+            }
+        }
+        return children
     }
 
 }

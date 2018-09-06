@@ -10,7 +10,7 @@
                     <b-list-group-item class="d-flex align-items-center">
                         <b-input v-model="newAggregatedSensorName"
                             type="text" class="mr-3 w-auto"
-                            v-focus placeholder="New aggregated sensor"
+                            placeholder="New aggregated sensor"
                             @keyup.enter.native="addSensor()" />
                         <code class="mr-auto">{{ newAggregatedSensorIdentifier }}</code>
                         <b-button @click="addSensor()" :variant="'link'" class="text-muted">
@@ -61,15 +61,22 @@ export default class Configuration extends Vue {
 
     saving = false
 
-    // TODO
-    unselectedSensors = [
-        new MachineSensor("unused1", ""),
-        new MachineSensor("unused2", ""),
-        new MachineSensor("unused3", "")
-    ]
+    unselectedSensors = new Array<Sensor>()
 
     newAggregatedSensorName = ""
     
+    created() {
+        HTTP.get('power-consumption')
+            .then(response => {
+                let unselectedSensors = response.data as Array<string>
+                let registeredSensors = this.sensorRegistry.registeredSensors.map(s => s.identifier)
+                this.unselectedSensors = unselectedSensors.filter(s => !registeredSensors.includes(s)).map(s => new MachineSensor(s, ""))
+            })
+            .catch(e => {
+                console.error(e)
+            })
+    }
+
     @Watch("sensorRegistry") //TODO
     updateModifiableSensorRegistry() {
         this.modifiableSensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry)
