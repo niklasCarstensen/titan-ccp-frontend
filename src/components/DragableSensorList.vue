@@ -73,9 +73,33 @@ export default class DragableSensorList extends Vue {
     padding-left: 6.25rem;
 }
 
-.dragArea {
-  min-height: 10px;
-  background-color: rgba(0,0,0,0.1);
+.list-group:empty {
+  min-height: 1em;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: 0 none;
+  margin-bottom: -1px;
+}
+.list-group .list-group:empty {
+    padding-left: 2.5rem;
+}
+.list-group .list-group .list-group:empty {
+    padding-left: 3.75rem;
+}
+.list-group .list-group .list-group .list-group:empty {
+    padding-left: 5rem;
+}
+.list-group .list-group .list-group .list-group .list-group:empty {
+    padding-left: 6.25rem;
+}
+.list-group:empty::before {
+    background-color: rgba(0,0,0,0.05);
+    content: "no child sensors";
+    text-align: center;
+    color: rgba(0,0,0,0.5);
+    font-size: 1em;
+    line-height: 2em;
+    font-style: italic;
 }
 .sortable-ghost {
     border: 2px dashed steelblue;

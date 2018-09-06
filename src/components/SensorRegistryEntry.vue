@@ -10,8 +10,7 @@
         <b-button v-if="!edit" @click="edit = true" :variant="'link'" class="text-muted">
             <font-awesome-icon icon="pen" />
         </b-button>
-        {{ sensor.parent }}
-        <b-button v-if="sensor.identifier" @click="$emit('remove')" :variant="'link'" class="text-muted">
+        <b-button @click="$emit('remove')" :variant="'link'" class="text-muted">
             <font-awesome-icon icon="trash" />
         </b-button>
     </div>

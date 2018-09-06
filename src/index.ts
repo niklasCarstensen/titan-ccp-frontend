@@ -10,12 +10,12 @@ import Configuration from "./components/Configuration.vue"
 import Examples from "./components/Examples.vue"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause } from '@fortawesome/free-solid-svg-icons'
+import { faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.use(BootstrapVue);
 
-library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause )
+library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck )
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 //Vue.config.productionTip = false
 

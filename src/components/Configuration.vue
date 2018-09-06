@@ -10,9 +10,12 @@
                     <b-list-group-item class="d-flex align-items-center">
                         <b-input v-model="newAggregatedSensorName"
                             type="text" class="mr-3 w-auto"
-                            v-focus placeholder="Sensor name"
+                            v-focus placeholder="New aggregated sensor"
                             @keyup.enter.native="addSensor()" />
-                            <code class="mr-auto">{{ newAggregatedSensorIdentifier }}</code>
+                        <code class="mr-auto">{{ newAggregatedSensorIdentifier }}</code>
+                        <b-button @click="addSensor()" :variant="'link'" class="text-muted">
+                            <font-awesome-icon icon="check" />
+                        </b-button>
                     </b-list-group-item>
                 </b-list-group>
             </b-col>
@@ -84,13 +87,15 @@ export default class Configuration extends Vue {
     }
 
     private addSensor() {
-        console.log("save")
+        this.unselectedSensors.push(new AggregatedSensor(this.newAggregatedSensorIdentifier, this.newAggregatedSensorName, []))
+        this.newAggregatedSensorName = ""
     }
 
     private get newAggregatedSensorIdentifier() {
         return this.slugify(this.newAggregatedSensorName)
     }
 
+    //TODO utility method
     private slugify = (text: String) => text.toString().toLowerCase()
                                     .replace(/\s+/g, '-')       // Replace spaces with -
                                     .replace(/[^\w\-]+/g, '')   // Remove all non-word chars
