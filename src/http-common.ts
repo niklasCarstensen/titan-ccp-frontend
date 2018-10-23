@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const HTTP = axios.create({
-  baseURL: `http://localhost:31100/`,
+  baseURL: `/`,
   headers: {
     Authorization: 'Bearer {token}'
   }
