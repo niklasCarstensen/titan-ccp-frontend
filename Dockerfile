@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:alpine
 
 COPY index.html /var/www/titan-ccp/index.html
 COPY dist /var/www/titan-ccp/dist
