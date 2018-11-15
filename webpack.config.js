@@ -79,7 +79,11 @@ module.exports = {
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
     }),
-    new webpack.HotModuleReplacementPlugin() //TODO helpful?
+    new webpack.HotModuleReplacementPlugin(), //TODO helpful?
+    new webpack.EnvironmentPlugin({
+      //NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
+      DEMO: "false"
+    })
   ],
   devtool: '#eval-source-map'
 }

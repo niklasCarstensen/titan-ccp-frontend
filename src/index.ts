@@ -13,6 +13,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+if (process.env.DEMO === "true") {
+  console.log("Start in demo mode.")
+}
+
 Vue.use(BootstrapVue);
 
 library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck )
@@ -57,4 +61,3 @@ new Vue({
     router: router,
     components: { App }
 });
-

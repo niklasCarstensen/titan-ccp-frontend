@@ -22,7 +22,7 @@
         </b-row>
         <b-row class="mb-4">
             <b-col>
-                <b-button :disabled="saving" variant="success" @click="save">
+                <b-button :disabled="saving || demoMode" variant="success" @click="save">
                     <font-awesome-icon v-if="saving" icon="spinner" spin />
                     <template v-else>Save</template>
                 </b-button>
@@ -80,6 +80,10 @@ export default class Configuration extends Vue {
     @Watch("sensorRegistry") //TODO
     updateModifiableSensorRegistry() {
         this.modifiableSensorRegistry = SensorRegistry.flatCopy(this.sensorRegistry)
+    }
+
+    get demoMode() {
+        return process.env.DEMO === "true"
     }
 
     private save() {
