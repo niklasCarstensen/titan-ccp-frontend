@@ -34,8 +34,8 @@ export default class SensorHistoryPlot extends Vue {
     @Prop() autoLoading: Boolean = true
 
     // TODO
-    private latest = 0
-    //private latest = new Date().getTime() - (3600 * 1000)
+    //private latest = 0
+    private latest = new Date().getTime() - (3600 * 1000)
 
     private isLoading = false
     private isError = false
@@ -100,8 +100,8 @@ export default class SensorHistoryPlot extends Vue {
 
     private destroyPlot() {
         // TODO
-        this.latest = 0
-        //this.latest = new Date().getTime() - (3600 * 1000)
+        //this.latest = 0
+        this.latest = new Date().getTime() - (3600 * 1000)
         this.plot.destroy()
     }
 
