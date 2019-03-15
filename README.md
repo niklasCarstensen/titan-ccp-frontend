@@ -44,4 +44,10 @@ This repository also contains a Dockerfile. Adjust the `nginx.conf` file accordi
 and run `docker build -t titan-ccp-frontend .` to create an image from it (after
 building it with npm).
 
+## Running
 
+To start a container execute:
+
+```
+docker run --rm --name titan-ccp-frontend -p <port>:8080 -e "CONFIGURATION_BASE_URL=http://<host>:<port>" -e "HISTORY_BASE_URL=http://<host>:<port>" -d titan-ccp-frontend
+```
