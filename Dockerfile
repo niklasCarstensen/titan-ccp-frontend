@@ -11,5 +11,6 @@ ENV HISTORY_BASE_URL http://titan-ccp-history:80
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD envsubst '$CONFIGURATION_BASE_URL $HISTORY_BASE_URL' < /etc/nginx/nginx.conf > /etc/nginx/nginx.conf \
+CMD cp /etc/nginx/nginx.conf /etc/nginx/nginx.tmpl.conf \
+    && envsubst '$CONFIGURATION_BASE_URL $HISTORY_BASE_URL' < /etc/nginx/nginx.tmpl.conf > /etc/nginx/nginx.conf \
     && nginx -g "daemon off;"
