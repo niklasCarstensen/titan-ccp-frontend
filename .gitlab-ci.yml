@@ -19,7 +19,6 @@ build:
     - dist/
     - index.html
 
-  
 deploy:
   stage: deploy
   tags:
@@ -28,11 +27,15 @@ deploy:
   services:
     - docker:dind
   script:
+    - DOCKER_TAG_NAME=$(echo $CI_COMMIT_REF_SLUG- | sed 's/^master-$//')
     - docker build --pull -t titan-ccp-frontend .
-    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:latest
-    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:${DOCKER_TAG_NAME}latest
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:$DOCKER_TAG_NAME$(date +%Y%m%d%H%M%S)
+    - docker tag titan-ccp-frontend industrialdevops/titan-ccp-frontend:$DOCKER_TAG_NAME$CI_COMMIT_SHA
     - echo $DOCKERHUB_PW | docker login -u $DOCKERHUB_ID --password-stdin
     - docker push industrialdevops/titan-ccp-frontend
     - docker logout
   only:
-    - master@titan/ControlCenterPrototype/frontend
+    variables:
+      - $DOCKERHUB_ID
+      - $DOCKERHUB_PW
