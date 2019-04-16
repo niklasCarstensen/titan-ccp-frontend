@@ -35,7 +35,6 @@ export default class SensorHistoryPlot extends Vue {
 
     // TODO
     private latest = 0
-    //private latest = this.completeHistory ? 0 : new Date().getTime() - (3600 * 1000)
     //private latest = new Date().getTime() - (3600 * 1000)
 
     private isLoading = false
@@ -47,11 +46,6 @@ export default class SensorHistoryPlot extends Vue {
 
     get canvasplotContainer() {
         return this.$el.querySelector(".canvasplot-container")! as HTMLElement
-    }
-
-    get completeHistory() {
-        console.log("SHOW_COMPLETE_HISTORY " + process.env.SHOW_COMPLETE_HISTORY);
-        return process.env.SHOW_COMPLETE_HISTORY === "true"
     }
 
     created() {
