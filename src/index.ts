@@ -16,6 +16,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 if (process.env.DEMO === "true") {
   console.log("Start in demo mode.")
 }
+if (process.env.SHOW_COMPLETE_HISTORY === "true") {
+  console.log("Show complete history.")
+}
 
 Vue.use(BootstrapVue);
 

@@ -49,6 +49,7 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     get completeHistory() {
+        console.log("SHOW_COMPLETE_HISTORY " + process.env.SHOW_COMPLETE_HISTORY);
         return process.env.SHOW_COMPLETE_HISTORY === "true"
     }
 
