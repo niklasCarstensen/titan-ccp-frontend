@@ -82,7 +82,8 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(), //TODO helpful?
     new webpack.EnvironmentPlugin({
       //NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
-      DEMO: "false"
+      DEMO: "false",
+      SHOW_COMPLETE_HISTORY: "false"
     })
   ],
   devtool: '#eval-source-map'
