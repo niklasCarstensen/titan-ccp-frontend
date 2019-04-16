@@ -11,7 +11,7 @@ do
     cp $file $file.tmpl.js
   fi
 
-  envsubst '$DEMO' < $file.tmpl.js > $file
+  envsubst '$DEMO $SHOW_COMPLETE_HISTORY' < $file.tmpl.js > $file
 done
 
 exec "$@"
