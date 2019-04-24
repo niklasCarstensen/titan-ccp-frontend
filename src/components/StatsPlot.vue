@@ -125,3 +125,11 @@ export const DAY_OF_WEEK: StatsType = {
         height: 300px;
     }
 </style>
+<style>
+    .c3-grid line {
+        stroke: #DFDFDF;
+    }
+    .c3-xgrid, .c3-ygrid {
+        stroke-dasharray: 0;
+    }
+</style>
