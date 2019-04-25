@@ -37,6 +37,16 @@
                     <composition-pie-chart :sensor="internalSensor" />
                 </b-col>
             </b-row>
+            <b-row class="mb-4">
+                <b-col v-if="!isAggregated" cols="12">
+                    <stats-plot :sensor="internalSensor" :stats-type="statsDayOfWeek" />
+                </b-col>
+            </b-row>
+            <b-row class="mb-4">
+                <b-col v-if="!isAggregated" cols="12">
+                    <stats-plot :sensor="internalSensor" :stats-type="statsHourOfDay" />
+                </b-col>
+            </b-row>
         </b-container>
     </div>
 </template>
@@ -51,6 +61,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import SensorParents from "./SensorParents.vue"
 import DistributionPlot from "./DistributionPlot.vue"
+import StatsPlot from "./StatsPlot.vue"
+import { HOUR_OF_DAY } from "./StatsPlot.vue"
+import { DAY_OF_WEEK } from "./StatsPlot.vue"
 import CompositionPieChart from "./CompositionPieChart.vue"
 import SensorHistoryPlot from "./SensorHistoryPlot.vue"
 import TrendArrow from "./TrendArrow.vue"
@@ -63,6 +76,7 @@ import { Timespan } from "./TrendArrow.vue"
         SensorHistoryPlot,
         CompositionPieChart,
         DistributionPlot,
+        StatsPlot,
         TrendArrow
     }
 })
@@ -77,6 +91,9 @@ export default class SensorDetails extends Vue {
     readonly trendLastHour = Timespan.LastHour
     readonly trendLastDay = Timespan.LastDay
     readonly trendLastWeek = Timespan.LastWeek
+
+    readonly statsDayOfWeek = DAY_OF_WEEK
+    readonly statsHourOfDay = HOUR_OF_DAY
 
     get isAggregated() {
         return this.internalSensor instanceof AggregatedSensor
