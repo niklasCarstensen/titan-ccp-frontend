@@ -38,12 +38,12 @@
                 </b-col>
             </b-row>
             <b-row class="mb-4">
-                <b-col v-if="!isAggregated" cols="12">
+                <b-col cols="12">
                     <stats-plot :sensor="internalSensor" :stats-type="statsDayOfWeek" />
                 </b-col>
             </b-row>
             <b-row class="mb-4">
-                <b-col v-if="!isAggregated" cols="12">
+                <b-col cols="12">
                     <stats-plot :sensor="internalSensor" :stats-type="statsHourOfDay" />
                 </b-col>
             </b-row>
