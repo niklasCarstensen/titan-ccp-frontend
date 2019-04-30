@@ -8,29 +8,42 @@ devices and machines in production environments such as factories.
 This repository contains the visualization frontend of the Titan CCP. It is a
 single-page application written in Typescript and Vue.js.
 
-
-
 ## Developing
 
-To work with this project, clone this repository and execute:
+To work on this project, clone this repository and execute:
 
 ```shell
 npm install
 ```
 
-To start a development server execute:
+In order to start a development server running on `http://localhost:8070` execute:
 
 ```shell
 npm run dev
 ```
 
 A good tool for working on this software is [Visual Studio Code](https://code.visualstudio.com/).
-In order to get things like autocomletion for `.vue` files, you need to install the [vetur](https://vuejs.github.io/vetur/) plugin.
-When you open a vue file the first time, Visual Studio Code suggests to install this plugin.
+In order to get things like autocompletion for `.vue` files, you need to install
+the [vetur](https://vuejs.github.io/vetur/) plugin. When you open a vue file the
+first time, Visual Studio Code suggests to install this plugin.
+
+The visualization frontend highly depends on external data sources, more
+specifically, the other Titan CCP microservices. In order to let the frontend
+access them, you need to start a reverse proxy that redirects all calls to
+the other services. We provide such a reverse proxy as part of the frontend,
+which can be started be started via:
+
+```shell
+docker run --rm --name titan-ccp-frontend --network host -e "CONFIGURATION_BASE_URL=http://<host>:<port>" -e "HISTORY_BASE_URL=http://<host>:<port>" -e "STATS_BASE_URL=http://<host>:<port>" -d industrialdevops/titan-ccp-frontend
+```
+
+Note: The application intendet for development is running at port 8070, whereas a the
+application running at port 8080 is the compiled one running in the Docker container.
+If you want to build this reverse proxy by yourself, follow the steps described below.
 
 ## Building
 
-To build it for use in production execute:
+To build the visualization frontend for use in production execute:
 
 ```shell
 npm install
@@ -48,6 +61,6 @@ building it with npm).
 
 To start a container execute:
 
-```
+```shell
 docker run --rm --name titan-ccp-frontend -p <port>:8080 -e "CONFIGURATION_BASE_URL=http://<host>:<port>" -e "HISTORY_BASE_URL=http://<host>:<port>" -d titan-ccp-frontend
 ```

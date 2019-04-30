@@ -43,15 +43,15 @@ module.exports = {
           'vue-style-loader',
           'css-loader'
         ]
-          /*
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[local]_[hash:base64:8]'
-            }
+        /*
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            localIdentName: '[local]_[hash:base64:8]'
           }
-          */
+        }
+        */
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -70,15 +70,19 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080'
+      }
+    }
   },
   performance: {
     hints: false
   },
   plugins: [
     new VueLoaderPlugin(),
-    new webpack.ProvidePlugin({
-    }),
+    new webpack.ProvidePlugin({}),
     new webpack.HotModuleReplacementPlugin(), //TODO helpful?
     new webpack.EnvironmentPlugin({
       //NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
