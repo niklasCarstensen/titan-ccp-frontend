@@ -63,14 +63,15 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
 
     private createPlot() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        let after = new Date().getTime() - (1 * 3600 * 1000)
+        //let after = new Date().getTime() - (1 * 3600 * 1000)
+        let after = 1547802000000 - (7 * 24 * 3600 * 1000)
         HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?after=' + after + '&buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
                 let values: Array<string|number> = [this.sensor.identifier]
                 for (let bucket of response.data) {
-                    labels.push("" + bucket.lower.toFixed(1) + " - " + bucket.upper.toFixed(1))
+                    labels.push("" + bucket.lower.toFixed(0) + " - " + bucket.upper.toFixed(0))
                     values.push(bucket.elements)
                 }
                 return [labels, values];
