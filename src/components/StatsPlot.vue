@@ -114,13 +114,13 @@ export interface StatsType {
 
 export const HOUR_OF_DAY: StatsType = {
     title: "Power Consumption per Hour of Day",
-    url: "hour-of-day",
+    url: "hour-of-day?intervalStart=2019-02-25T00:00:00Z&intervalEnd=2019-03-27T00:00:00Z",
     accessor: stats => stats.hourOfDay
 }
 
 export const DAY_OF_WEEK: StatsType = {
     title: "Power Consumption per Day of Week",
-    url: "day-of-week",
+    url: "day-of-week?intervalStart=2018-11-15T00:00:00Z&intervalEnd=2019-11-15T00:00:00Z",
     accessor: stats => getDayOfWeekText(stats.dayOfWeek)
 }
 
