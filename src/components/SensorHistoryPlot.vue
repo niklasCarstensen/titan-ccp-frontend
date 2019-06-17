@@ -123,6 +123,6 @@ export default class SensorHistoryPlot extends Vue {
 
 <style scoped>
     .canvasplot-container {
-        height: 400px;
+        height: 300px;
     }
 </style>
