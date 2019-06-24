@@ -49,7 +49,9 @@ export class MovingTimeSeriesPlot {
 		this.plot.removeDataSet(this.datasetId);
 		this.plot.addDataSet(this.datasetId, "", this.dataPoints, this.color, false, false);
 		if (this.dataPoints.length != 0) {
-			this.plot.updateDomains(this.plot.calculateXDomain(), this.plot.getYDomain(), true);
+			let xDomain = Domain.of(this.plot.calculateXDomain())
+			xDomain.start = 1552961340000
+			this.plot.updateDomains(xDomain.toArray(), this.plot.getYDomain(), true);
 			this.updateDomains();
 		}
 	}
