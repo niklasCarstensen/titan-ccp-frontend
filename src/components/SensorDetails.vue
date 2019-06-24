@@ -37,9 +37,6 @@
                     <composition-pie-chart :sensor="internalSensor" />
                 </b-col>
             </b-row>
-            <pre>{{ internalSensor }}</pre>
-            <pre>{{ internalSensor.identifier }}</pre>
-            <pre>{{ internalSensor.identifier == '2.25' }}</pre>
             <b-row class="mb-4" v-if="internalSensor.identifier == '2.25'">
                 <b-col cols="12">
                     <stats-plot :sensor="internalSensor" :stats-type="statsDayOfWeek" />
