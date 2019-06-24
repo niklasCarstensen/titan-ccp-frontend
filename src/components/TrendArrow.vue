@@ -65,7 +65,8 @@ export default class TrendArrow extends Vue {
 
     private get after() {
         //let now = DateTime.local()
-        let now = DateTime.fromMillis(1553608020000)
+        let now = this.sensor.identifier == '2.25' ? DateTime.fromMillis(1553566140000) : DateTime.fromMillis(1553608020000)
+        //let now = DateTime.fromMillis(1553566140000)
         switch(this.timespan) { 
             case Timespan.LastHour: {
                 return now.minus({hours: 1})
