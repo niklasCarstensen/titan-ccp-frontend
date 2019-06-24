@@ -24,12 +24,12 @@
                 <composition-pie-chart :sensor="sensor" />
             </b-col>
         </b-row>
-        <b-row class="mb-4" v-if="internalSensor.identifier == '2.25'">
+        <b-row class="mb-4" v-if="sensor.identifier == '2.25'">
             <b-col cols="12">
                 <stats-plot :sensor="sensor" :stats-type="statsDayOfWeek" />
             </b-col>
         </b-row>
-        <b-row class="mb-4" v-if="internalSensor.identifier == '2.25'">
+        <b-row class="mb-4" v-if="sensor.identifier == '2.25'">
             <b-col cols="12">
                 <stats-plot :sensor="sensor" :stats-type="statsHourOfDay" />
             </b-col>
