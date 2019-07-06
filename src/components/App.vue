@@ -8,7 +8,21 @@
             <div class="container justify-content-end">
                 <ul class="navbar-nav">
                     <li class="nav-item text-nowrap">
-                        <b-button @click="autoLoading = !autoLoading" variant="link" class="nav-link">
+                        <b-dropdown right text="History" class="m-2">
+                            <b-dropdown-form>
+                                <b-form-group label="Date:" for="date">
+                                    <b-form-input id="date" type="date" v-model="date"></b-form-input>
+                                </b-form-group>
+                                <b-form-group label="Time:" for="time">
+                                    <b-form-input id="time" type="time" format="HH:mm" v-model="time"></b-form-input>
+                                </b-form-group>
+                                <b-form-group>
+                                    <b-button @click="setTimeOffset(true)">Now</b-button>
+                                    <b-button @click="setTimeOffset(false)">Set Time</b-button>
+                                </b-form-group>
+                            </b-dropdown-form>
+                        </b-dropdown>
+                        <b-button @click="autoLoading = !autoLoading" variant="link" class="play-pause-button">
                             <font-awesome-icon icon="pause" v-if="autoLoading" />
                             <font-awesome-icon icon="play" v-else />
                         </b-button>
@@ -64,6 +78,7 @@
                             :sensor="sensorRegistry.topLevelSensor"
                             :sensorRegistry="sensorRegistry"
                             :auto-loading="autoLoading"
+                            :getDate="getDate"
                             @update:sensor-registry="loadSensorRegistry">
                         </router-view>
                     </loading-spinner>
@@ -89,6 +104,8 @@ import Dashboard from "./Dashboard.vue"
 import SensorDetails from "./SensorDetails.vue"
 import Configuration from "./Configuration.vue"
 import Examples from "./Examples.vue"
+import { DateTime } from "luxon";
+import { DateGetter } from "../globals";
 
 @Component({
     components: {
@@ -109,6 +126,22 @@ export default class App extends Vue {
 
     private autoLoading = true
 
+    private time = null;
+    private date = null;
+    private getDate: DateGetter = DateTime.local
+
+    setTimeOffset(now: boolean) {
+        if (this.date && this.time && !now) {
+            this.getDate = ()  => {
+                const tmp = DateTime.fromISO(`${this.date}T${this.time}`);
+                
+                return tmp;
+                }
+        } else {
+            this.getDate = DateTime.local
+        }
+    }
+
     created() {
         this.isLoading = true;
         this.loadSensorRegistry().then(_ => {
@@ -128,6 +161,7 @@ export default class App extends Vue {
     }
 
 }
+
 </script>
 
 <style scoped>
@@ -192,6 +226,13 @@ export default class App extends Vue {
   font-size: 1rem;
   background-color: rgba(0, 0, 0, .25);
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+/*
+ * History dropdown
+ */
+.play-pause-button {
+    color: #AAA;
 }
 
 </style>
