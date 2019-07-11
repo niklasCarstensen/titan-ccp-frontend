@@ -50,7 +50,8 @@ declare var d3version3: any;
 })
 export default class ComparisonPlot extends Vue {
 
-    readonly after = new Date().getTime() - (1 * 3600 * 1000)
+    //readonly after = new Date().getTime() - (1 * 3600 * 1000)
+    readonly after = 0
 
     readonly dataSets = new Array<DataSet>()
 
