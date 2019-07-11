@@ -46,7 +46,7 @@ export default class StatsPlot extends Vue {
             },
             axis: {
                 x: {
-                    
+                    type: 'category'
                 },
                 y: {
                     min: 0
@@ -73,20 +73,26 @@ export default class StatsPlot extends Vue {
     }
 
     private createPlot() {
-        HTTP.get('/stats/' + this.sensor.identifier + '/' + this.statsType.url ) //hour-of-day'
+        HTTP.get('/stats/' + this.sensor.identifier + '/' + this.statsType.url)
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
-                let values: Array<string|number> = ["mean"]
+                let minValues: Array<string|number> = ["min"]
+                let meanValues: Array<string|number> = ["mean"]
+                let maxValues: Array<string|number> = ["max"]
                 for (let stats of response.data) {
                     labels.push(this.statsType.accessor(stats))
-                    values.push(stats.mean)
+                    minValues.push(stats.min)
+                    meanValues.push(stats.mean)
+                    maxValues.push(stats.max)
                 }
-                return [labels, values]
+                //return [labels, minValues, meanValues, maxValues]
+                return [labels, meanValues]
             })
             .catch(e => {
                 console.error(e);
                 this.isError = true
+                //return [["x"], ["min"], ["mean"], ["max"]]
                 return [["x"], ["mean"]]
             })
             .then(data => {
@@ -115,7 +121,36 @@ export const HOUR_OF_DAY: StatsType = {
 export const DAY_OF_WEEK: StatsType = {
     title: "Power Consumption per Day of Week",
     url: "day-of-week",
-    accessor: stats => stats.dayOfWeek
+    accessor: stats => getDayOfWeekText(stats.dayOfWeek)
+}
+
+function getDayOfWeekText(number: number) {
+    switch(number) { 
+        case 1: { 
+            return "Monday"
+        }
+        case 2: { 
+            return "Tuesday"
+        }
+        case 3: { 
+            return "Wednesday"
+        }
+        case 4: { 
+            return "Thursday"
+        }
+        case 5: { 
+            return "Friday"
+        }
+        case 6: { 
+            return "Saturday"
+        }
+        case 7: { 
+            return "Sunday"
+        }
+        default: { 
+            throw new RangeError("Day of week number must be between 1 and 7"); 
+        }
+    } 
 }
 
 </script>
