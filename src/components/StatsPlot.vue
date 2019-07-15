@@ -73,7 +73,9 @@ export default class StatsPlot extends Vue {
     }
 
     private createPlot() {
-        HTTP.get('/stats/' + this.sensor.identifier + '/' + this.statsType.url)
+        HTTP.get('/stats/' + this.sensor.identifier + '/' + this.statsType.url, {
+                params: this.statsType.params
+            })
             .then(response => {
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
@@ -109,18 +111,21 @@ export default class StatsPlot extends Vue {
 export interface StatsType {
     title: string
     url: string
+    params: object
     accessor: (stats: any) => string
 }
 
 export const HOUR_OF_DAY: StatsType = {
     title: "Power Consumption per Hour of Day",
-    url: "hour-of-day?intervalStart=2018-12-20T00:00:00Z&intervalEnd=2019-01-19T00:00:00Z",
+    url: "hour-of-day",
+    params: {intervalStart: "2018-12-20T00:00:00Z", intervalEnd: "2019-01-19T00:00:00Z"},
     accessor: stats => stats.hourOfDay
 }
 
 export const DAY_OF_WEEK: StatsType = {
     title: "Power Consumption per Day of Week",
-    url: "day-of-week?intervalStart=2018-01-19T00:00:00Z&intervalEnd=2019-01-19T00:00:00Z",
+    url: "day-of-week",
+    params: {intervalStart: "2018-01-19T00:00:00Z", intervalEnd: "2019-01-19T00:00:00Z"},
     accessor: stats => getDayOfWeekText(stats.dayOfWeek)
 }
 
