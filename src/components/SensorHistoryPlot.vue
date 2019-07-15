@@ -39,6 +39,11 @@ export default class SensorHistoryPlot extends Vue {
 
     // TODO
     private latest = this.getDate().toMillis() - (3600 * 1000);
+
+    @Watch('getDate')
+    updateLatest() {
+        this.latest = this.getDate().toMillis() - (3600 * 1000);
+    }
     //private latest = new Date().getTime() - (3600 * 1000)
 
     private isLoading = false
@@ -115,6 +120,7 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private fetchNewData(): Promise<DataPoint[]> {
+        console.log(this.latest);
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
         return HTTP.get(resource + '/' + this.sensor.identifier + '?after=' + this.latest)
             .then(response => {

@@ -56,9 +56,8 @@ export default class TrendArrow extends Vue {
     }
 
     private updateChart() {
-        console.log("After: " + this.after.constructor);
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        return HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after.toMillis())
+        return HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after().toMillis())
             .then(response => {
                 this.trendValue = response.data as number
             })
@@ -67,7 +66,7 @@ export default class TrendArrow extends Vue {
             });
     }
 
-    private get after() {
+    after = () => {
         let now = DateTime.local();
         console.log("Millis: " + now.toMillis());
         switch(this.timespan) { 
