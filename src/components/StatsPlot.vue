@@ -101,7 +101,7 @@ export default class StatsPlot extends Vue {
                 return [["x"], ["mean"]]
             })
             .then(data => {
-                this.chart.unload()
+                //this.chart.unload()
                 this.chart.load({
                     columns: data,
                     unload: true
