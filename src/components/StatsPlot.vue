@@ -73,13 +73,13 @@ export default class StatsPlot extends Vue {
     }
 
     private createPlot() {
+        this.isLoading = true
         console.log("Start loading data...")
+
         HTTP.get('/stats/' + this.sensor.identifier + '/' + this.statsType.url, {
                 params: this.statsType.params
             })
             .then(response => {
-                console.log(response.request)
-                console.log(response.status)
                 // JSON responses are automatically parsed.
                 let labels: string[] = ["x"]
                 let minValues: Array<string|number> = ["min"]
