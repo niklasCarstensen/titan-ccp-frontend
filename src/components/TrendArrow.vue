@@ -64,7 +64,8 @@ export default class TrendArrow extends Vue {
     }
 
     private get after() {
-        let now = DateTime.local()
+        //let now = DateTime.local()
+        let now = DateTime.fromMillis(1547802000000)
         switch(this.timespan) { 
             case Timespan.LastHour: {
                 return now.minus({hours: 1})
