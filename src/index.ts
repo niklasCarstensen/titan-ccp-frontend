@@ -64,3 +64,5 @@ new Vue({
     router: router,
     components: { App }
 });
+
+console.log("Hello, I'm a test from the app's entrypoint")
