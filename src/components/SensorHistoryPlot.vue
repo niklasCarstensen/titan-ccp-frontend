@@ -100,8 +100,8 @@ export default class SensorHistoryPlot extends Vue {
 
     private destroyPlot() {
         // TODO
-        this.latest = 0
-        //this.latest = new Date().getTime() - (3600 * 1000)
+        //this.latest = 0
+        this.latest = new Date().getTime() - (30 * 24 * 60 * 60 * 1000)
         this.plot.destroy()
     }
 
