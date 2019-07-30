@@ -19,7 +19,7 @@ import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 import Repeater from "../Repeater";
 import { DateTime } from "luxon";
-import { DateGetter } from "../globals";
+import { TimeMode } from "./App.vue";
 
 @Component({
     components: {
@@ -27,7 +27,7 @@ import { DateGetter } from "../globals";
     }
 })
 export default class SensorHistoryPlot extends Vue {
-    
+     
     private refreshIntervalInMs = 1000
 
     //private dataPoints = new Array<Array<any>>()
@@ -35,16 +35,22 @@ export default class SensorHistoryPlot extends Vue {
 
     @Prop() autoLoading: Boolean = true
 
-    @Prop() getDate!: DateGetter
+    @Prop() timeMode!: TimeMode
+
+    private timeOffset: number = 0
+
+    private dataPoints: any[] = []
 
     // TODO
-    private latest = this.getDate().toMillis() - (3600 * 1000);
-
-    @Watch('getDate')
-    updateLatest() {
-        this.latest = this.getDate().toMillis() - (3600 * 1000);
-    }
+    private latest = this.completeHistory ? 0 : this.timeMode.getTime().toMillis() - (3600*1000)
     //private latest = new Date().getTime() - (3600 * 1000)
+
+    @Watch('timeMode')
+    updateLatest() {
+        this.destroyPlot()
+        this.latest = this.completeHistory ? 0 : this.timeMode.getTime().toMillis() - (3600*1000)
+        this.requester.restart()
+    }
 
     private isLoading = false
     private isError = false
@@ -101,15 +107,27 @@ export default class SensorHistoryPlot extends Vue {
                 this.isError = true
                 return []
             })
-            .then(dataPoints => {
+            .then((dataPoints) => {
+                if (!this.timeMode.autoLoading) {
+                    let acc: DataPoint[] = []
+                    for (let point of dataPoints) {
+                        if (point.date.getTime() < this.timeMode.getTime().toMillis()) {
+                            acc.push(point)
+                        } else break;
+                    }
+                    this.plot.setDataPoints(acc)
+                } else {
+                    this.plot.setDataPoints(dataPoints)
+                }
                 this.isLoading = false
-                this.plot.setDataPoints(dataPoints)
             })
         
     }
 
     private updatePlot() {
-        this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))
+        if (this.timeMode.autoLoading) {      
+            this.fetchNewData().then(dataPoints => this.plot.addDataPoints(dataPoints))
+        }
     }
 
     private destroyPlot() {
@@ -120,7 +138,6 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     private fetchNewData(): Promise<DataPoint[]> {
-        console.log(this.latest);
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption' 
         return HTTP.get(resource + '/' + this.sensor.identifier + '?after=' + this.latest)
             .then(response => {
@@ -132,7 +149,6 @@ export default class SensorHistoryPlot extends Vue {
                 return response.data.map((x: any) => new DataPoint(new Date(x.timestamp), this.sensor instanceof AggregatedSensor ? x.sumInW : x.valueInW));
             })
     }
-
 }
 </script>
 

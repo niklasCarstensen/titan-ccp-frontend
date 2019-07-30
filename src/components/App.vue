@@ -9,16 +9,15 @@
                 <ul class="navbar-nav">
                     <li class="nav-item text-nowrap">
                         <b-dropdown right text="History" class="m-2">
+                            <flat-pickr                                                        
+                                placeholder="Select date"
+                                v-model="date"
+                                :config="flatPickrConfig">
+                            </flat-pickr>
                             <b-dropdown-form>
-                                <b-form-group label="Date:" for="date">
-                                    <b-form-input id="date" type="date" v-model="date"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label="Time:" for="time">
-                                    <b-form-input id="time" type="time" format="HH:mm" v-model="time"></b-form-input>
-                                </b-form-group>
                                 <b-form-group>
-                                    <b-button @click="setTimeOffset(true)">Now</b-button>
-                                    <b-button @click="setTimeOffset(false)">Set Time</b-button>
+                                    <b-button @click="setStartDate(true)">Now</b-button>
+                                    <b-button @click="setStartDate(false)">Set Time</b-button>
                                 </b-form-group>
                             </b-dropdown-form>
                         </b-dropdown>
@@ -58,7 +57,7 @@
                                 <router-link to="/configuration" class="nav-link">
                                     <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration
-                                </router-link>
+                                </router-link>enableTime
                             </li>
                             <!--
                             <li class="nav-item">
@@ -78,7 +77,7 @@
                             :sensor="sensorRegistry.topLevelSensor"
                             :sensorRegistry="sensorRegistry"
                             :auto-loading="autoLoading"
-                            :getDate="getDate"
+                            :timeMode="timeMode"
                             @update:sensor-registry="loadSensorRegistry">
                         </router-view>
                     </loading-spinner>
@@ -105,7 +104,8 @@ import SensorDetails from "./SensorDetails.vue"
 import Configuration from "./Configuration.vue"
 import Examples from "./Examples.vue"
 import { DateTime } from "luxon";
-import { DateGetter } from "../globals";
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 
 @Component({
     components: {
@@ -114,6 +114,7 @@ import { DateGetter } from "../globals";
         SensorDetails,
         Configuration,
         Examples,
+        flatPickr
     }
 })
 export default class App extends Vue {
@@ -126,19 +127,29 @@ export default class App extends Vue {
 
     private autoLoading = true
 
-    private time = null;
-    private date = null;
-    private getDate: DateGetter = DateTime.local
+    private flatPickrConfig = {
+        allowInput: true,
+        time_24hr: true,
+        enableTime: true
+    }
 
-    setTimeOffset(now: boolean) {
-        if (this.date && this.time && !now) {
-            this.getDate = ()  => {
-                const tmp = DateTime.fromISO(`${this.date}T${this.time}`);
-                
-                return tmp;
-                }
+    private date: string = new Date().toISOString()
+    private timeMode: TimeMode = {
+        autoLoading: this.autoLoading,
+        getTime: () => DateTime.local()
+    }
+
+    setStartDate(now: boolean) {
+        if (this.date && !now) {
+            this.timeMode = {
+                autoLoading: false,
+                getTime: () => DateTime.fromJSDate(new Date(this.date))
+            }
         } else {
-            this.getDate = DateTime.local
+            this.timeMode = {
+                autoLoading: true,
+                getTime: () => DateTime.local()
+            }
         }
     }
 
@@ -160,6 +171,11 @@ export default class App extends Vue {
         })
     }
 
+}
+
+export interface TimeMode {
+    autoLoading: boolean
+    getTime: () => DateTime
 }
 
 </script>
@@ -234,5 +250,4 @@ export default class App extends Vue {
 .play-pause-button {
     color: #AAA;
 }
-
 </style>

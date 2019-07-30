@@ -14,7 +14,7 @@ import { AggregatedSensor, Sensor } from '../SensorRegistry'
 import { HTTP } from "../http-common";
 import Repeater from "../Repeater";
 import { DateTime } from "luxon"
-import { DateGetter } from "../globals";
+import { TimeMode } from "./App.vue";
 
 @Component
 export default class TrendArrow extends Vue {
@@ -25,7 +25,7 @@ export default class TrendArrow extends Vue {
 
     @Prop() autoLoading: Boolean = true
 
-    @Prop() getDate!: DateGetter
+    @Prop() timeMode!: TimeMode
 
     trendValue = -1
 
@@ -57,7 +57,7 @@ export default class TrendArrow extends Vue {
 
     private updateChart() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        return HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after().toMillis())
+        return HTTP.get(resource + '/' + this.sensor.identifier + '/trend?after=' + this.after.toMillis())
             .then(response => {
                 this.trendValue = response.data as number
             })
@@ -66,9 +66,8 @@ export default class TrendArrow extends Vue {
             });
     }
 
-    after = () => {
-        let now = DateTime.local();
-        console.log("Millis: " + now.toMillis());
+    get after() {
+        let now = this.timeMode.getTime()
         switch(this.timespan) { 
             case Timespan.LastHour: {
                 return now.minus({hours: 1})
