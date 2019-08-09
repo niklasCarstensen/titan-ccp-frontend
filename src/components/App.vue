@@ -8,22 +8,17 @@
             <div class="container justify-content-end">
                 <ul class="navbar-nav">
                     <li class="nav-item text-nowrap">
-                        <b-dropdown right text="History" class="m-2">
-                            <flat-pickr                                                        
-                                placeholder="Select date"
-                                v-model="date"
-                                :config="flatPickrConfig">
-                            </flat-pickr>
-                            <b-dropdown-form>
-                                <b-form-group>
-                                    <b-button @click="setStartDate(true)">Now</b-button>
-                                    <b-button @click="setStartDate(false)">Set Time</b-button>
-                                </b-form-group>
-                            </b-dropdown-form>
-                        </b-dropdown>
-                        <b-button @click="autoLoading = !autoLoading" variant="link" class="play-pause-button">
-                            <font-awesome-icon icon="pause" v-if="autoLoading" />
-                            <font-awesome-icon icon="play" v-else />
+                        <flat-pickr                                                        
+                            placeholder="Select date"
+                            v-model="date"
+                            :config="flatPickrConfig"
+                            :events="flatPickrEvents">
+                        </flat-pickr>
+                        <b-button @click="setStartDate(true)" v-if="!timeMode.autoLoading" variant="link" class="play-pause-button">
+                            <font-awesome-icon icon="play"/>
+                        </b-button>
+                        <b-button @click="setStartDate(false)" v-else variant="link" class="play-pause-button">
+                            <font-awesome-icon icon="pause"/>
                         </b-button>
                     </li>
                 </ul>
@@ -76,7 +71,6 @@
                         <router-view v-if="sensorRegistry != null"
                             :sensor="sensorRegistry.topLevelSensor"
                             :sensorRegistry="sensorRegistry"
-                            :auto-loading="autoLoading"
                             :timeMode="timeMode"
                             @update:sensor-registry="loadSensorRegistry">
                         </router-view>
@@ -125,22 +119,26 @@ export default class App extends Vue {
 
     private isError = false
 
-    private autoLoading = true
-
     private flatPickrConfig = {
         allowInput: true,
         time_24hr: true,
         enableTime: true
     }
 
+    private flatPickrEvents =  [
+        {
+            onChange: () => this.setStartDate(false)
+        }
+    ]
+
     private date: string = new Date().toISOString()
     private timeMode: TimeMode = {
-        autoLoading: this.autoLoading,
+        autoLoading: true,
         getTime: () => DateTime.local()
     }
 
     setStartDate(now: boolean) {
-        if (this.date && !now) {
+        if (!now) {
             this.timeMode = {
                 autoLoading: false,
                 getTime: () => DateTime.fromJSDate(new Date(this.date))

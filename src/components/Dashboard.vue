@@ -2,23 +2,23 @@
     <b-container class="">
         <b-row class="mb-4">
             <b-col>
-                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastHour" :auto-loading="autoLoading" />
+                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastHour" />
             </b-col>
             <b-col>
-                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastDay" :auto-loading="autoLoading" />
+                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastDay" />
             </b-col>
             <b-col>
-                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastWeek" :auto-loading="autoLoading" />
+                <trend-arrow :timeMode="timeMode" :sensor="sensor" :timespan="trendLastWeek" />
             </b-col>
         </b-row>
         <b-row class="mb-4">
             <b-col>
-                <sensor-history-plot :timeMode="timeMode" :sensor="sensor" :auto-loading="autoLoading" />
+                <sensor-history-plot :timeMode="timeMode" :sensor="sensor" />
             </b-col>
         </b-row>
         <b-row class="mb-4">
             <b-col cols="6">
-                <distribution-plot :sensor="sensor" />
+                <distribution-plot :timeMode="timeMode" :sensor="sensor" />
             </b-col>
             <b-col cols="6">
                 <composition-pie-chart :sensor="sensor" />
@@ -74,8 +74,6 @@ import { TimeMode } from "./App.vue";
 export default class App extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
-
-    @Prop() autoLoading: Boolean = true
 
     @Prop() timeMode!: TimeMode
 

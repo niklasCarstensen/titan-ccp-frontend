@@ -23,9 +23,7 @@ export default class TrendArrow extends Vue {
 
     @Prop({ required: true }) timespan!: Timespan
 
-    @Prop() autoLoading: Boolean = true
-
-    @Prop() timeMode!: TimeMode
+    @Prop({ required: true }) timeMode!: TimeMode
 
     trendValue = -1
 
@@ -46,12 +44,13 @@ export default class TrendArrow extends Vue {
         this.requester.restart()
     }
 
-    @Watch('autoLoading')
-    onAutoLoadingChanged() {
-        if (this.autoLoading) {
+    @Watch('timeMode')
+    timeModeChanged() {
+        if (this.timeMode.autoLoading) {
             this.requester.start()
         } else {
             this.requester.stop()
+            this.updateChart();
         }
     }
 

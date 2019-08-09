@@ -16,6 +16,7 @@ import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from '../SensorRegistry'
 import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
+import { TimeMode } from "./App.vue";
 
 @Component({
     components: {
@@ -27,6 +28,8 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
     @Prop({ required: true }) sensor!: Sensor
 
     @Prop({ default: 8}) buckets!: number
+
+    @Prop({ required: true }) timeMode!: TimeMode
 
     private chart!: ChartAPI
 
@@ -61,9 +64,14 @@ export default class DistributionPlot extends Vue { //TODO Rename to histogram
         this.createPlot();
     }
 
+    @Watch('timeMode')
+    onTimeModeChanged() {
+        this.createPlot();
+    }
+
     private createPlot() {
         let resource = this.sensor instanceof AggregatedSensor ? 'aggregated-power-consumption' : 'power-consumption'
-        let after = new Date().getTime() - (1 * 3600 * 1000)
+        let after = this.timeMode.getTime().toMillis() - (1 * 3600 * 1000)
         HTTP.get(resource + '/' + this.sensor.identifier + '/distribution?after=' + after + '&buckets=' + this.buckets)
             .then(response => {
                 // JSON responses are automatically parsed.
