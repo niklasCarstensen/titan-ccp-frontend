@@ -49,7 +49,7 @@
                                 <router-link to="/configuration" class="nav-link">
                                     <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
                                     Configuration
-                                </router-link>enableTime
+                                </router-link>
                             </li>
                             <!--
                             <li class="nav-item">
