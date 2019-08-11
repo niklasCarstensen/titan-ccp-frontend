@@ -12,13 +12,10 @@
                             placeholder="Select date"
                             v-model="date"
                             :config="flatPickrConfig"
-                            :events="flatPickrEvents">
+                            @on-change="setStartDate(false)">
                         </flat-pickr>
                         <b-button @click="setStartDate(true)" v-if="!timeMode.autoLoading" variant="link" class="play-pause-button">
                             <font-awesome-icon icon="play"/>
-                        </b-button>
-                        <b-button @click="setStartDate(false)" v-else variant="link" class="play-pause-button">
-                            <font-awesome-icon icon="pause"/>
                         </b-button>
                     </li>
                 </ul>
@@ -124,12 +121,6 @@ export default class App extends Vue {
         time_24hr: true,
         enableTime: true
     }
-
-    private flatPickrEvents =  [
-        {
-            onChange: () => this.setStartDate(false)
-        }
-    ]
 
     private date: string = new Date().toISOString()
     private timeMode: TimeMode = {

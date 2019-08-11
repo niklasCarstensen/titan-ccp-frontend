@@ -30,7 +30,6 @@ export default class TrendArrow extends Vue {
     requester = new Repeater(this.updateChart, this.updateChart, 10_000)
 
     created() {
-        //this.updateChart()
         this.requester.start()
     }
 
@@ -40,7 +39,6 @@ export default class TrendArrow extends Vue {
 
     @Watch('sensor')
     onSensorChanged() {
-        //this.updateChart()
         this.requester.restart()
     }
 
