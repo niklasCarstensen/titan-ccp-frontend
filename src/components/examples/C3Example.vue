@@ -15,7 +15,7 @@ export default class C3Example extends Vue {
     
     mounted() {
         let chart = generate({
-            bindto: this.$el,
+            bindto: this.$el as HTMLElement,
             data: {
                 x : 'x',
                 columns: [
