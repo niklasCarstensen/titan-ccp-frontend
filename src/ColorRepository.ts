@@ -12,7 +12,7 @@ export default class ColorRepository {
         this.available = this.colors.slice().reverse()
     }
 
-    get(key: string) {
+    get(key: string): string {
         let color = this.repository.get(key)
         if (color) {
             return color
@@ -23,8 +23,8 @@ export default class ColorRepository {
         }
     }
 
-    free(key: string) {
-        let color = this.repository.get(key)
+    free(key: string): void {
+        const color = this.repository.get(key)
         console.log(color)
         if (color) {
             this.repository.delete(key)
