@@ -17,7 +17,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.2",
     "@riophae/vue-treeselect": "^0.0.38",
     "@types/node": "^10.12.8",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap-vue": "^2.0.0-rc.14",
     "c3": "^0.6.8",
     "luxon": "^1.6.2",
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/c3": "^0.6.2",
     "@types/luxon": "^0.5.3",
-    "css-loader": "^0.28.9",
+    "css-loader": "^3.2.0",
     "exports-loader": "^0.7.0",
     "ts-loader": "^4.5.0",
     "typescript": "^2.9.2",
