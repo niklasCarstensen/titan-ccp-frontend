@@ -10,7 +10,7 @@ import { MovingTimeSeriesPlot, DataPoint } from '../../MovingTimeSeriesPlot';
 @Component
 export default class MovingTimeSeriesPlotExample extends Vue {
     mounted() {
-        let plot = new MovingTimeSeriesPlot(this.$el);
+        let plot = new MovingTimeSeriesPlot(this.$el as HTMLElement);
 
         var last = Math.random() * 100
 

@@ -12,32 +12,32 @@
   "author": "Sören Henning <post@soeren-henning.de>",
   "license": "Apache v2",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.8",
-    "@fortawesome/free-solid-svg-icons": "^5.5.0",
-    "@fortawesome/vue-fontawesome": "^0.1.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
+    "@fortawesome/vue-fontawesome": "^0.1.6",
     "@riophae/vue-treeselect": "^0.0.38",
-    "@types/node": "^10.12.8",
+    "@types/node": "^10.14.15",
     "axios": "^0.18.1",
-    "bootstrap-vue": "^2.0.0-rc.14",
-    "c3": "^0.6.8",
-    "luxon": "^1.6.2",
-    "vue-router": "^3.0.1",
-    "vuedraggable": "^2.16.0"
+    "bootstrap-vue": "^2.0.0-rc.28",
+    "c3": "^0.6.14",
+    "luxon": "^1.17.2",
+    "vue-router": "^3.1.2",
+    "vuedraggable": "^2.23.0"
   },
   "devDependencies": {
-    "@types/c3": "^0.6.2",
+    "@types/c3": "^0.6.4",
     "@types/luxon": "^0.5.3",
     "css-loader": "^3.2.0",
     "exports-loader": "^0.7.0",
     "ts-loader": "^4.5.0",
     "typescript": "^3.5.2",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-class-component": "^6.3.2",
-    "vue-loader": "^15.4.2",
+    "vue-loader": "^15.7.1",
     "vue-property-decorator": "^6.1.0",
-    "vue-template-compiler": "^2.5.17",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.2.1"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   }
 }
