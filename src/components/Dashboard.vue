@@ -60,7 +60,7 @@ import { Timespan } from "./TrendArrow.vue"
 
 import Examples from "./Examples.vue"
 import { DateTime } from "luxon";
-import { TimeMode } from "./App.vue";
+import TimeMode from "../model/time-mode";
 
 @Component({
     components: {

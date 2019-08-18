@@ -16,7 +16,7 @@ import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from '../SensorRegistry'
 import { ChartAPI, generate } from 'c3';
 import 'c3/c3.css';
-import { TimeMode } from "./App.vue";
+import TimeMode from "../model/time-mode";
 
 @Component({
     components: {
