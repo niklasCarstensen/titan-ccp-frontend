@@ -97,6 +97,7 @@ import Examples from "./Examples.vue"
 import { DateTime } from "luxon";
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
+import TimeMode from './../model/time-mode';
 
 @Component({
     components: {
@@ -160,11 +161,6 @@ export default class App extends Vue {
         })
     }
 
-}
-
-export interface TimeMode {
-    autoLoading: boolean
-    getTime: () => DateTime
 }
 
 </script>

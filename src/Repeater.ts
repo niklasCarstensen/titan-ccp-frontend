@@ -12,16 +12,12 @@ export default class Repeater {
     // TODO remove
     async start() {
         await this.initialFunction()
-         this.intervalId = setInterval(() => {
-            this.repeatingFunction()     
-        }, this.repeatIntervalInMs)
+        this.intervalId = setInterval(() => this.repeatingFunction(), this.repeatIntervalInMs)
     }
 
     // TODO rename to start
     continue() {
-        this.intervalId = setInterval(() => {
-            this.repeatingFunction()     
-        }, this.repeatIntervalInMs)
+        this.intervalId = setInterval(() => this.repeatingFunction(), this.repeatIntervalInMs)
     }
     
     stop() {

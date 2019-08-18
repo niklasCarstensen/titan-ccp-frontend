@@ -14,7 +14,7 @@ import { AggregatedSensor, Sensor } from '../SensorRegistry'
 import { HTTP } from "../http-common";
 import Repeater from "../Repeater";
 import { DateTime } from "luxon"
-import { TimeMode } from "./App.vue";
+import TimeMode from "../model/time-mode";
 
 @Component
 export default class TrendArrow extends Vue {
@@ -43,7 +43,7 @@ export default class TrendArrow extends Vue {
     }
 
     @Watch('timeMode')
-    timeModeChanged() {
+    onTimeModeChanged() {
         if (this.timeMode.autoLoading) {
             this.requester.start()
         } else {
@@ -63,7 +63,7 @@ export default class TrendArrow extends Vue {
             });
     }
 
-    get after() {
+    private get after() {
         let now = this.timeMode.getTime()
         switch(this.timespan) { 
             case Timespan.LastHour: {

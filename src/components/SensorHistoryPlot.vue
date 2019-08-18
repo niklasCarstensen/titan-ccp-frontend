@@ -19,7 +19,7 @@ import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 import Repeater from "../Repeater";
 import { DateTime } from "luxon";
-import { TimeMode } from "./App.vue";
+import TimeMode from "../model/time-mode";
 
 @Component({
     components: {
@@ -74,7 +74,7 @@ export default class SensorHistoryPlot extends Vue {
     }
 
     @Watch('timeMode')
-    onAutoLoadingChanged() {
+    onTimeModeChanged() {
         this.destroyPlot();
         if (this.timeMode.autoLoading) {
             this.requester.restart();
