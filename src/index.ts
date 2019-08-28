@@ -22,7 +22,7 @@ if (process.env.SHOW_COMPLETE_HISTORY === "true") {
 
 Vue.use(BootstrapVue);
 
-library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck )
+library.add(faTachometerAlt, faChartBar, faBalanceScale, faSlidersH, faPlay, faMinus, faArrowRight, faPen, faTrash, faSpinner, faChartLine, faCog, faTimes, faPause, faCheck)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 //Vue.config.productionTip = false
 
@@ -58,9 +58,9 @@ const router = new VueRouter({
   //mode: 'history',
 })
 
-new Vue({   
-    el: '#app',
-    template: '<app />',
-    router: router,
-    components: { App }
+new Vue({
+  el: '#app',
+  components: { App },
+  template: '<app />',
+  router: router
 });

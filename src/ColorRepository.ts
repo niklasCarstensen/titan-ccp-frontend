@@ -12,19 +12,29 @@ export default class ColorRepository {
         this.available = this.colors.slice().reverse()
     }
 
-    get(key: string) {
-        let color = this.repository.get(key)
+    get(key: string): string {
+        const color = this.repository.get(key)
         if (color) {
             return color
         } else {
-            let color = this.available.length > 0 ? this.available.pop()! : this.colors[++this.last % this.colors.length]
+            const color = this.getNewColor()
             this.repository.set(key, color)
             return color
         }
     }
 
-    free(key: string) {
-        let color = this.repository.get(key)
+    private getNewColor(): string {
+        if (this.available.length > 0) {
+            const newColor = this.available.pop()
+            if (newColor) {
+                return newColor
+            }
+        }
+        return this.colors[++this.last % this.colors.length]
+    }
+
+    free(key: string): void {
+        const color = this.repository.get(key)
         console.log(color)
         if (color) {
             this.repository.delete(key)

@@ -25,7 +25,10 @@ npm run dev
 A good tool for working on this software is [Visual Studio Code](https://code.visualstudio.com/).
 In order to get things like autocompletion for `.vue` files, you need to install
 the [vetur](https://vuejs.github.io/vetur/) plugin. When you open a vue file the
-first time, Visual Studio Code suggests to install this plugin.
+first time, Visual Studio Code suggests to install this plugin. Further, the
+[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+plugin should be installed to get notifactions on violated coding guideline
+already during developing.
 
 The visualization frontend highly depends on external data sources, more
 specifically, the other Titan CCP microservices. In order to let the frontend

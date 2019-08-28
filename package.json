@@ -7,14 +7,15 @@
     "dev": "webpack-dev-server --open --hot --mode development --port 8070",
     "build": "webpack --progress --mode production",
     "build-silent": "webpack --hide-modules --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "author": "Sören Henning <post@soeren-henning.de>",
   "license": "Apache v2",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.8",
-    "@fortawesome/free-solid-svg-icons": "^5.5.0",
-    "@fortawesome/vue-fontawesome": "^0.1.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
+    "@fortawesome/vue-fontawesome": "^0.1.6",
     "@riophae/vue-treeselect": "^0.0.38",
     "@types/node": "^10.12.8",
     "axios": "^0.18.0",
@@ -26,19 +27,22 @@
     "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
-    "@types/c3": "^0.6.2",
+    "@types/c3": "^0.6.4",
     "@types/luxon": "^0.5.3",
-    "css-loader": "^0.28.9",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.1.0",
     "exports-loader": "^0.7.0",
     "ts-loader": "^4.5.0",
-    "typescript": "^2.9.2",
-    "vue": "^2.5.17",
+    "typescript": "^3.5.2",
+    "vue": "^2.6.10",
     "vue-class-component": "^6.3.2",
-    "vue-loader": "^15.4.2",
+    "vue-loader": "^15.7.1",
     "vue-property-decorator": "^6.1.0",
-    "vue-template-compiler": "^2.5.17",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.2.1"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   }
 }

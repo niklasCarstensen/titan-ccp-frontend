@@ -6,6 +6,11 @@ cache:
   paths:
   - node_modules/
 
+stages:
+  - build
+  - check
+  - deploy
+
 build:
   stage: build
   tags:
@@ -18,6 +23,12 @@ build:
     paths:
     - dist/
     - index.html
+
+eslint:
+  stage: check
+  tags:
+    - dockerex
+  script: npm run lint
 
 deploy:
   stage: deploy
