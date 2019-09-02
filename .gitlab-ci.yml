@@ -8,6 +8,7 @@ cache:
 
 stages:
   - build
+  - audit
   - check
   - deploy
 
@@ -23,6 +24,12 @@ build:
     paths:
     - dist/
     - index.html
+
+audit:
+  stage: audit
+  tags:
+    - dockerex
+  script: npm audit
 
 eslint:
   stage: check
