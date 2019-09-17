@@ -1,13 +1,16 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{{ statsType.title }}</h5>
-      <b-dropdown text="Interval" class="m-md-2">
-        <b-dropdown-item
-          v-for="interval in intervals"
-          :key="interval.start.seconds"
-        >{{getIntervalString(interval)}}</b-dropdown-item>
-      </b-dropdown>
+      <div class="space-between">
+        <h5 class="card-title">{{ statsType.title }}</h5>
+        <b-dropdown text="Choose Interval" class="m-md-2">
+          <b-dropdown-item
+            @click="createPlot(interval.start.seconds * 1000, interval.end.seconds * 1000)"
+            v-for="interval in intervals"
+            :key="interval.start.seconds"
+          >{{getIntervalString(interval)}}</b-dropdown-item>
+        </b-dropdown>
+      </div>
       <loading-spinner :is-loading="isLoading" :is-error="isError">
         <div class="c3-container"></div>
       </loading-spinner>
@@ -77,10 +80,10 @@ export default class StatsPlot extends Vue {
   }
 
   getIntervalString(interval: any) {
-    const from = DateTime.fromMillis(interval.start.seconds * 1000);
-    const to = DateTime.fromMillis(interval.end.seconds * 1000);
+    const start = DateTime.fromMillis(interval.start.seconds * 1000);
+    const end = DateTime.fromMillis(interval.end.seconds * 1000);
 
-    return from.toISODate() + " - " + to.toISODate();
+    return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
   }
 
   @Watch("sensor")
@@ -89,14 +92,18 @@ export default class StatsPlot extends Vue {
   }
 
   private getIntervals() {
-    HTTP.get("/stats/interval/get-" + this.statsType.url).then(response => {
-      console.log(response.data);
+    HTTP.get(`/stats/interval/${this.statsType.url}`).then(response => {
       this.intervals = response.data;
     });
   }
 
-  private createPlot() {
-    HTTP.get("/stats/" + this.sensor.identifier + "/" + this.statsType.url)
+  private createPlot(start?: number, end?: number) {
+    let url =
+      start != undefined && end != undefined
+        ? `/stats/sensor/${this.sensor.identifier}/${this.statsType.url}?start=${start}&end=${end}`
+        : `/stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
+
+    HTTP.get(url)
       .then(response => {
         // JSON responses are automatically parsed.
         let labels: string[] = ["x"];
@@ -119,7 +126,6 @@ export default class StatsPlot extends Vue {
         return [["x"], ["mean"]];
       })
       .then(data => {
-        //this.chart.unload()
         this.chart.load({
           columns: data,
           unload: true
@@ -178,6 +184,10 @@ function getDayOfWeekText(number: number) {
 </script>
 
 <style scoped>
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
 .c3-container {
   height: 300px;
 }
