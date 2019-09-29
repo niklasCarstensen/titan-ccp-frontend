@@ -35,13 +35,11 @@ export default class ColorRepository {
 
     free(key: string): void {
         const color = this.repository.get(key)
-        console.log(color)
         if (color) {
             this.repository.delete(key)
             if (this.available.indexOf(color) == -1) {
                 this.available.push(color)
             }
-            console.log(this.available)
         }
     }
 
