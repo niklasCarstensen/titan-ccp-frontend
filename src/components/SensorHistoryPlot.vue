@@ -18,6 +18,8 @@ import LoadingSpinner from "./LoadingSpinner.vue"
 import { CanvasTimeSeriesPlot } from '../canvasplot.js';
 import { MovingTimeSeriesPlot, DataPoint } from '../MovingTimeSeriesPlot';
 import Repeater from "../Repeater";
+import { DateTime } from "luxon";
+import { DateGetter } from "../globals";
 
 @Component({
     components: {
@@ -33,8 +35,10 @@ export default class SensorHistoryPlot extends Vue {
 
     @Prop() autoLoading: Boolean = true
 
+    @Prop() getDate!: DateGetter
+
     // TODO
-    private latest = this.completeHistory ? 0 : new Date().getTime() - (3600 * 1000)
+    private latest = this.getDate().toMillis() - (3600 * 1000);
     //private latest = new Date().getTime() - (3600 * 1000)
 
     private isLoading = false
