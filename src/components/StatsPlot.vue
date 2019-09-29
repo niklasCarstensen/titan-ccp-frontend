@@ -3,11 +3,11 @@
     <div class="card-body">
       <div class="space-between">
         <h5 class="card-title">{{ statsType.title }}</h5>
-        <b-dropdown text="Choose Interval" class="m-md-2">
+        <b-dropdown v-if="selectedIntervalString" :text="selectedIntervalString" class="m-md-2">
           <b-dropdown-item
-            @click="createPlot(interval.start.seconds * 1000, interval.end.seconds * 1000)"
+            @click="chooseInterval(interval)"
             v-for="interval in intervals"
-            :key="interval.start.seconds"
+            :key="interval.intervalStart"
           >{{getIntervalString(interval)}}</b-dropdown-item>
         </b-dropdown>
       </div>
@@ -37,12 +37,14 @@ export default class StatsPlot extends Vue {
 
   @Prop({ required: true }) statsType!: StatsType;
 
+  @Prop() private selectedIntervalString!: string;
+
   private chart!: ChartAPI;
 
   private isLoading = true;
   private isError = false;
 
-  private intervals: any = [];
+  private intervals: Interval[] = [];
 
   mounted() {
     this.chart = generate({
@@ -76,12 +78,11 @@ export default class StatsPlot extends Vue {
       }
     });
     this.getIntervals();
-    this.createPlot();
   }
 
-  getIntervalString(interval: any) {
-    const start = DateTime.fromMillis(interval.start.seconds * 1000);
-    const end = DateTime.fromMillis(interval.end.seconds * 1000);
+  getIntervalString(interval: Interval) {
+    const start = DateTime.fromISO(interval.intervalStart);
+    const end = DateTime.fromISO(interval.intervalEnd);
 
     return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
   }
@@ -94,13 +95,19 @@ export default class StatsPlot extends Vue {
   private getIntervals() {
     HTTP.get(`/stats/interval/${this.statsType.url}`).then(response => {
       this.intervals = response.data;
+      this.chooseInterval(this.intervals[this.intervals.length - 1]);
     });
   }
 
-  private createPlot(start?: number, end?: number) {
+  private chooseInterval(interval: Interval) {
+    this.selectedIntervalString = this.getIntervalString(interval);
+    this.createPlot(interval);
+  }
+
+  private createPlot(interval?: Interval) {
     let url =
-      start != undefined && end != undefined
-        ? `stats/sensor/${this.sensor.identifier}/${this.statsType.url}?intervalStart=${start}&intervalEnd=${end}`
+      interval != undefined
+        ? `stats/sensor/${this.sensor.identifier}/${this.statsType.url}?intervalStart=${interval.intervalStart}&intervalEnd=${interval.intervalEnd}`
         : `stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
 
     HTTP.get(url)
@@ -139,6 +146,11 @@ export interface StatsType {
   title: string;
   url: string;
   accessor: (stats: any) => string;
+}
+
+export interface Interval {
+  intervalStart: string;
+  intervalEnd: string;
 }
 
 export const HOUR_OF_DAY: StatsType = {
