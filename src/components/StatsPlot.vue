@@ -100,8 +100,8 @@ export default class StatsPlot extends Vue {
   private createPlot(start?: number, end?: number) {
     let url =
       start != undefined && end != undefined
-        ? `/stats/sensor/${this.sensor.identifier}/${this.statsType.url}?start=${start}&end=${end}`
-        : `/stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
+        ? `stats/sensor/${this.sensor.identifier}/${this.statsType.url}?intervalStart=${start}&intervalEnd=${end}`
+        : `stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
 
     HTTP.get(url)
       .then(response => {
