@@ -15,23 +15,23 @@
             </b-row>
             <b-row class="mb-4">
                 <b-col>
-                    <trend-arrow :sensor="internalSensor" :timespan="trendLastHour" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastHour" :timeMode="timeMode" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="internalSensor" :timespan="trendLastDay" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastDay" :timeMode="timeMode" />
                 </b-col>
                 <b-col>
-                    <trend-arrow :sensor="internalSensor" :timespan="trendLastWeek" :auto-loading="autoLoading" />
+                    <trend-arrow :sensor="internalSensor" :timespan="trendLastWeek" :timeMode="timeMode" />
                 </b-col>
             </b-row>
             <b-row class="mb-4">
                 <b-col>
-                    <sensor-history-plot :sensor="internalSensor" :auto-loading="autoLoading" />
+                    <sensor-history-plot :sensor="internalSensor" :timeMode="timeMode" />
                 </b-col>
             </b-row>
             <b-row class="mb-4">
                 <b-col cols="6">
-                    <distribution-plot :sensor="internalSensor" />
+                    <distribution-plot :sensor="internalSensor" :timeMode="timeMode" />
                 </b-col>
                 <b-col v-if="isAggregated" cols="6">
                     <composition-pie-chart :sensor="internalSensor" />
@@ -68,6 +68,7 @@ import CompositionPieChart from "./CompositionPieChart.vue"
 import SensorHistoryPlot from "./SensorHistoryPlot.vue"
 import TrendArrow from "./TrendArrow.vue"
 import { Timespan } from "./TrendArrow.vue"
+import TimeMode from "../model/time-mode";
 
 
 @Component({
@@ -84,7 +85,7 @@ export default class SensorDetails extends Vue {
 
     @Prop({ required: true }) sensor!: Sensor
 
-    @Prop() autoLoading: Boolean = true
+    @Prop({ required: true }) timeMode!: TimeMode
 
     private internalSensor = this.sensor
 

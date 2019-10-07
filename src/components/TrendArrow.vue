@@ -14,6 +14,7 @@ import { AggregatedSensor, Sensor } from '../SensorRegistry'
 import { HTTP } from "../http-common";
 import Repeater from "../Repeater";
 import { DateTime } from "luxon"
+import TimeMode from "../model/time-mode";
 
 @Component
 export default class TrendArrow extends Vue {
@@ -22,14 +23,13 @@ export default class TrendArrow extends Vue {
 
     @Prop({ required: true }) timespan!: Timespan
 
-    @Prop() autoLoading: Boolean = true
+    @Prop({ required: true }) timeMode!: TimeMode
 
     trendValue = -1
 
     requester = new Repeater(this.updateChart, this.updateChart, 10_000)
 
     created() {
-        //this.updateChart()
         this.requester.start()
     }
 
@@ -39,16 +39,16 @@ export default class TrendArrow extends Vue {
 
     @Watch('sensor')
     onSensorChanged() {
-        //this.updateChart()
         this.requester.restart()
     }
 
-    @Watch('autoLoading')
-    onAutoLoadingChanged() {
-        if (this.autoLoading) {
+    @Watch('timeMode')
+    onTimeModeChanged() {
+        if (this.timeMode.autoLoading) {
             this.requester.start()
         } else {
             this.requester.stop()
+            this.updateChart();
         }
     }
 
@@ -64,7 +64,7 @@ export default class TrendArrow extends Vue {
     }
 
     private get after() {
-        let now = DateTime.local()
+        let now = this.timeMode.getTime()
         switch(this.timespan) { 
             case Timespan.LastHour: {
                 return now.minus({hours: 1})
