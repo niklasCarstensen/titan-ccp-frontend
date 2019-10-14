@@ -18,12 +18,13 @@
     "@fortawesome/vue-fontawesome": "^0.1.6",
     "@riophae/vue-treeselect": "^0.0.38",
     "@types/node": "^10.14.15",
-    "axios": "^0.18.1",
-    "bootstrap-vue": "^2.0.0-rc.28",
-    "c3": "^0.6.14",
-    "luxon": "^1.17.2",
-    "vue-router": "^3.1.2",
-    "vuedraggable": "^2.23.0"
+    "axios": "^0.18.0",
+    "bootstrap-vue": "^2.0.0-rc.14",
+    "c3": "^0.6.8",
+    "luxon": "^1.6.2",
+    "vue-flatpickr-component": "^8.1.2",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "@types/c3": "^0.6.4",

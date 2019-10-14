@@ -1,171 +1,175 @@
 <template>
-    <div>
+  <div>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <router-link to="/" class="navbar-brand col-sm-3 col-md-2 mr-0">Titan Control Center</router-link>
+      <div class="container justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item text-nowrap">
+            <flat-pickr
+              placeholder="Select date"
+              v-model="date"
+              :config="flatPickrConfig"
+              @on-change="setStartDate(false)"
+            ></flat-pickr>
+            <b-button
+              @click="setStartDate(true)"
+              v-if="!timeMode.autoLoading"
+              variant="link"
+              class="play-pause-button"
+            >
+              <font-awesome-icon icon="play" />
+            </b-button>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-            <router-link to="/" class="navbar-brand col-sm-3 col-md-2 mr-0">
-                Titan Control Center
-            </router-link>
-            <div class="container justify-content-end">
-                <ul class="navbar-nav">
-                    <li class="nav-item text-nowrap">
-                        <b-dropdown right text="History" class="m-2">
-                            <b-dropdown-form>
-                                <b-form-group label="Date:" for="date">
-                                    <b-form-input id="date" type="date" v-model="date"></b-form-input>
-                                </b-form-group>
-                                <b-form-group label="Time:" for="time">
-                                    <b-form-input id="time" type="time" format="HH:mm" v-model="time"></b-form-input>
-                                </b-form-group>
-                                <b-form-group>
-                                    <b-button @click="setTimeOffset(true)">Now</b-button>
-                                    <b-button @click="setTimeOffset(false)">Set Time</b-button>
-                                </b-form-group>
-                            </b-dropdown-form>
-                        </b-dropdown>
-                        <b-button @click="autoLoading = !autoLoading" variant="link" class="play-pause-button">
-                            <font-awesome-icon icon="pause" v-if="autoLoading" />
-                            <font-awesome-icon icon="play" v-else />
-                        </b-button>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                    <div class="sidebar-sticky">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <router-link to="/" class="nav-link">
-                                    <font-awesome-icon icon="tachometer-alt" fixed-width class="feather" />
-                                    Dashboard
-                                </router-link>
-                            </li>
-                            <li class="nav-item">
-                                <router-link to="/sensor-details" class="nav-link">
-                                    <font-awesome-icon icon="chart-bar" fixed-width class="feather" />
-                                    Sensor Details
-                                </router-link>
-                            </li>
-                            <li class="nav-item">
-                                <router-link to="/comparison" class="nav-link">
-                                    <font-awesome-icon icon="balance-scale" fixed-width class="feather" />
-                                    Comparison
-                                </router-link>
-                            </li>
-                            <li class="nav-item">
-                                <router-link to="/configuration" class="nav-link">
-                                    <font-awesome-icon icon="sliders-h" fixed-width class="feather" />
-                                    Configuration
-                                </router-link>
-                            </li>
-                            <!--
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <router-link to="/" class="nav-link">
+                  <font-awesome-icon icon="tachometer-alt" fixed-width class="feather" />Dashboard
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/sensor-details" class="nav-link">
+                  <font-awesome-icon icon="chart-bar" fixed-width class="feather" />Sensor Details
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/comparison" class="nav-link">
+                  <font-awesome-icon icon="balance-scale" fixed-width class="feather" />Comparison
+                </router-link>
+              </li>
+              <li class="nav-item">
+                <router-link to="/configuration" class="nav-link">
+                  <font-awesome-icon icon="sliders-h" fixed-width class="feather" />Configuration
+                </router-link>
+              </li>
+              <!--
                             <li class="nav-item">
                                 <router-link to="/examples" class="nav-link">
                                     <font-awesome-icon icon="play" fixed-width class="feather" />
                                     Examples
                                 </router-link>
                             </li>
-                            -->
-                        </ul>
-                    </div>
-                </nav>
+              -->
+            </ul>
+          </div>
+        </nav>
 
-                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                    <loading-spinner :is-loading="isLoading" :is-error="isError">
-                        <router-view v-if="sensorRegistry != null"
-                            :sensor="sensorRegistry.topLevelSensor"
-                            :sensorRegistry="sensorRegistry"
-                            :auto-loading="autoLoading"
-                            :getDate="getDate"
-                            @update:sensor-registry="loadSensorRegistry">
-                        </router-view>
-                    </loading-spinner>
-                </main>
-            </div>
-        </div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <loading-spinner :is-loading="isLoading" :is-error="isError">
+            <router-view
+              v-if="sensorRegistry != null"
+              :sensor="sensorRegistry.topLevelSensor"
+              :sensorRegistry="sensorRegistry"
+              :timeMode="timeMode"
+              @update:sensor-registry="loadSensorRegistry"
+            ></router-view>
+          </loading-spinner>
+        </main>
+      </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
-import VueRouter from "vue-router"
-import { Sensor, AggregatedSensor, MachineSensor, SensorRegistry } from '../SensorRegistry'
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import VueRouter from "vue-router";
+import {
+  Sensor,
+  AggregatedSensor,
+  MachineSensor,
+  SensorRegistry
+} from "../SensorRegistry";
 
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import BootstrapVue from "bootstrap-vue";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
 
-import { SensorRegistryRequester } from '../SensorRegistry'
+import { SensorRegistryRequester } from "../SensorRegistry";
 
-import LoadingSpinner from "./LoadingSpinner.vue"
-import Dashboard from "./Dashboard.vue"
-import SensorDetails from "./SensorDetails.vue"
-import Configuration from "./Configuration.vue"
-import Examples from "./Examples.vue"
+import LoadingSpinner from "./LoadingSpinner.vue";
+import Dashboard from "./Dashboard.vue";
+import SensorDetails from "./SensorDetails.vue";
+import Configuration from "./Configuration.vue";
+import Examples from "./Examples.vue";
 import { DateTime } from "luxon";
-import { DateGetter } from "../globals";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+import TimeMode from "./../model/time-mode";
 
 @Component({
-    components: {
-        LoadingSpinner,
-        Dashboard,
-        SensorDetails,
-        Configuration,
-        Examples,
-    }
+  components: {
+    LoadingSpinner,
+    Dashboard,
+    SensorDetails,
+    Configuration,
+    Examples,
+    flatPickr
+  }
 })
 export default class App extends Vue {
+  private sensorRegistry: SensorRegistry | null = null;
 
-    private sensorRegistry: SensorRegistry | null = null
+  private isLoading = false;
 
-    private isLoading = false
+  private isError = false;
 
-    private isError = false
+  private flatPickrConfig = {
+    allowInput: true,
+    time_24hr: true,
+    enableTime: true
+  };
 
-    private autoLoading = true
+  private date: string = new Date().toISOString();
+  private timeMode: TimeMode = {
+    autoLoading: true,
+    getTime: () => DateTime.local()
+  };
 
-    private time = null;
-    private date = null;
-    private getDate: DateGetter = DateTime.local
-
-    setTimeOffset(now: boolean) {
-        if (this.date && this.time && !now) {
-            this.getDate = ()  => {
-                const tmp = DateTime.fromISO(`${this.date}T${this.time}`);
-                
-                return tmp;
-                }
-        } else {
-            this.getDate = DateTime.local
-        }
+  setStartDate(now: boolean) {
+    if (!now) {
+      this.timeMode = {
+        autoLoading: false,
+        getTime: () => DateTime.fromJSDate(new Date(this.date))
+      };
+    } else {
+      this.timeMode = {
+        autoLoading: true,
+        getTime: () => DateTime.local()
+      };
+      this.date = new Date().toISOString();
     }
+  }
 
-    created() {
-        this.isLoading = true;
-        this.loadSensorRegistry().then(_ => {
-            this.isLoading = false
-        }).catch(e => {
-            this.isLoading = false
-            this.isError = true
-            console.error(e)
-        })
-    }
+  created() {
+    this.isLoading = true;
+    this.loadSensorRegistry()
+      .then(_ => {
+        this.isLoading = false;
+      })
+      .catch(e => {
+        this.isLoading = false;
+        this.isError = true;
+        console.error(e);
+      });
+  }
 
-    loadSensorRegistry() {
-        return new SensorRegistryRequester().request().then(registry => {
-            this.sensorRegistry = registry
-            return registry
-        })
-    }
-
+  loadSensorRegistry() {
+    return new SensorRegistryRequester().request().then(registry => {
+      this.sensorRegistry = registry;
+      return registry;
+    });
+  }
 }
-
 </script>
 
 <style scoped>
-
 /*
  * Sidebar
  */
@@ -177,7 +181,7 @@ export default class App extends Vue {
   left: 0;
   z-index: 100; /* Behind the navbar */
   padding: 0;
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-sticky {
@@ -185,7 +189,7 @@ export default class App extends Vue {
   position: sticky;
   top: 48px; /* Height of navbar */
   height: calc(100vh - 48px);
-  padding-top: .5rem;
+  padding-top: 0.5rem;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
@@ -196,7 +200,7 @@ export default class App extends Vue {
 }
 
 .sidebar .nav-link .feather {
-  color: #AAA;
+  color: #aaa;
   margin-right: 4px;
 }
 
@@ -212,7 +216,7 @@ export default class App extends Vue {
 }
 
 .sidebar-heading {
-  font-size: .75rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
@@ -221,18 +225,17 @@ export default class App extends Vue {
  */
 
 .navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+  background-color: rgba(0, 0, 0, 0.25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.25);
 }
 
 /*
  * History dropdown
  */
 .play-pause-button {
-    color: #AAA;
+  color: #aaa;
 }
-
 </style>
