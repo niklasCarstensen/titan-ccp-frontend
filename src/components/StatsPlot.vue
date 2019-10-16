@@ -37,7 +37,7 @@ export default class StatsPlot extends Vue {
 
   @Prop({ required: true }) statsType!: StatsType;
 
-  @Prop() private selectedIntervalString!: string;
+  public selectedIntervalString: string | null = null;
 
   private chart!: ChartAPI;
 
