@@ -12,13 +12,7 @@ export default class Repeater {
     // TODO remove
     async start(): Promise<void> {
         await this.initialFunction()
-<<<<<<< HEAD
-        this.intervalId = window.setInterval(() => {
-            this.repeatingFunction()
-        }, this.repeatIntervalInMs)
-=======
         this.intervalId = window.setInterval(() => this.repeatingFunction(), this.repeatIntervalInMs)
->>>>>>> 938efde1dc0615aab7a5291c511f3c65aa65dea1
     }
 
     // TODO rename to start
