@@ -9,7 +9,8 @@
               placeholder="Select date"
               v-model="date"
               :config="flatPickrConfig"
-              @on-change="setStartDate(false)"
+              @on-close="checkDateChanged()"
+              @on-open="setOldDate()"
             ></flat-pickr>
             <b-button
               @click="setStartDate(true)"
@@ -126,7 +127,19 @@ export default class App extends Vue {
     enableTime: true
   };
 
+  setOldDate() {
+    this.oldDate = this.date;
+  }
+
+  checkDateChanged() {
+    if (this.oldDate !== this.date) {
+      this.setStartDate(false);
+    }
+  }
+
   private date: string = new Date().toISOString();
+  private oldDate: string = this.date;
+
   private timeMode: TimeMode = {
     autoLoading: true,
     getTime: () => DateTime.local()
