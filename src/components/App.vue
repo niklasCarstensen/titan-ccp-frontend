@@ -5,21 +5,27 @@
       <div class="container justify-content-end">
         <ul class="navbar-nav">
           <li class="nav-item text-nowrap">
-            <flat-pickr
-              placeholder="Select date"
-              v-model="date"
-              :config="flatPickrConfig"
-              @on-close="checkDateChanged()"
-              @on-open="setOldDate()"
-            ></flat-pickr>
             <b-button
-              @click="setStartDate(true)"
-              v-if="!timeMode.autoLoading"
+              v-if="timeMode.autoLoading == true"
+              @click="setStartDate(false)"
               variant="link"
               class="play-pause-button"
             >
-              <font-awesome-icon icon="play" />
+              <font-awesome-icon icon="history" />
             </b-button>
+            <div v-else class="form-inline">
+              <flat-pickr
+                placeholder="Select date"
+                v-model="date"
+                class="date-picker form-control text-center"
+                :config="flatPickrConfig"
+                @on-close="checkDateChanged()"
+                @on-open="setOldDate()"
+              ></flat-pickr>
+              <b-button @click="setStartDate(true)" variant="link" class="play-pause-button">
+                <font-awesome-icon icon="play" />
+              </b-button>
+            </div>
           </li>
         </ul>
       </div>
@@ -117,6 +123,14 @@ export default class App extends Vue {
     enableTime: true
   };
 
+  private date: string = new Date().toISOString();
+  private oldDate: string = this.date;
+
+  private timeMode: TimeMode = {
+    autoLoading: true,
+    getTime: () => DateTime.local() // now
+  };
+
   setOldDate() {
     this.oldDate = this.date;
   }
@@ -127,14 +141,6 @@ export default class App extends Vue {
     }
   }
 
-  private date: string = new Date().toISOString();
-  private oldDate: string = this.date;
-
-  private timeMode: TimeMode = {
-    autoLoading: true,
-    getTime: () => DateTime.local()
-  };
-
   setStartDate(now: boolean) {
     if (!now) {
       this.timeMode = {
@@ -144,7 +150,7 @@ export default class App extends Vue {
     } else {
       this.timeMode = {
         autoLoading: true,
-        getTime: () => DateTime.local()
+        getTime: () => DateTime.local() // now
       };
       this.date = new Date().toISOString();
     }
@@ -238,6 +244,10 @@ export default class App extends Vue {
 /*
  * History dropdown
  */
+.date-picker {
+  width: 10em;
+}
+
 .play-pause-button {
   color: #aaa;
 }
