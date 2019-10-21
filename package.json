@@ -19,7 +19,7 @@
     "@riophae/vue-treeselect": "^0.0.38",
     "@types/node": "^10.14.15",
     "axios": "^0.18.0",
-    "bootstrap-vue": "^2.0.0-rc.14",
+    "bootstrap-vue": "^2.0.4",
     "c3": "^0.6.8",
     "luxon": "^1.6.2",
     "vue-flatpickr-component": "^8.1.2",
