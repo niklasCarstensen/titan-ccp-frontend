@@ -50,14 +50,6 @@
                   <font-awesome-icon icon="sliders-h" fixed-width class="feather" />Configuration
                 </router-link>
               </li>
-              <!--
-                            <li class="nav-item">
-                                <router-link to="/examples" class="nav-link">
-                                    <font-awesome-icon icon="play" fixed-width class="feather" />
-                                    Examples
-                                </router-link>
-                            </li>
-              -->
             </ul>
           </div>
         </nav>
@@ -98,7 +90,6 @@ import LoadingSpinner from "./LoadingSpinner.vue";
 import Dashboard from "./Dashboard.vue";
 import SensorDetails from "./SensorDetails.vue";
 import Configuration from "./Configuration.vue";
-import Examples from "./Examples.vue";
 import { DateTime } from "luxon";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
@@ -110,7 +101,6 @@ import TimeMode from "./../model/time-mode";
     Dashboard,
     SensorDetails,
     Configuration,
-    Examples,
     flatPickr
   }
 })
