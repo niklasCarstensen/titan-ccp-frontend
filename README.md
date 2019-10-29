@@ -1,11 +1,11 @@
-# Titan CCP - Visualization Frontend
+# Titan Control Center - Visualization Frontend
 
-The [Titan Control Center Prototype](http://eprints.uni-kiel.de/43910) (CCP) is a
-scalable monitoring infrastructure for [Industrial DevOps](https://industrial-devops.org/).
+The [Titan Control Center](https://ieeexplore.ieee.org/abstract/document/8822045)
+is a scalable monitoring infrastructure for [Industrial DevOps](https://industrial-devops.org/).
 It allows to monitor, analyze and visualize the electrical power consumption of
-devices and machines in production environments such as factories.
+devices and machines in industrial production environments.
 
-This repository contains the visualization frontend of the Titan CCP. It is a
+This repository contains the visualization frontend of the Titan Control Center. It is a
 single-page application written in Typescript and Vue.js.
 
 ## Developing
