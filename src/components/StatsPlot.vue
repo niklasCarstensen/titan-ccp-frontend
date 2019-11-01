@@ -3,13 +3,7 @@
     <div class="card-body">
       <div class="space-between">
         <h5 class="card-title">{{ statsType.title }}</h5>
-        <b-dropdown v-if="selectedIntervalString" :text="selectedIntervalString" class="m-md-2">
-          <b-dropdown-item
-            @click="chooseInterval(interval)"
-            v-for="interval in intervals"
-            :key="interval.intervalStart"
-          >{{getIntervalString(interval)}}</b-dropdown-item>
-        </b-dropdown>
+        <b-form-select v-model="selectedInterval" :options="intervalSelectOptions" class="mb-3"></b-form-select>
       </div>
       <loading-spinner :is-loading="isLoading" :is-error="isError">
         <div class="c3-container"></div>
@@ -37,14 +31,13 @@ export default class StatsPlot extends Vue {
 
   @Prop({ required: true }) statsType!: StatsType;
 
-  public selectedIntervalString: string | null = null;
+  private selectedInterval: Interval | null = null;
+  private intervals: Interval[] = [];
 
   private chart!: ChartAPI;
 
   private isLoading = true;
   private isError = false;
-
-  private intervals: Interval[] = [];
 
   mounted() {
     this.chart = generate({
@@ -77,30 +70,30 @@ export default class StatsPlot extends Vue {
         show: false
       }
     });
-    this.getIntervals();
+    this.loadAvailableIntervals();
+    this.createPlot();
   }
 
-  getIntervalString(interval: Interval) {
-    const start = DateTime.fromISO(interval.intervalStart);
-    const end = DateTime.fromISO(interval.intervalEnd);
-
-    return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
+  get intervalSelectOptions(): Array<IntervalSelectOption> {
+    return this.intervals.map(i => new IntervalSelectOption(i));
   }
 
   @Watch("sensor")
   onSensorChanged(sensor: Sensor) {
+    console.log("sensorChanged");
     this.createPlot();
   }
 
-  private getIntervals() {
+  private loadAvailableIntervals() {
     HTTP.get(`/stats/interval/${this.statsType.url}`).then(response => {
       this.intervals = response.data;
-      this.chooseInterval(this.intervals[this.intervals.length - 1]);
     });
   }
 
-  private chooseInterval(interval: Interval) {
-    this.selectedIntervalString = this.getIntervalString(interval);
+  @Watch("selectedInterval")
+  onIntervalChanged(interval: Interval) {
+    console.log("onIntervalChanged");
+    console.log(interval);
     this.createPlot(interval);
   }
 
@@ -151,6 +144,23 @@ export interface StatsType {
 export interface Interval {
   intervalStart: string;
   intervalEnd: string;
+}
+
+class IntervalSelectOption {
+  public readonly value: Interval;
+  public readonly text: string;
+
+  constructor(interval: Interval) {
+    this.value = interval;
+    this.text = intervalToString(interval);
+  }
+}
+
+function intervalToString(interval: Interval) {
+  const start = DateTime.fromISO(interval.intervalStart);
+  const end = DateTime.fromISO(interval.intervalEnd);
+
+  return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
 }
 
 export const HOUR_OF_DAY: StatsType = {
