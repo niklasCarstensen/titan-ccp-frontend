@@ -1,16 +1,19 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <div class="space-between">
-        <h5 class="card-title">{{ statsType.title }}</h5>
-        <b-dropdown v-if="selectedIntervalString" :text="selectedIntervalString" class="m-md-2">
-          <b-dropdown-item
-            @click="chooseInterval(interval)"
-            v-for="interval in intervals"
-            :key="interval.intervalStart"
-          >{{getIntervalString(interval)}}</b-dropdown-item>
-        </b-dropdown>
-      </div>
+      <b-row>
+        <b-col cols="9">
+          <h5 class="card-title">{{ statsType.title }}</h5>
+        </b-col>
+        <b-col cols="3">
+          <b-form-select
+            v-if="selectedInterval"
+            v-model="selectedInterval"
+            :options="intervalSelectOptions"
+            class="mb-3"
+          ></b-form-select>
+        </b-col>
+      </b-row>
       <loading-spinner :is-loading="isLoading" :is-error="isError">
         <div class="c3-container"></div>
       </loading-spinner>
@@ -25,7 +28,7 @@ import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from "../SensorRegistry";
 import { ChartAPI, generate } from "c3";
 import "c3/c3.css";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 @Component({
   components: {
@@ -37,14 +40,17 @@ export default class StatsPlot extends Vue {
 
   @Prop({ required: true }) statsType!: StatsType;
 
-  public selectedIntervalString: string | null = null;
+  private availableIntervals: Interval[] = [];
+  private selectedInterval: Interval | null = null;
 
   private chart!: ChartAPI;
 
   private isLoading = true;
   private isError = false;
 
-  private intervals: Interval[] = [];
+  get intervalSelectOptions(): Array<IntervalSelectOption> {
+    return this.availableIntervals.map(i => new IntervalSelectOption(i));
+  }
 
   mounted() {
     this.chart = generate({
@@ -77,14 +83,8 @@ export default class StatsPlot extends Vue {
         show: false
       }
     });
-    this.getIntervals();
-  }
-
-  getIntervalString(interval: Interval) {
-    const start = DateTime.fromISO(interval.intervalStart);
-    const end = DateTime.fromISO(interval.intervalEnd);
-
-    return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
+    this.loadAvailableIntervals();
+    this.createPlot();
   }
 
   @Watch("sensor")
@@ -92,22 +92,32 @@ export default class StatsPlot extends Vue {
     this.createPlot();
   }
 
-  private getIntervals() {
+  private loadAvailableIntervals() {
     HTTP.get(`/stats/interval/${this.statsType.url}`).then(response => {
-      this.intervals = response.data;
-      this.chooseInterval(this.intervals[this.intervals.length - 1]);
+      this.availableIntervals = response.data.map((i: any) =>
+        Interval.fromDateTimes(
+          DateTime.fromISO(i.intervalStart),
+          DateTime.fromISO(i.intervalEnd)
+        )
+      );
     });
   }
 
-  private chooseInterval(interval: Interval) {
-    this.selectedIntervalString = this.getIntervalString(interval);
-    this.createPlot(interval);
+  @Watch("selectedInterval")
+  onIntervalChanged(interval: Interval, oldInterval: Interval) {
+    if (oldInterval != null) {
+      this.createPlot(interval);
+    }
   }
 
   private createPlot(interval?: Interval) {
     let url =
       interval != undefined
-        ? `stats/sensor/${this.sensor.identifier}/${this.statsType.url}?intervalStart=${interval.intervalStart}&intervalEnd=${interval.intervalEnd}`
+        ? `stats/sensor/${this.sensor.identifier}/${
+            this.statsType.url
+          }?intervalStart=${this.dateTimeToBackendISO(
+            interval.start
+          )}&intervalEnd=${this.dateTimeToBackendISO(interval.end)}`
         : `stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
 
     HTTP.get(url)
@@ -122,6 +132,13 @@ export default class StatsPlot extends Vue {
           minValues.push(stats.min);
           meanValues.push(stats.mean);
           maxValues.push(stats.max);
+        }
+        // Update selected interval
+        if (response.data.length > 0 && this.selectedInterval == null) {
+          this.selectedInterval = Interval.fromDateTimes(
+            DateTime.fromMillis(response.data[0].periodStart),
+            DateTime.fromMillis(response.data[0].periodEnd)
+          );
         }
         //return [labels, minValues, meanValues, maxValues]
         return [labels, meanValues];
@@ -140,17 +157,26 @@ export default class StatsPlot extends Vue {
         this.isLoading = false;
       });
   }
+
+  private dateTimeToBackendISO(dateTime: DateTime): string {
+    return dateTime.toUTC().toISO({ suppressMilliseconds: true });
+  }
+}
+
+class IntervalSelectOption {
+  public readonly value: Interval;
+  public readonly text: string;
+
+  constructor(interval: Interval) {
+    this.value = interval;
+    this.text = interval.toFormat("yyyy/MM/dd");
+  }
 }
 
 export interface StatsType {
   title: string;
   url: string;
   accessor: (stats: any) => string;
-}
-
-export interface Interval {
-  intervalStart: string;
-  intervalEnd: string;
 }
 
 export const HOUR_OF_DAY: StatsType = {
@@ -196,10 +222,6 @@ function getDayOfWeekText(number: number) {
 </script>
 
 <style scoped>
-.space-between {
-  display: flex;
-  justify-content: space-between;
-}
 .c3-container {
   height: 300px;
 }
