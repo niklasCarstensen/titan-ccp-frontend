@@ -1,15 +1,19 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <div class="space-between">
-        <h5 class="card-title">{{ statsType.title }}</h5>
-        <b-form-select
-          v-if="selectedInterval"
-          v-model="selectedInterval"
-          :options="intervalSelectOptions"
-          class="mb-3"
-        ></b-form-select>
-      </div>
+      <b-row>
+        <b-col cols="9">
+          <h5 class="card-title">{{ statsType.title }}</h5>
+        </b-col>
+        <b-col cols="3">
+          <b-form-select
+            v-if="selectedInterval"
+            v-model="selectedInterval"
+            :options="intervalSelectOptions"
+            class="mb-3"
+          ></b-form-select>
+        </b-col>
+      </b-row>
       <loading-spinner :is-loading="isLoading" :is-error="isError">
         <div class="c3-container"></div>
       </loading-spinner>
@@ -218,10 +222,6 @@ function getDayOfWeekText(number: number) {
 </script>
 
 <style scoped>
-.space-between {
-  display: flex;
-  justify-content: space-between;
-}
 .c3-container {
   height: 300px;
 }
