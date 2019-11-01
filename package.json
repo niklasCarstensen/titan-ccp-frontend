@@ -21,14 +21,14 @@
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.4",
     "c3": "^0.6.8",
-    "luxon": "^1.6.2",
+    "luxon": "^1.21.0",
     "vue-flatpickr-component": "^8.1.2",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0"
   },
   "devDependencies": {
     "@types/c3": "^0.6.4",
-    "@types/luxon": "^0.5.3",
+    "@types/luxon": "^1.15.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "css-loader": "^3.2.0",
