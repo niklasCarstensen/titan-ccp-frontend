@@ -3,7 +3,12 @@
     <div class="card-body">
       <div class="space-between">
         <h5 class="card-title">{{ statsType.title }}</h5>
-        <b-form-select v-model="selectedInterval" :options="intervalSelectOptions" class="mb-3"></b-form-select>
+        <b-form-select
+          v-if="selectedInterval"
+          v-model="selectedInterval"
+          :options="intervalSelectOptions"
+          class="mb-3"
+        ></b-form-select>
       </div>
       <loading-spinner :is-loading="isLoading" :is-error="isError">
         <div class="c3-container"></div>
@@ -19,7 +24,7 @@ import { HTTP } from "../http-common";
 import { Sensor, AggregatedSensor } from "../SensorRegistry";
 import { ChartAPI, generate } from "c3";
 import "c3/c3.css";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 @Component({
   components: {
@@ -31,13 +36,17 @@ export default class StatsPlot extends Vue {
 
   @Prop({ required: true }) statsType!: StatsType;
 
+  private availableIntervals: Interval[] = [];
   private selectedInterval: Interval | null = null;
-  private intervals: Interval[] = [];
 
   private chart!: ChartAPI;
 
   private isLoading = true;
   private isError = false;
+
+  get intervalSelectOptions(): Array<IntervalSelectOption> {
+    return this.availableIntervals.map(i => new IntervalSelectOption(i));
+  }
 
   mounted() {
     this.chart = generate({
@@ -74,33 +83,37 @@ export default class StatsPlot extends Vue {
     this.createPlot();
   }
 
-  get intervalSelectOptions(): Array<IntervalSelectOption> {
-    return this.intervals.map(i => new IntervalSelectOption(i));
-  }
-
   @Watch("sensor")
   onSensorChanged(sensor: Sensor) {
-    console.log("sensorChanged");
     this.createPlot();
   }
 
   private loadAvailableIntervals() {
     HTTP.get(`/stats/interval/${this.statsType.url}`).then(response => {
-      this.intervals = response.data;
+      this.availableIntervals = response.data.map((i: any) =>
+        Interval.fromDateTimes(
+          DateTime.fromISO(i.intervalStart),
+          DateTime.fromISO(i.intervalEnd)
+        )
+      );
     });
   }
 
   @Watch("selectedInterval")
-  onIntervalChanged(interval: Interval) {
-    console.log("onIntervalChanged");
-    console.log(interval);
-    this.createPlot(interval);
+  onIntervalChanged(interval: Interval, oldInterval: Interval) {
+    if (oldInterval != null) {
+      this.createPlot(interval);
+    }
   }
 
   private createPlot(interval?: Interval) {
     let url =
       interval != undefined
-        ? `stats/sensor/${this.sensor.identifier}/${this.statsType.url}?intervalStart=${interval.intervalStart}&intervalEnd=${interval.intervalEnd}`
+        ? `stats/sensor/${this.sensor.identifier}/${
+            this.statsType.url
+          }?intervalStart=${this.dateTimeToBackendISO(
+            interval.start
+          )}&intervalEnd=${this.dateTimeToBackendISO(interval.end)}`
         : `stats/sensor/${this.sensor.identifier}/${this.statsType.url}`;
 
     HTTP.get(url)
@@ -115,6 +128,13 @@ export default class StatsPlot extends Vue {
           minValues.push(stats.min);
           meanValues.push(stats.mean);
           maxValues.push(stats.max);
+        }
+        // Update selected interval
+        if (response.data.length > 0 && this.selectedInterval == null) {
+          this.selectedInterval = Interval.fromDateTimes(
+            DateTime.fromMillis(response.data[0].periodStart),
+            DateTime.fromMillis(response.data[0].periodEnd)
+          );
         }
         //return [labels, minValues, meanValues, maxValues]
         return [labels, meanValues];
@@ -133,17 +153,10 @@ export default class StatsPlot extends Vue {
         this.isLoading = false;
       });
   }
-}
 
-export interface StatsType {
-  title: string;
-  url: string;
-  accessor: (stats: any) => string;
-}
-
-export interface Interval {
-  intervalStart: string;
-  intervalEnd: string;
+  private dateTimeToBackendISO(dateTime: DateTime): string {
+    return dateTime.toUTC().toISO({ suppressMilliseconds: true });
+  }
 }
 
 class IntervalSelectOption {
@@ -152,15 +165,14 @@ class IntervalSelectOption {
 
   constructor(interval: Interval) {
     this.value = interval;
-    this.text = intervalToString(interval);
+    this.text = interval.toFormat("yyyy/MM/dd");
   }
 }
 
-function intervalToString(interval: Interval) {
-  const start = DateTime.fromISO(interval.intervalStart);
-  const end = DateTime.fromISO(interval.intervalEnd);
-
-  return start.toFormat("yyyy/MM/dd") + " - " + end.toFormat("yyyy/MM/dd");
+export interface StatsType {
+  title: string;
+  url: string;
+  accessor: (stats: any) => string;
 }
 
 export const HOUR_OF_DAY: StatsType = {
