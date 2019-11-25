@@ -73,7 +73,7 @@ module.exports = {
     noInfo: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080'
+        target: 'http://samoa.se.informatik.uni-kiel.de:8185'
       }
     }
   },
