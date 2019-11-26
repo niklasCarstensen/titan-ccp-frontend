@@ -75,49 +75,7 @@ export default class TimeStackChart extends Vue {
       "#ffd92f"
     ];
 
-    const pie_svg = d3
-      .select(this.$el)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
-
-    // Create pie structure
-    const pie = d3
-      .pie()
-      .value((Math.PI * 2) / data.length)
-      .sort(null);
-
-    // Set Radii
-    const maxData = data.reduce((x, y) => Math.max(x, y));
-    const arc = d3.arc().innerRadius(0);
-    var i = 0;
-    arc.outerRadius(d => (data[i++] * height) / 2 / maxData);
-
-    // Draw pie
-    const path = pie_svg.selectAll("path").data(pie(data));
-    path
-      .enter()
-      .append("path")
-      .attr("fill", (d, i) => color[i])
-      .attr("d", <any>arc)
-      .attr("stroke", "white")
-      .attr("stroke-width", "2px");
-
-    // Set Radii2
-    const arc2 = d3.arc().innerRadius(0);
-    var i = 0;
-    arc2.outerRadius(d => ((data[i++] / 3) * 2 * height) / 2 / maxData);
-
-    // Draw pie2
-    path
-      .enter()
-      .append("path")
-      .attr("fill", (d, i) => color[i + 1])
-      .attr("d", <any>arc2)
-      .attr("stroke", "white")
-      .attr("stroke-width", "2px");
+    // TODO: Add chart
 
     // Create ledgend svg
     var size = 20;

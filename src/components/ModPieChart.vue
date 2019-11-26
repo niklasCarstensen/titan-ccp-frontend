@@ -22,6 +22,19 @@ import "c3/c3.css";
 
 import * as d3 from "d3";
 
+function brighten(color: any, percent: any) {
+  var r = parseInt(color.substr(1, 2), 16);
+  var g = parseInt(color.substr(3, 2), 16);
+  var b = parseInt(color.substr(5, 2), 16);
+
+  return (
+    "#" +
+    Math.min(255, Math.floor(r * percent)).toString(16) +
+    Math.min(255, Math.floor(g * percent)).toString(16) +
+    Math.min(255, Math.floor(b * percent)).toString(16)
+  );
+}
+
 @Component({
   components: {
     LoadingSpinner
@@ -114,8 +127,22 @@ export default class ModPieChart extends Vue {
     path
       .enter()
       .append("path")
-      .attr("fill", (d, i) => color[i + 1])
+      .attr("fill", (d, i) => brighten(color[i], 1.2))
       .attr("d", <any>arc2)
+      .attr("stroke", "white")
+      .attr("stroke-width", "2px");
+
+    // Set Radii3
+    const arc3 = d3.arc().innerRadius(0);
+    var i = 0;
+    arc3.outerRadius(d => ((data[i++] / 3) * height) / 2 / maxData);
+
+    // Draw pie3
+    path
+      .enter()
+      .append("path")
+      .attr("fill", (d, i) => brighten(color[i], 1.4))
+      .attr("d", <any>arc3)
       .attr("stroke", "white")
       .attr("stroke-width", "2px");
 
@@ -139,7 +166,7 @@ export default class ModPieChart extends Vue {
       .attr("x", 100)
       .attr("y", function(d, i) {
         return 20 + i * (size + padding);
-      }) // 100 is where the first dot appears. 25 is the distance between dots
+      })
       .attr("width", size)
       .attr("height", size)
       .style("fill", function(d, i) {
@@ -154,7 +181,7 @@ export default class ModPieChart extends Vue {
       .attr("x", 100 + size * 1.2)
       .attr("y", function(d, i) {
         return 20 + i * (size + padding) + size / 2;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
+      })
       .style("fill", function(d, i) {
         return color[<any>i];
       })
