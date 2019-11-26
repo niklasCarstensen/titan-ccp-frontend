@@ -13,7 +13,7 @@
     </b-row>
     <b-row class="mb-4">
       <b-col>
-        <niklas-mod-pie-chart :timeMode="timeMode" :sensor="sensor" />
+        <mod-pie-chart :timeMode="timeMode" :sensor="sensor" />
       </b-col>
     </b-row>
     <b-row class="mb-4">
@@ -72,7 +72,7 @@ import Examples from "./Examples.vue";
 import { DateTime } from "luxon";
 import TimeMode from "../model/time-mode";
 
-import NiklasModPieChart from "./NiklasModPieChart.vue";
+import ModPieChart from "./ModPieChart.vue";
 
 @Component({
   components: {
@@ -81,7 +81,7 @@ import NiklasModPieChart from "./NiklasModPieChart.vue";
     DistributionPlot,
     StatsPlot,
     TrendArrow,
-    NiklasModPieChart
+    ModPieChart
   }
 })
 export default class App extends Vue {

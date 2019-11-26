@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">New Pie Charts &#128526; [WIP]</h5>
+      <h5 class="card-title">New Pie Chart &#128526; [WIP]</h5>
       <loading-spinner :is-loading="isLoading" :is-error="isError"></loading-spinner>
     </div>
   </div>
@@ -27,7 +27,7 @@ import * as d3 from "d3";
     LoadingSpinner
   }
 })
-export default class NiklasModPieChart extends Vue {
+export default class ModPieChart extends Vue {
   @Prop({ required: true }) sensor!: AggregatedSensor;
 
   private isLoading = false;
@@ -39,22 +39,26 @@ export default class NiklasModPieChart extends Vue {
     const width = 540;
     const height = 540;
     const radius = Math.min(width, height) / 2;
-    const actualData = [
-      ["Computing Center", 286],
+    const inputData = [
+      ["Computing Center", 166],
       ["Computing Center 2", 256],
-      ["Computing Center 3", 212]
+      ["Computing Center 3", 302],
+      ["Computing Center 4", 256],
+      ["Computing Center 5", 292]
     ];
-    const data = [123, 125, 137, 135, 189, 123, 146, 146, 134, 124, 134];
-    const data_labels = [
-      "OwO",
-      "Uwu?",
-      "Öwö",
-      "ÄwÄ",
-      "ÜwÜ",
-      "Ohw",
-      "kek",
-      "kek3"
-    ];
+    const reducedData = inputData.reduce(
+      (memo, elem) => {
+        memo.strings.push(elem[0] as string);
+        memo.numbers.push(elem[1] as number);
+        return memo;
+      },
+      {
+        strings: [] as string[],
+        numbers: [] as number[]
+      }
+    );
+    const data = reducedData.numbers;
+    const data_labels = reducedData.strings;
 
     const color = [
       "#66c2a5",
@@ -101,42 +105,56 @@ export default class NiklasModPieChart extends Vue {
       .attr("stroke", "white")
       .attr("stroke-width", "2px");
 
+    // Set Radii2
+    const arc2 = d3.arc().innerRadius(0);
+    var i = 0;
+    arc2.outerRadius(d => ((data[i++] / 3) * 2 * height) / 2 / maxData);
+
+    // Draw pie2
+    path
+      .enter()
+      .append("path")
+      .attr("fill", (d, i) => color[i + 1])
+      .attr("d", <any>arc2)
+      .attr("stroke", "white")
+      .attr("stroke-width", "2px");
+
     // Create ledgend svg
+    var size = 20;
+    var padding = 5;
     const ledgend_svg = d3
       .select(this.$el)
       .append("svg")
       .attr("width", width)
-      .attr("height", 75)
+      .attr("height", data_labels.length * (size + padding) + 40)
       .append("g");
+    console.log(data_labels.length * (size * padding) + 20);
 
-    // Add one dot in the legend for each name.
-    var size = 20;
-    var padding = 75;
+    // Add legend dots
     ledgend_svg
       .selectAll("mydots")
       .data(data_labels)
       .enter()
       .append("rect")
-      .attr("x", function(d, i) {
-        return 100 + i * (size + padding);
-      })
-      .attr("y", 25) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("x", 100)
+      .attr("y", function(d, i) {
+        return 20 + i * (size + padding);
+      }) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
       .style("fill", function(d, i) {
         return color[<any>i];
       });
-
-    // Add one dot in the legend for each name.
+    // Add legend labels
     ledgend_svg
       .selectAll("mylabels")
       .data(data_labels)
       .enter()
       .append("text")
-      .attr("x", function(d, i) {
-        return 105 + i * (size + padding) + size;
-      })
-      .attr("y", 27.5 + size / 2) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("x", 100 + size * 1.2)
+      .attr("y", function(d, i) {
+        return 20 + i * (size + padding) + size / 2;
+      }) // 100 is where the first dot appears. 25 is the distance between dots
       .style("fill", function(d, i) {
         return color[<any>i];
       })
