@@ -1,10 +1,5 @@
 <template>
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">New Pie Chart &#128526; [WIP]</h5>
-      <loading-spinner :is-loading="isLoading" :is-error="isError"></loading-spinner>
-    </div>
-  </div>
+  <div class="card"></div>
 </template>
 
 <script lang="ts">
@@ -40,18 +35,15 @@ function brighten(color: any, percent: any) {
     LoadingSpinner
   }
 })
-export default class ModPieChart extends Vue {
+export default class ChartLegend extends Vue {
   @Prop({ required: true }) sensor!: AggregatedSensor;
 
   private isLoading = false;
   private isError = false;
 
-  private pie_svg: any;
-
-  private width = 540;
-  private height = 540;
-  private radius = Math.min(this.width, this.height) / 2;
-  private padding = 15;
+  private width = 1200;
+  private height = 200;
+  private padding = 5;
   private color = [
     "#66c2FF",
     "#fc8d62",
@@ -91,15 +83,6 @@ export default class ModPieChart extends Vue {
   }
 
   mounted() {
-    // Create svg
-    this.pie_svg = d3
-      .select(this.$el)
-      .append("svg")
-      .attr("width", this.width)
-      .attr("height", this.height)
-      .append("g")
-      .attr("transform", `translate(${this.width / 2}, ${this.height / 2})`);
-
     this.updateChart();
   }
 
@@ -110,33 +93,52 @@ export default class ModPieChart extends Vue {
 
   private updateChart() {
     const data = this.getData();
+    const color = this.color;
+    const padding = this.padding;
 
-    // Create pie structure
-    const pie = d3
-      .pie()
-      .value((Math.PI * 2) / data.data.length)
-      .sort(null);
+    // Create ledgend svg
+    var size = 20;
+    const ledgend_svg = d3
+      .select(this.$el)
+      .append("svg")
+      .attr("width", this.width)
+      .attr("height", data.dataLabels.length * (size + this.padding) + 40)
+      .append("g");
 
-    const maxData = data.data.reduce((x, y) => Math.max(x, y));
-    const path = this.pie_svg.selectAll("path").data(pie(data.data));
-    for (let j = 0; j < 3; j++) {
-      // Set Radii
-      const arc = d3.arc().innerRadius(0);
-      var i = 0;
-      arc.outerRadius(
-        d =>
-          ((data.data[i++] * (this.height - this.padding * 2)) / 2 / maxData) *
-          (1 - j / 3.0)
-      );
-
-      // Draw pie
-      path
+    for (var j = 0; j < 3; j++) {
+      // Add legend dots
+      ledgend_svg
+        .selectAll("mydots")
+        .data(data.dataLabels)
         .enter()
-        .append("path")
-        .attr("fill", (d: any, i: any) => brighten(this.color[i], 1 + j * 0.2))
-        .attr("d", <any>arc)
-        .attr("stroke", "white")
-        .attr("stroke-width", "2px");
+        .append("rect")
+        .attr("x", 100 + j * 300)
+        .attr("y", function(d, i) {
+          return 20 + i * (size + padding);
+        }) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", function(d, i) {
+          return brighten(color[<any>i], 1 + j * 0.2);
+        });
+      // Add legend labels
+      ledgend_svg
+        .selectAll("mylabels")
+        .data(data.dataLabels)
+        .enter()
+        .append("text")
+        .attr("x", 100 + j * 300 + size * 1.2)
+        .attr("y", function(d, i) {
+          return 20 + i * (size + padding) + size / 2;
+        }) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d, i) {
+          return brighten(color[<any>i], 1 + j * 0.2);
+        })
+        .text(function(d) {
+          return <any>d;
+        })
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle");
     }
   }
 }

@@ -46,20 +46,37 @@ export default class TimeStackChart extends Vue {
   private isLoading = false;
   private isError = false;
 
-  private chart!: ChartAPI;
+  private svg: any;
 
-  mounted() {
-    const width = 540;
-    const height = 540;
-    const radius = Math.min(width, height) / 2;
-    const inputData = [
-      ["Computing Center", 166],
-      ["Computing Center 2", 256],
-      ["Computing Center 3", 302],
-      ["Computing Center 4", 256],
-      ["Computing Center 5", 292]
-    ];
-    const reducedData = inputData.reduce(
+  private width = 540;
+  private height = 540;
+  private radius = Math.min(this.width, this.height) / 2;
+  private padding = 15;
+  private color = [
+    "#66c2FF",
+    "#fc8d62",
+    "#8da0cb",
+    "#e78ac3",
+    "#a6d854",
+    "#ffd92f",
+    "#66c2a5",
+    "#fc8d62",
+    "#8da0cb",
+    "#e78ac3",
+    "#a6d854",
+    "#ffd92f"
+  ];
+
+  private inputData = [
+    ["Computing Center", 166],
+    ["Computing Center 2", 256],
+    ["Computing Center 3", 302],
+    ["Computing Center 4", 256],
+    ["Computing Center 5", 292]
+  ];
+
+  private getData() {
+    const reducedData = this.inputData.reduce(
       (memo, elem) => {
         memo.strings.push(elem[0] as string);
         memo.numbers.push(elem[1] as number);
@@ -70,103 +87,17 @@ export default class TimeStackChart extends Vue {
         numbers: [] as number[]
       }
     );
-    const data = reducedData.numbers;
-    const data_labels = reducedData.strings;
+    return { data: reducedData.numbers, dataLabels: reducedData.strings };
+  }
 
-    const color = [
-      "#66c2a5",
-      "#fc8d62",
-      "#8da0cb",
-      "#e78ac3",
-      "#a6d854",
-      "#ffd92f",
-      "#66c2a5",
-      "#fc8d62",
-      "#8da0cb",
-      "#e78ac3",
-      "#a6d854",
-      "#ffd92f"
-    ];
-
-    var padding = 5;
-
-    // TODO: Add chart
-    const svg = d3
+  mounted() {
+    // Add chart svg
+    this.svg = d3
       .select(this.$el)
       .append("svg")
-      .attr("width", width)
-      .attr("height", height)
+      .attr("width", this.width)
+      .attr("height", this.height)
       .append("g");
-
-    var sum = data.reduce((x, y) => Number(x) + Number(y));
-    var curY = 0;
-    var i = 0;
-    for (var i = 0; i < data.length; i++) {
-      var curHeight = (data[i] * height) / sum;
-
-      var curX = 0;
-      for (var j = 0; j < 3; j++) {
-        var curWidth = (width - padding * 2) / 3;
-
-        svg
-          .append("rect")
-          .attr("x", padding + curX)
-          .attr("y", padding + curY)
-          .attr("width", curWidth)
-          .attr("height", curHeight)
-          .attr("fill", brighten(color[i], 1 + j * 0.2))
-          .attr("stroke", "white")
-          .attr("stroke-width", "2px");
-
-        curX += curWidth;
-      }
-
-      curY += curHeight;
-    }
-
-    // Create ledgend svg
-    var size = 20;
-    const ledgend_svg = d3
-      .select(this.$el)
-      .append("svg")
-      .attr("width", width)
-      .attr("height", data_labels.length * (size + padding) + 40)
-      .append("g");
-    console.log(data_labels.length * (size * padding) + 20);
-
-    // Add legend dots
-    ledgend_svg
-      .selectAll("mydots")
-      .data(data_labels)
-      .enter()
-      .append("rect")
-      .attr("x", 100)
-      .attr("y", function(d, i) {
-        return 20 + i * (size + padding);
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("width", size)
-      .attr("height", size)
-      .style("fill", function(d, i) {
-        return color[<any>i];
-      });
-    // Add legend labels
-    ledgend_svg
-      .selectAll("mylabels")
-      .data(data_labels)
-      .enter()
-      .append("text")
-      .attr("x", 100 + size * 1.2)
-      .attr("y", function(d, i) {
-        return 20 + i * (size + padding) + size / 2;
-      }) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", function(d, i) {
-        return color[<any>i];
-      })
-      .text(function(d) {
-        return <any>d;
-      })
-      .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle");
 
     this.updateChart();
   }
@@ -176,12 +107,34 @@ export default class TimeStackChart extends Vue {
     this.updateChart();
   }
 
-  private updateChart() {}
+  private updateChart() {
+    const data = this.getData();
+
+    var sum = data.data.reduce((x, y) => Number(x) + Number(y));
+    var curY = 0;
+    var i = 0;
+    for (var i = 0; i < data.data.length; i++) {
+      var curHeight = (data.data[i] * (this.height - this.padding * 2)) / sum;
+
+      var curX = 0;
+      for (var j = 0; j < 3; j++) {
+        var curWidth = (this.width - this.padding * 2) / 3;
+
+        this.svg
+          .append("rect")
+          .attr("x", this.padding + curX)
+          .attr("y", this.padding + curY)
+          .attr("width", curWidth)
+          .attr("height", curHeight)
+          .attr("fill", brighten(this.color[i], 1 + j * 0.2))
+          .attr("stroke", "white")
+          .attr("stroke-width", "2px");
+
+        curX += curWidth;
+      }
+
+      curY += curHeight;
+    }
+  }
 }
 </script>
-
-<style scoped>
-.-container {
-  height: 300px;
-}
-</style>

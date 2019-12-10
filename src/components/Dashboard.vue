@@ -21,6 +21,11 @@
     </b-row>
     <b-row class="mb-4">
       <b-col>
+        <chart-legend :timeMode="timeMode" :sensor="sensor" />
+      </b-col>
+    </b-row>
+    <b-row class="mb-4">
+      <b-col>
         <sensor-history-plot :timeMode="timeMode" :sensor="sensor" />
       </b-col>
     </b-row>
@@ -77,6 +82,7 @@ import TimeMode from "../model/time-mode";
 
 import ModPieChart from "./ModPieChart.vue";
 import TimeStackChart from "./TimeStackChart.vue";
+import ChartLegend from "./ChartLegend.vue";
 
 @Component({
   components: {
@@ -86,7 +92,8 @@ import TimeStackChart from "./TimeStackChart.vue";
     StatsPlot,
     TrendArrow,
     ModPieChart,
-    TimeStackChart
+    TimeStackChart,
+    ChartLegend
   }
 })
 export default class App extends Vue {
