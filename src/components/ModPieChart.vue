@@ -74,7 +74,7 @@ export default class ModPieChart extends Vue {
     const data_labels = reducedData.strings;
 
     const color = [
-      "#66c2a5",
+      "#66c2FF",
       "#fc8d62",
       "#8da0cb",
       "#e78ac3",
@@ -88,6 +88,7 @@ export default class ModPieChart extends Vue {
       "#ffd92f"
     ];
 
+    // Create svg
     const pie_svg = d3
       .select(this.$el)
       .append("svg")
@@ -102,49 +103,25 @@ export default class ModPieChart extends Vue {
       .value((Math.PI * 2) / data.length)
       .sort(null);
 
-    // Set Radii
     const maxData = data.reduce((x, y) => Math.max(x, y));
-    const arc = d3.arc().innerRadius(0);
-    var i = 0;
-    arc.outerRadius(d => (data[i++] * height) / 2 / maxData);
-
-    // Draw pie
     const path = pie_svg.selectAll("path").data(pie(data));
-    path
-      .enter()
-      .append("path")
-      .attr("fill", (d, i) => color[i])
-      .attr("d", <any>arc)
-      .attr("stroke", "white")
-      .attr("stroke-width", "2px");
+    for (let j = 0; j < 3; j++) {
+      // Set Radii
+      const arc = d3.arc().innerRadius(0);
+      var i = 0;
+      arc.outerRadius(
+        d => ((data[i++] * height) / 2 / maxData) * (1 - j / 3.0)
+      );
 
-    // Set Radii2
-    const arc2 = d3.arc().innerRadius(0);
-    var i = 0;
-    arc2.outerRadius(d => ((data[i++] / 3) * 2 * height) / 2 / maxData);
-
-    // Draw pie2
-    path
-      .enter()
-      .append("path")
-      .attr("fill", (d, i) => brighten(color[i], 1.2))
-      .attr("d", <any>arc2)
-      .attr("stroke", "white")
-      .attr("stroke-width", "2px");
-
-    // Set Radii3
-    const arc3 = d3.arc().innerRadius(0);
-    var i = 0;
-    arc3.outerRadius(d => ((data[i++] / 3) * height) / 2 / maxData);
-
-    // Draw pie3
-    path
-      .enter()
-      .append("path")
-      .attr("fill", (d, i) => brighten(color[i], 1.4))
-      .attr("d", <any>arc3)
-      .attr("stroke", "white")
-      .attr("stroke-width", "2px");
+      // Draw pie
+      path
+        .enter()
+        .append("path")
+        .attr("fill", (d, i) => brighten(color[i], 1 + j * 0.2))
+        .attr("d", <any>arc)
+        .attr("stroke", "white")
+        .attr("stroke-width", "2px");
+    }
 
     // Create ledgend svg
     var size = 20;

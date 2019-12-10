@@ -22,6 +22,19 @@ import "c3/c3.css";
 
 import * as d3 from "d3";
 
+function brighten(color: any, percent: any) {
+  var r = parseInt(color.substr(1, 2), 16);
+  var g = parseInt(color.substr(3, 2), 16);
+  var b = parseInt(color.substr(5, 2), 16);
+
+  return (
+    "#" +
+    Math.min(255, Math.floor(r * percent)).toString(16) +
+    Math.min(255, Math.floor(g * percent)).toString(16) +
+    Math.min(255, Math.floor(b * percent)).toString(16)
+  );
+}
+
 @Component({
   components: {
     LoadingSpinner
@@ -75,11 +88,44 @@ export default class TimeStackChart extends Vue {
       "#ffd92f"
     ];
 
+    var padding = 5;
+
     // TODO: Add chart
+    const svg = d3
+      .select(this.$el)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g");
+
+    var sum = data.reduce((x, y) => Number(x) + Number(y));
+    var curY = 0;
+    var i = 0;
+    for (var i = 0; i < data.length; i++) {
+      var curHeight = (data[i] * height) / sum;
+
+      var curX = 0;
+      for (var j = 0; j < 3; j++) {
+        var curWidth = (width - padding * 2) / 3;
+
+        svg
+          .append("rect")
+          .attr("x", padding + curX)
+          .attr("y", padding + curY)
+          .attr("width", curWidth)
+          .attr("height", curHeight)
+          .attr("fill", brighten(color[i], 1 + j * 0.2))
+          .attr("stroke", "white")
+          .attr("stroke-width", "2px");
+
+        curX += curWidth;
+      }
+
+      curY += curHeight;
+    }
 
     // Create ledgend svg
     var size = 20;
-    var padding = 5;
     const ledgend_svg = d3
       .select(this.$el)
       .append("svg")
