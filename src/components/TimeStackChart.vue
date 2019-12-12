@@ -67,27 +67,116 @@ export default class TimeStackChart extends Vue {
     "#ffd92f"
   ];
 
-  private inputData = [
-    ["Computing Center", 166],
-    ["Computing Center 2", 256],
-    ["Computing Center 3", 302],
-    ["Computing Center 4", 256],
-    ["Computing Center 5", 292]
+  private data = [
+    {
+      identifier: "",
+      title: "",
+      value: 0,
+      drawCurRadius: 0,
+      children: [
+        {
+          identifier: "",
+          title: "",
+          value: 0,
+          valuePercent: 0
+        }
+      ]
+    }
   ];
 
-  private getData() {
-    const reducedData = this.inputData.reduce(
-      (memo, elem) => {
-        memo.strings.push(elem[0] as string);
-        memo.numbers.push(elem[1] as number);
-        return memo;
-      },
-      {
-        strings: [] as string[],
-        numbers: [] as number[]
+  public getAPIData(
+    sensor: AggregatedSensor,
+    data: {
+      identifier: string;
+      title: string;
+      value: number;
+      drawCurRadius: number;
+      children: {
+        identifier: string;
+        title: string;
+        value: number;
+        valuePercent: number;
+      }[];
+    }[]
+  ) {
+    const sens = sensor.children.concat(
+      sensor.children
+        .filter(x => x instanceof AggregatedSensor)
+        .map(x => (x as AggregatedSensor).children)
+        .reduce((x, y) => x.concat(y))
+    );
+    Promise.all(sens.map(s => this.addToDataList(data, s)))
+      .catch(e => {
+        console.error(e);
+        this.isError = true;
+      })
+      .then(x => {
+        // Remove sample element
+        data.shift();
+
+        this.updateChart();
+      });
+  }
+  private addToDataList(
+    data: {
+      identifier: string;
+      title: string;
+      value: number;
+      drawCurRadius: number;
+      children: {
+        identifier: string;
+        title: string;
+        value: number;
+        valuePercent: number;
+      }[];
+    }[],
+    child: Sensor
+  ) {
+    let resource =
+      child instanceof AggregatedSensor
+        ? "aggregated-power-consumption"
+        : "power-consumption";
+    return HTTP.get(resource + "/" + child.identifier + "/latest").then(
+      response => {
+        // JSON responses are automatically parsed.
+        let value;
+        if (response.data.length <= 0) {
+          value = 0;
+        } else if (child instanceof AggregatedSensor) {
+          value = response.data[0].sumInW;
+        } else {
+          value = response.data[0].valueInW;
+        }
+
+        if (child.parent !== undefined) {
+          if (child.parent.identifier === "root") {
+            data.push({
+              identifier: child.identifier,
+              title: child.title,
+              value: value,
+              drawCurRadius: 1,
+              children: []
+            });
+          } else {
+            const par = data.find(
+              x =>
+                child.parent !== undefined &&
+                x.identifier == child.parent.identifier
+            );
+            if (par !== undefined) {
+              par.children.push({
+                identifier: child.identifier,
+                title: child.title,
+                value: value,
+                valuePercent: 0
+              });
+            } else {
+              console.log("Lost child!" + child.identifier);
+            }
+          }
+        }
       }
     );
-    return { data: reducedData.numbers, dataLabels: reducedData.strings };
   }
 
   mounted() {
@@ -99,26 +188,40 @@ export default class TimeStackChart extends Vue {
       .attr("height", this.height)
       .append("g");
 
-    this.updateChart();
+    this.onSensorChanged();
   }
 
   @Watch("sensor")
   onSensorChanged() {
-    this.updateChart();
+    this.getAPIData(this.sensor, this.data);
   }
 
   private updateChart() {
-    const data = this.getData();
+    var dataValueSum = this.data.map(x => x.value).reduce((x, y) => x + y);
+    const maxChildCount = this.data
+      .map(x => x.children.length)
+      .reduce((x, y) => Math.max(x, y));
+    // Set child value percentages
+    this.data.forEach(x => {
+      const childValueSum = x.children
+        .map(x => x.value)
+        .reduce((x, y) => x + y);
+      x.children.forEach(c => (c.valuePercent = c.value / childValueSum));
+    });
 
-    var sum = data.data.reduce((x, y) => Number(x) + Number(y));
     var curY = 0;
     var i = 0;
-    for (var i = 0; i < data.data.length; i++) {
-      var curHeight = (data.data[i] * (this.height - this.padding * 2)) / sum;
+    for (var i = 0; i < this.data.length; i++) {
+      var curHeight =
+        (this.data[i].value * (this.height - this.padding * 2)) / dataValueSum;
 
       var curX = 0;
-      for (var j = 0; j < 3; j++) {
-        var curWidth = (this.width - this.padding * 2) / 3;
+      for (var j = 0; j < maxChildCount; j++) {
+        var curWidth =
+          (this.width - this.padding * 2) *
+          (this.data[i].children.length > j
+            ? this.data[i].children[j].valuePercent
+            : 0);
 
         this.svg
           .append("rect")

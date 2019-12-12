@@ -222,15 +222,7 @@ export default class ModPieChart extends Vue {
         .reduce((x, y) => x + y);
       x.children.forEach(c => (c.valuePercent = c.value / childValueSum));
     });
-    console.log(
-      this.data
-        .map(x =>
-          x.children
-            .map(y => y.valuePercent + "")
-            .reduce((a, b) => a + ", " + b)
-        )
-        .reduce((x, y) => x + "   " + y)
-    );
+
     const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
     this.drawPieLayer(dataNumbers.map(x => x / maxData), path, this.color);
     for (let j = 0; j < maxChildCount; j++) {

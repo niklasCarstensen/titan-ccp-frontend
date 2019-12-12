@@ -193,7 +193,10 @@ export default class ChartLegend extends Vue {
       .attr("width", this.width)
       .attr(
         "height",
-        (1 + this.data.map(x => x.children.length).reduce((x, y) => x + y)) *
+        (1 +
+          this.data
+            .map(x => x.children.length)
+            .reduce((x, y) => Math.max(x, y))) *
           (size + this.padding) +
           40
       )
