@@ -84,7 +84,6 @@ export default class CompositionPieChart extends Vue {
         return [];
       })
       .then(columns => {
-        console.log(columns);
         this.isLoading = false;
         this.chart.load({
           columns: columns,
