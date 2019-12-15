@@ -21,19 +21,8 @@ import { ChartAPI, generate } from "c3";
 import "c3/c3.css";
 
 import * as d3 from "d3";
-
-function brighten(color: any, percent: any) {
-  var r = parseInt(color.substr(1, 2), 16);
-  var g = parseInt(color.substr(3, 2), 16);
-  var b = parseInt(color.substr(5, 2), 16);
-
-  return (
-    "#" +
-    Math.min(255, Math.floor(r * percent)).toString(16) +
-    Math.min(255, Math.floor(g * percent)).toString(16) +
-    Math.min(255, Math.floor(b * percent)).toString(16)
-  );
-}
+import ChartDataLoader from "../ChartDataLoader";
+import ChartColors from "../ChartColors";
 
 @Component({
   components: {
@@ -45,6 +34,7 @@ export default class ModPieChart extends Vue {
 
   private isLoading = false;
   private isError = false;
+  private loader = new ChartDataLoader();
 
   private pie_svg: any;
 
@@ -52,134 +42,8 @@ export default class ModPieChart extends Vue {
   private height = 540;
   private radius = Math.min(this.width, this.height) / 2;
   private padding = 15;
-  private color = [
-    "#66c2FF",
-    "#fc8d62",
-    "#8da0cb",
-    "#e78ac3",
-    "#a6d854",
-    "#ffd92f",
-    "#66c2a5",
-    "#fc8d62",
-    "#8da0cb",
-    "#e78ac3",
-    "#a6d854",
-    "#ffd92f"
-  ];
 
-  private data = [
-    {
-      identifier: "",
-      title: "",
-      value: 0,
-      drawCurRadius: 0,
-      children: [
-        {
-          identifier: "",
-          title: "",
-          value: 0,
-          valuePercent: 0
-        }
-      ]
-    }
-  ];
-
-  public getAPIData(
-    sensor: AggregatedSensor,
-    data: {
-      identifier: string;
-      title: string;
-      value: number;
-      drawCurRadius: number;
-      children: {
-        identifier: string;
-        title: string;
-        value: number;
-        valuePercent: number;
-      }[];
-    }[]
-  ) {
-    const sens = sensor.children.concat(
-      sensor.children
-        .filter(x => x instanceof AggregatedSensor)
-        .map(x => (x as AggregatedSensor).children)
-        .reduce((x, y) => x.concat(y))
-    );
-    Promise.all(sens.map(s => this.addToDataList(data, s)))
-      .catch(e => {
-        console.error(e);
-        this.isError = true;
-      })
-      .then(x => {
-        // Remove sample element
-        data.shift();
-
-        this.updateChart();
-      });
-  }
-  private addToDataList(
-    data: {
-      identifier: string;
-      title: string;
-      value: number;
-      drawCurRadius: number;
-      children: {
-        identifier: string;
-        title: string;
-        value: number;
-        valuePercent: number;
-      }[];
-    }[],
-    child: Sensor
-  ) {
-    let resource =
-      child instanceof AggregatedSensor
-        ? "aggregated-power-consumption"
-        : "power-consumption";
-    return HTTP.get(resource + "/" + child.identifier + "/latest").then(
-      response => {
-        // JSON responses are automatically parsed.
-        let value;
-        if (response.data.length <= 0) {
-          value = 0;
-        } else if (child instanceof AggregatedSensor) {
-          value = response.data[0].sumInW;
-        } else {
-          value = response.data[0].valueInW;
-        }
-
-        if (child.parent !== undefined) {
-          if (child.parent.identifier === "root") {
-            data.push({
-              identifier: child.identifier,
-              title: child.title,
-              value: value,
-              drawCurRadius: 1,
-              children: []
-            });
-          } else {
-            const par = data.find(
-              x =>
-                child.parent !== undefined &&
-                x.identifier == child.parent.identifier
-            );
-            if (par !== undefined) {
-              par.children.push({
-                identifier: child.identifier,
-                title: child.title,
-                value: value,
-                valuePercent: 0
-              });
-            } else {
-              console.log("Lost child!" + child.identifier);
-            }
-          }
-        }
-      }
-    );
-  }
-
-  mounted() {
+  async mounted() {
     // Create svg
     this.pie_svg = d3
       .select(this.$el)
@@ -189,13 +53,17 @@ export default class ModPieChart extends Vue {
       .append("g")
       .attr("transform", `translate(${this.width / 2}, ${this.height / 2})`);
 
-    this.onSensorChanged();
+    await this.onSensorChanged();
   }
 
   @Watch("sensor")
-  onSensorChanged() {
-    this.getAPIData(this.sensor, this.data);
-    console.log(this.data);
+  async onSensorChanged() {
+    this.isLoading = true;
+
+    this.isError = await this.loader.getAPIData(this.sensor);
+    this.updateChart();
+
+    this.isLoading = false;
   }
 
   private updateChart() {
@@ -207,16 +75,16 @@ export default class ModPieChart extends Vue {
     // Create pie structure
     const pie = d3
       .pie()
-      .value((Math.PI * 2) / this.data.length) // all slice angles are the same here
+      .value((Math.PI * 2) / this.loader.data.length) // all slice angles are the same here
       .sort(null);
 
-    const dataNumbers = this.data.map(x => x.value);
+    const dataNumbers = this.loader.data.map(x => x.value);
     const maxData = dataNumbers.reduce((x, y) => Math.max(x, y));
-    const maxChildCount = this.data
+    const maxChildCount = this.loader.data
       .map(x => x.children.length)
       .reduce((x, y) => Math.max(x, y));
     // Set child value percentages
-    this.data.forEach(x => {
+    this.loader.data.forEach(x => {
       const childValueSum = x.children
         .map(x => x.value)
         .reduce((x, y) => x + y);
@@ -224,19 +92,24 @@ export default class ModPieChart extends Vue {
     });
 
     const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
-    this.drawPieLayer(dataNumbers.map(x => x / maxData), path, this.color);
+    this.drawPieLayer(
+      dataNumbers.map(x => x / maxData),
+      path,
+      ChartColors.color
+    );
     for (let j = 0; j < maxChildCount; j++) {
-      for (let i = 0; i < this.data.length; i++) {
-        this.data[i].drawCurRadius =
-          this.data[i].children.length > j
-            ? this.data[i].drawCurRadius - this.data[i].children[j].valuePercent
+      for (let i = 0; i < this.loader.data.length; i++) {
+        this.loader.data[i].drawCurRadius =
+          this.loader.data[i].children.length > j
+            ? this.loader.data[i].drawCurRadius -
+              this.loader.data[i].children[j].valuePercent
             : 0;
       }
-      console.log(this.data.map(x => x.drawCurRadius));
+      console.log(this.loader.data.map(x => x.drawCurRadius));
       this.drawPieLayer(
-        this.data.map(x => (x.drawCurRadius * x.value) / maxData),
+        this.loader.data.map(x => (x.drawCurRadius * x.value) / maxData),
         path,
-        this.color.map(x => brighten(x, 1.2 + j * 0.2))
+        ChartColors.color.map(x => ChartColors.brighten(x, 1.2 + j * 0.2))
       );
     }
   }
