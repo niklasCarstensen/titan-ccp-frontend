@@ -40,6 +40,7 @@ export default class ChartDataLoader {
             .then(() => {
                 // Remove sample element
                 this.data.shift();
+
                 return false;
             });
     }

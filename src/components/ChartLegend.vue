@@ -68,6 +68,7 @@ export default class ChartLegend extends Vue {
           .reduce((x, y) => Math.max(x, y))) *
         (size + this.padding) +
       40;
+    const width = 20 + this.loader.data.length * 200 + size * 1.2;
     (this.$el.querySelector(".d3-container") as HTMLElement).setAttribute(
       "height",
       height.toString()
@@ -75,7 +76,7 @@ export default class ChartLegend extends Vue {
     this.ledgend_svg = d3
       .select(this.$el.querySelector(".d3-container") as HTMLElement)
       .append("svg")
-      .attr("width", this.width)
+      .attr("width", width)
       .attr("height", height)
       .append("g");
 
@@ -125,3 +126,13 @@ export default class ChartLegend extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.card {
+  display: flex;
+  flex-direction: column;
+}
+.d3-container {
+  overflow: auto;
+}
+</style>

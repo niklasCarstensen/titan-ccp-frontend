@@ -38,6 +38,7 @@ export default class ModPieChart extends Vue {
 
   private pie_svg: any;
 
+  private normalPieMode = false;
   private width = 540;
   private height = 540;
   private radius = Math.min(this.width, this.height) / 2;
@@ -73,15 +74,25 @@ export default class ModPieChart extends Vue {
       return;
     }
 
-    // Create pie structure
-    const pie = d3
-      .pie()
-      .value((Math.PI * 2) / this.loader.data.length) // all slice angles are the same here
-      .sort(null);
-
     const dataNumbers = this.loader.data.map(x =>
       this.valueMappingFunction(x.value)
     );
+
+    // Create pie structure
+    let pie;
+    if (this.normalPieMode)
+      pie = d3
+        .pie()
+        .value(function(d) {
+          return d.valueOf();
+        })
+        .sort(null);
+    else
+      pie = d3
+        .pie()
+        .value((Math.PI * 2) / this.loader.data.length) // all slice angles are the same if we are in mod mode
+        .sort(null);
+
     const maxData = dataNumbers.reduce((x, y) => Math.max(x, y));
     const maxChildCount = this.loader.data
       .map(x => x.children.length)
@@ -98,11 +109,13 @@ export default class ModPieChart extends Vue {
     });
 
     const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
-    this.loader.data.forEach(x => (x.drawCurRadius = 1));
     for (let j = 0; j < maxChildCount; j++) {
+      console.log(this.loader.data.map(x => x.drawCurRadius));
       this.drawPieLayer(
-        this.loader.data.map(
-          x => (x.drawCurRadius * this.valueMappingFunction(x.value)) / maxData
+        this.loader.data.map(x =>
+          this.normalPieMode
+            ? x.drawCurRadius
+            : (x.drawCurRadius * this.valueMappingFunction(x.value)) / maxData
         ),
         path,
         ChartColors.color.map(x => ChartColors.brighten(x, 1.2 + j * 0.2))
@@ -126,10 +139,14 @@ export default class ModPieChart extends Vue {
     path
       .enter()
       .append("path")
-      .attr("fill", (d: any, i: any) => color[i])
-      .attr("d", <any>arc)
+      .attr("class", "slice")
+      .attr("fill", (d: any, i: number) => color[i])
+      .attr("d", arc)
       .attr("stroke", "white")
-      .attr("stroke-width", "2px");
+      .attr("stroke-width", "2px")
+      .append("title")
+      .text((d: any) => d.data)
+      .exit();
   }
 }
 </script>
