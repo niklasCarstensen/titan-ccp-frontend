@@ -1,5 +1,9 @@
 <template>
-  <div class="card"></div>
+  <div class="card">
+    <loading-spinner :is-loading="isLoading" :is-error="isError">
+      <div class="d3-container"></div>
+    </loading-spinner>
+  </div>
 </template>
 
 <script lang="ts">
@@ -32,8 +36,9 @@ export default class ChartLegend extends Vue {
   private isError = false;
   private loader = new ChartDataLoader();
 
+  private ledgend_svg: any;
   private width = 1200;
-  private height = 200;
+  private height = 50;
   private padding = 5;
 
   mounted() {
@@ -56,24 +61,27 @@ export default class ChartLegend extends Vue {
 
     // Create ledgend svg
     var size = 20;
-    const ledgend_svg = d3
-      .select(this.$el)
+    const height =
+      (1 +
+        this.loader.data
+          .map(x => x.children.length)
+          .reduce((x, y) => Math.max(x, y))) *
+        (size + this.padding) +
+      40;
+    (this.$el.querySelector(".d3-container") as HTMLElement).setAttribute(
+      "height",
+      height.toString()
+    );
+    this.ledgend_svg = d3
+      .select(this.$el.querySelector(".d3-container") as HTMLElement)
       .append("svg")
       .attr("width", this.width)
-      .attr(
-        "height",
-        (1 +
-          this.loader.data
-            .map(x => x.children.length)
-            .reduce((x, y) => Math.max(x, y))) *
-          (size + this.padding) +
-          40
-      )
+      .attr("height", height)
       .append("g");
 
-    for (var j = 0; j < this.loader.data.length; j++) {
+    for (var j: number = 0; j < this.loader.data.length; j++) {
       // Add legend dots
-      ledgend_svg
+      this.ledgend_svg
         .selectAll("mydots")
         .data(
           [this.loader.data[j].title].concat(
@@ -83,16 +91,16 @@ export default class ChartLegend extends Vue {
         .enter()
         .append("rect")
         .attr("x", 20 + j * 200)
-        .attr("y", function(d, i) {
+        .attr("y", function(d: any, i: number) {
           return 20 + i * (size + padding);
         })
         .attr("width", size)
         .attr("height", size)
-        .style("fill", function(d, i) {
-          return ChartColors.brighten(color[<any>j], 1 + i * 0.2);
+        .style("fill", function(d: any, i: number) {
+          return ChartColors.brighten(color[j], 1 + i * 0.2);
         });
       // Add legend labels
-      ledgend_svg
+      this.ledgend_svg
         .selectAll("mylabels")
         .data(
           [this.loader.data[j].title].concat(
@@ -102,14 +110,14 @@ export default class ChartLegend extends Vue {
         .enter()
         .append("text")
         .attr("x", 20 + j * 200 + size * 1.2)
-        .attr("y", function(d, i) {
+        .attr("y", function(d: any, i: number) {
           return 20 + i * (size + padding) + size / 2;
         })
-        .style("fill", function(d, i) {
+        .style("fill", function(d: any, i: number) {
           return ChartColors.brighten(color[<any>j], 1 + i * 0.2);
         })
-        .text(function(d) {
-          return <any>d;
+        .text(function(d: any, i: number) {
+          return d;
         })
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle");

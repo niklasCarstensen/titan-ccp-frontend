@@ -101,7 +101,10 @@ export default class TimeStackChart extends Vue {
           .attr("y", this.padding + curY)
           .attr("width", curWidth)
           .attr("height", curHeight)
-          .attr("fill", ChartColors.brighten(ChartColors.color[i], 1 + j * 0.2))
+          .attr(
+            "fill",
+            ChartColors.brighten(ChartColors.color[i], 1.2 + j * 0.2)
+          )
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
 

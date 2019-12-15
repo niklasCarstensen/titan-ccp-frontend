@@ -11,7 +11,7 @@ export default class ChartDataLoader {
             identifier: "",
             title: "",
             value: 0,
-            drawCurRadius: 0,
+            drawCurRadius: 0, // for ModPieChart
             children: [
                 {
                     identifier: "",

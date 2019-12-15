@@ -42,6 +42,7 @@ export default class ModPieChart extends Vue {
   private height = 540;
   private radius = Math.min(this.width, this.height) / 2;
   private padding = 15;
+  private valueMappingFunction = Math.sqrt;
 
   async mounted() {
     // Create svg
@@ -78,7 +79,9 @@ export default class ModPieChart extends Vue {
       .value((Math.PI * 2) / this.loader.data.length) // all slice angles are the same here
       .sort(null);
 
-    const dataNumbers = this.loader.data.map(x => x.value);
+    const dataNumbers = this.loader.data.map(x =>
+      this.valueMappingFunction(x.value)
+    );
     const maxData = dataNumbers.reduce((x, y) => Math.max(x, y));
     const maxChildCount = this.loader.data
       .map(x => x.children.length)
@@ -86,18 +89,24 @@ export default class ModPieChart extends Vue {
     // Set child value percentages
     this.loader.data.forEach(x => {
       const childValueSum = x.children
-        .map(x => x.value)
+        .map(x => this.valueMappingFunction(x.value))
         .reduce((x, y) => x + y);
-      x.children.forEach(c => (c.valuePercent = c.value / childValueSum));
+      x.children.forEach(
+        c =>
+          (c.valuePercent = this.valueMappingFunction(c.value) / childValueSum)
+      );
     });
 
     const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
-    this.drawPieLayer(
-      dataNumbers.map(x => x / maxData),
-      path,
-      ChartColors.color
-    );
+    this.loader.data.forEach(x => (x.drawCurRadius = 1));
     for (let j = 0; j < maxChildCount; j++) {
+      this.drawPieLayer(
+        this.loader.data.map(
+          x => (x.drawCurRadius * this.valueMappingFunction(x.value)) / maxData
+        ),
+        path,
+        ChartColors.color.map(x => ChartColors.brighten(x, 1.2 + j * 0.2))
+      );
       for (let i = 0; i < this.loader.data.length; i++) {
         this.loader.data[i].drawCurRadius =
           this.loader.data[i].children.length > j
@@ -105,12 +114,6 @@ export default class ModPieChart extends Vue {
               this.loader.data[i].children[j].valuePercent
             : 0;
       }
-      console.log(this.loader.data.map(x => x.drawCurRadius));
-      this.drawPieLayer(
-        this.loader.data.map(x => (x.drawCurRadius * x.value) / maxData),
-        path,
-        ChartColors.color.map(x => ChartColors.brighten(x, 1.2 + j * 0.2))
-      );
     }
   }
   private drawPieLayer(Radii: number[], path: any, color: any) {
