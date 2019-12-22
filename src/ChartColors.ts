@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { strict } from "assert";
 
 export default class ChartColors {
     private static colorSet = 1;
@@ -25,9 +24,11 @@ export default class ChartColors {
                 return this.color[i % this.color.length];
             case 1:
                 {
-                    const colorArray = (d3.range(1 / 12, 1, 1 / 12).concat(d3.range(1, 1 / 12, -1 / 12))).map(function (d: number) {
+                    const colorArray = (d3.range(1 / 12, 1, 1 / 12).map(function (d: number) {
+                        return d3.interpolateRgb("#108bff", "#fd7e14")(d)
+                    }).concat(d3.range(1, 1 / 12, -1 / 12).map(function (d: number) {
                         return d3.interpolateRgb("#007bff", "#fd7e14")(d)
-                    });
+                    })));
                     const hexRes = d3.color(colorArray[Math.abs(i) % colorArray.length])?.hex();
                     return hexRes === undefined ? "#111111" : hexRes;
                 }
@@ -37,6 +38,14 @@ export default class ChartColors {
     }
 
     public static brighten(color: string, percent: number): string {
+        // const d3Color = d3.color(color);
+        // d3Color?.brighter(percent);
+        // const res = d3Color?.hex();
+        // if (res !== undefined)
+        //     return res;
+        // else
+        //     return "#000000";
+
         const r = parseInt(color.substr(1, 2), 16);
         const g = parseInt(color.substr(3, 2), 16);
         const b = parseInt(color.substr(5, 2), 16);
