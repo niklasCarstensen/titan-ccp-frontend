@@ -1,7 +1,10 @@
-
+import * as d3 from "d3";
+import { strict } from "assert";
 
 export default class ChartColors {
-    public static readonly color = [
+    private static colorSet = 1;
+
+    private static readonly color = [
         "#66c2FF",
         "#fc8d62",
         "#8da0cb",
@@ -15,6 +18,23 @@ export default class ChartColors {
         "#a6d854",
         "#ffd92f"
     ];
+
+    public static get(i: number): string {
+        switch (this.colorSet) {
+            case 0:
+                return this.color[i % this.color.length];
+            case 1:
+                {
+                    const colorArray = (d3.range(1 / 12, 1, 1 / 12).concat(d3.range(1, 1 / 12, -1 / 12))).map(function (d: number) {
+                        return d3.interpolateRgb("#007bff", "#fd7e14")(d)
+                    });
+                    const hexRes = d3.color(colorArray[Math.abs(i) % colorArray.length])?.hex();
+                    return hexRes === undefined ? "#111111" : hexRes;
+                }
+                break;
+        }
+        return "#000000"
+    }
 
     public static brighten(color: string, percent: number): string {
         const r = parseInt(color.substr(1, 2), 16);

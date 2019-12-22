@@ -22,6 +22,8 @@ import "c3/c3.css";
 
 import * as d3 from "d3";
 import ChartDataLoader from "../ChartDataLoader";
+import ChartChildDataLoader from "../ChartChildDataLoader";
+import ChartTimeDataLoader from "../ChartTimeDataLoader";
 import ChartColors from "../ChartColors";
 
 @Component({
@@ -34,7 +36,7 @@ export default class ModPieChart extends Vue {
 
   private isLoading = false;
   private isError = false;
-  private loader = new ChartDataLoader();
+  private loader = new ChartTimeDataLoader();
 
   private pie_svg: any;
 
@@ -44,6 +46,9 @@ export default class ModPieChart extends Vue {
   private radius = Math.min(this.width, this.height) / 2;
   private padding = 15;
   private valueMappingFunction = Math.sqrt;
+
+  range = (start: number, end: number, length = end - start) =>
+    Array.from({ length }, (_, i) => start + i);
 
   async mounted() {
     // Create svg
@@ -99,9 +104,12 @@ export default class ModPieChart extends Vue {
       .reduce((x, y) => Math.max(x, y));
     // Set child value percentages
     this.loader.data.forEach(x => {
-      const childValueSum = x.children
-        .map(x => this.valueMappingFunction(x.value))
-        .reduce((x, y) => x + y);
+      const childValueSum =
+        x.children.length == 0
+          ? 0
+          : x.children
+              .map(x => this.valueMappingFunction(x.value))
+              .reduce((x, y) => x + y);
       x.children.forEach(
         c =>
           (c.valuePercent = this.valueMappingFunction(c.value) / childValueSum)
@@ -110,7 +118,6 @@ export default class ModPieChart extends Vue {
 
     const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
     for (let j = 0; j < maxChildCount; j++) {
-      console.log(this.loader.data.map(x => x.drawCurRadius));
       this.drawPieLayer(
         this.loader.data.map(x =>
           this.normalPieMode
@@ -118,7 +125,9 @@ export default class ModPieChart extends Vue {
             : (x.drawCurRadius * this.valueMappingFunction(x.value)) / maxData
         ),
         path,
-        ChartColors.color.map(x => ChartColors.brighten(x, 1.2 + j * 0.2))
+        this.range(0, this.loader.data.length).map(i =>
+          ChartColors.brighten(ChartColors.get(i), 1.2 + j * 0.2)
+        )
       );
       for (let i = 0; i < this.loader.data.length; i++) {
         this.loader.data[i].drawCurRadius =

@@ -22,6 +22,8 @@ import "c3/c3.css";
 import * as d3 from "d3";
 import ModPieChart from "./ModPieChart.vue";
 import ChartDataLoader from "../ChartDataLoader";
+import ChartChildDataLoader from "../ChartChildDataLoader";
+import ChartTimeDataLoader from "../ChartTimeDataLoader";
 import ChartColors from "../ChartColors";
 
 @Component({
@@ -34,7 +36,7 @@ export default class ChartLegend extends Vue {
 
   private isLoading = false;
   private isError = false;
-  private loader = new ChartDataLoader();
+  private loader = new ChartTimeDataLoader();
 
   private ledgend_svg: any;
   private width = 1200;
@@ -42,6 +44,8 @@ export default class ChartLegend extends Vue {
   private padding = 5;
 
   mounted() {
+    console.log(ChartColors.get(0));
+
     this.onSensorChanged();
   }
 
@@ -56,7 +60,6 @@ export default class ChartLegend extends Vue {
   }
 
   private updateChart() {
-    const color = ChartColors.color;
     const padding = this.padding;
 
     // Create ledgend svg
@@ -98,7 +101,7 @@ export default class ChartLegend extends Vue {
         .attr("width", size)
         .attr("height", size)
         .style("fill", function(d: any, i: number) {
-          return ChartColors.brighten(color[j], 1 + i * 0.2);
+          return ChartColors.brighten(ChartColors.get(j), 1 + i * 0.2);
         });
       // Add legend labels
       this.ledgend_svg
@@ -115,7 +118,7 @@ export default class ChartLegend extends Vue {
           return 20 + i * (size + padding) + size / 2;
         })
         .style("fill", function(d: any, i: number) {
-          return ChartColors.brighten(color[<any>j], 1 + i * 0.2);
+          return ChartColors.brighten(ChartColors.get(j), 1 + i * 0.2);
         })
         .text(function(d: any, i: number) {
           return d;

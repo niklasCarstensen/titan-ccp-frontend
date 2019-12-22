@@ -22,6 +22,8 @@ import "c3/c3.css";
 
 import * as d3 from "d3";
 import ChartDataLoader from "../ChartDataLoader";
+import ChartChildDataLoader from "../ChartChildDataLoader";
+import ChartTimeDataLoader from "../ChartTimeDataLoader";
 import ChartColors from "../ChartColors";
 
 @Component({
@@ -34,7 +36,7 @@ export default class TimeStackChart extends Vue {
 
   private isLoading = false;
   private isError = false;
-  private loader = new ChartDataLoader();
+  private loader = new ChartTimeDataLoader();
 
   private svg: any;
 
@@ -101,10 +103,7 @@ export default class TimeStackChart extends Vue {
           .attr("y", this.padding + curY)
           .attr("width", curWidth)
           .attr("height", curHeight)
-          .attr(
-            "fill",
-            ChartColors.brighten(ChartColors.color[i], 1.2 + j * 0.2)
-          )
+          .attr("fill", ChartColors.brighten(ChartColors.get(i), 1.2 + j * 0.2))
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
 
