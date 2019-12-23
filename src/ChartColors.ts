@@ -27,7 +27,7 @@ export default class ChartColors {
                     const colorArray = (d3.range(1 / 12, 1, 1 / 12).map(function (d: number) {
                         return d3.interpolateRgb("#108bff", "#fd7e14")(d)
                     }).concat(d3.range(1, 1 / 12, -1 / 12).map(function (d: number) {
-                        return d3.interpolateRgb("#007bff", "#fd7e14")(d)
+                        return d3.interpolateRgb("#108bff", "#fd7e14")(d)
                     })));
                     const hexRes = d3.color(colorArray[Math.abs(i) % colorArray.length])?.hex();
                     return hexRes === undefined ? "#111111" : hexRes;
