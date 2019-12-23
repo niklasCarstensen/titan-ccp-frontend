@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">New Time Stack Chart &#128526; [WIP]</h5>
+      <h5 class="card-title">Time Stack Chart</h5>
       <loading-spinner :is-loading="isLoading" :is-error="isError"></loading-spinner>
     </div>
   </div>
@@ -76,9 +76,10 @@ export default class TimeStackChart extends Vue {
       .reduce((x, y) => Math.max(x, y));
     // Set child value percentages
     this.loader.data.forEach(x => {
-      const childValueSum = x.children
-        .map(x => x.value)
-        .reduce((x, y) => x + y);
+      const childValueSum =
+        x.children.length == 0
+          ? 0
+          : x.children.map(x => x.value).reduce((x, y) => x + y);
       x.children.forEach(c => (c.valuePercent = c.value / childValueSum));
     });
 
@@ -106,6 +107,25 @@ export default class TimeStackChart extends Vue {
           .attr("fill", ChartColors.brighten(ChartColors.get(i), 1.2 + j * 0.2))
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
+
+        if (curWidth > 50 && curHeight > 1) {
+          if (curWidth < 250)
+            this.svg
+              .append("text")
+              .attr("x", this.padding * 2 + curX)
+              .attr("y", this.padding + curY + curHeight / 2 + 6)
+              .text(this.loader.data[i].title);
+          else
+            this.svg
+              .append("text")
+              .attr("x", this.padding * 2 + curX)
+              .attr("y", this.padding + curY + curHeight / 2 + 6)
+              .text(
+                this.loader.data[i].title +
+                  " - " +
+                  this.loader.data[i].children[j].title
+              );
+        }
 
         curX += curWidth;
       }

@@ -3,7 +3,7 @@
     <div class="card-body">
       <b-row>
         <b-col cols="9">
-          <h5 class="card-title">New Pie Chart &#128526; [WIP]</h5>
+          <h5 class="card-title">Time Pie Chart</h5>
         </b-col>
         <b-col cols="3">
           <b-form-select
@@ -38,6 +38,17 @@ import ChartDataLoader from "../ChartDataLoader";
 import ChartChildDataLoader from "../ChartChildDataLoader";
 import ChartTimeDataLoader from "../ChartTimeDataLoader";
 import ChartColors from "../ChartColors";
+import * as Stats from "./StatsPlot.vue";
+
+class IntervalSelectOption {
+  public readonly value: Interval;
+  public readonly text: string;
+
+  constructor(interval: Interval) {
+    this.value = interval;
+    this.text = interval.toFormat("yyyy/MM/dd");
+  }
+}
 
 @Component({
   components: {
@@ -51,8 +62,13 @@ export default class ModPieChart extends Vue {
   private isError = false;
   private loader = new ChartTimeDataLoader();
 
+  @Prop({ required: true }) statsType!: Stats.StatsType;
   private availableIntervals: Interval[] = [];
   private selectedInterval: Interval | null = null;
+
+  get intervalSelectOptions(): Array<IntervalSelectOption> {
+    return this.availableIntervals.map(i => new IntervalSelectOption(i));
+  }
 
   private pie_svg: any;
 
@@ -78,6 +94,9 @@ export default class ModPieChart extends Vue {
 
     await this.onSensorChanged();
   }
+
+  @Watch("selectedInterval")
+  onIntervalChanged(interval: Interval, oldInterval: Interval) {}
 
   @Watch("sensor")
   async onSensorChanged() {
@@ -196,15 +215,15 @@ export default class ModPieChart extends Vue {
             (Math.cos((i + 1 / 2) * angle - Math.PI / 2) *
               Radii[i] *
               (t.height - t.padding * 2)) /
-              2.2 +
+              2.3 +
             "," +
             (Math.sin((i + 1 / 2) * angle - Math.PI / 2) *
               Radii[i] *
               (t.height - t.padding * 2)) /
-              2.2 +
+              2.3 +
             ")"
           );
-        else return "translate(-50000,0)";
+        else return "translate(-5000000,0)";
       })
       .attr("dy", ".50em")
       .style("text-anchor", "middle")
@@ -212,8 +231,7 @@ export default class ModPieChart extends Vue {
         return t.loader.data[i].title;
       });
 
-    pathPath.append("title").text((d: any) => d.data);
-    pathPath.selectAll("path").sty;
+    pathPath.append("title").text((d: any) => Math.round(d.data));
   }
 }
 </script>
