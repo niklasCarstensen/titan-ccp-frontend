@@ -1,7 +1,19 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">New Pie Chart &#128526; [WIP]</h5>
+      <b-row>
+        <b-col cols="9">
+          <h5 class="card-title">New Pie Chart &#128526; [WIP]</h5>
+        </b-col>
+        <b-col cols="3">
+          <b-form-select
+            v-if="selectedInterval"
+            v-model="selectedInterval"
+            :options="intervalSelectOptions"
+            class="mb-3"
+          ></b-form-select>
+        </b-col>
+      </b-row>
       <loading-spinner :is-loading="isLoading" :is-error="isError"></loading-spinner>
     </div>
   </div>
@@ -18,6 +30,7 @@ import {
 import { HTTP } from "../http-common";
 import LoadingSpinner from "./LoadingSpinner.vue";
 import { ChartAPI, generate } from "c3";
+import { DateTime, Interval } from "luxon";
 import "c3/c3.css";
 
 import * as d3 from "d3";
@@ -37,6 +50,9 @@ export default class ModPieChart extends Vue {
   private isLoading = false;
   private isError = false;
   private loader = new ChartTimeDataLoader();
+
+  private availableIntervals: Interval[] = [];
+  private selectedInterval: Interval | null = null;
 
   private pie_svg: any;
 
@@ -116,7 +132,10 @@ export default class ModPieChart extends Vue {
       );
     });
 
-    const path = this.pie_svg.selectAll("path").data(pie(dataNumbers));
+    const path = this.pie_svg
+      .selectAll("path")
+      .data(pie(dataNumbers))
+      .enter();
     for (let j = 0; j < maxChildCount; j++) {
       this.drawPieLayer(
         this.loader.data.map(x =>
@@ -127,7 +146,9 @@ export default class ModPieChart extends Vue {
         path,
         this.range(0, this.loader.data.length).map(i =>
           ChartColors.brighten(ChartColors.get(i), 1.2 + j * 0.2)
-        )
+        ),
+        pie,
+        (Math.PI * 2) / this.loader.data.length
       );
       for (let i = 0; i < this.loader.data.length; i++) {
         this.loader.data[i].drawCurRadius =
@@ -138,24 +159,61 @@ export default class ModPieChart extends Vue {
       }
     }
   }
-  private drawPieLayer(Radii: number[], path: any, color: any) {
+  private drawPieLayer(
+    Radii: number[],
+    path: any,
+    color: any,
+    pie: any,
+    angle: any
+  ) {
+    const t = this;
+
     // Set Radii
-    const arc = d3.arc().innerRadius(0);
     var i = 0;
-    arc.outerRadius(d => (Radii[i++] * (this.height - this.padding * 2)) / 2);
+    const pathArc = d3
+      .arc()
+      .innerRadius(0)
+      .outerRadius(d => (Radii[i++] * (this.height - this.padding * 2)) / 2)
+      .startAngle((d, i) => i * angle)
+      .endAngle((d, i) => (i + 1) * angle);
 
     // Draw pie
-    path
-      .enter()
+    const sliceG = path.append("g");
+    const pathPath = sliceG
       .append("path")
       .attr("class", "slice")
       .attr("fill", (d: any, i: number) => color[i])
-      .attr("d", arc)
+      .attr("d", pathArc)
       .attr("stroke", "white")
-      .attr("stroke-width", "2px")
-      .append("title")
-      .text((d: any) => d.data)
-      .exit();
+      .attr("stroke-width", "2px");
+
+    sliceG
+      .append("text")
+      .attr("transform", function(d: any, i: any) {
+        if (Radii[i] > 0.7)
+          return (
+            "translate(" +
+            (Math.cos((i + 1 / 2) * angle - Math.PI / 2) *
+              Radii[i] *
+              (t.height - t.padding * 2)) /
+              2.2 +
+            "," +
+            (Math.sin((i + 1 / 2) * angle - Math.PI / 2) *
+              Radii[i] *
+              (t.height - t.padding * 2)) /
+              2.2 +
+            ")"
+          );
+        else return "translate(-50000,0)";
+      })
+      .attr("dy", ".50em")
+      .style("text-anchor", "middle")
+      .text(function(d: any, i: any) {
+        return t.loader.data[i].title;
+      });
+
+    pathPath.append("title").text((d: any) => d.data);
+    pathPath.selectAll("path").sty;
   }
 }
 </script>
