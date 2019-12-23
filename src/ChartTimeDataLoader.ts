@@ -1,6 +1,5 @@
 import {
-    AggregatedSensor,
-    Sensor,
+    AggregatedSensor
 } from "./SensorRegistry";
 import { HTTP } from "./http-common";
 import "c3/c3.css";
