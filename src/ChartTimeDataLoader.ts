@@ -48,7 +48,7 @@ export default class ChartTimeDataLoader extends ChartDataLoader {
 
     private async addSensorData(sensor: AggregatedSensor): Promise<void> {
         const response = await HTTP.get("http://localhost:8070/api/stats/sensor/" + sensor.identifier +
-            "/hour-of-day?intervalStart=2019-09-24T00:00:00Z&intervalEnd=2019-10-24T00:00:00Z");
+            "/hour-of-day");
 
         for (let i = 0; i < response.data.length; i++) {
             const value = response.data[i].mean;

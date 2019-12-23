@@ -44,8 +44,6 @@ export default class ChartLegend extends Vue {
   private padding = 5;
 
   mounted() {
-    console.log(ChartColors.get(0));
-
     this.onSensorChanged();
   }
 
