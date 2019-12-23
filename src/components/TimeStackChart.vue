@@ -109,13 +109,7 @@ export default class TimeStackChart extends Vue {
           .attr("stroke-width", "2px");
 
         if (curWidth > 50 && curHeight > 20) {
-          if (curWidth < 250)
-            this.svg
-              .append("text")
-              .attr("x", this.padding * 2 + curX)
-              .attr("y", this.padding + curY + curHeight / 2 + 6)
-              .text(this.loader.data[i].title);
-          else
+          if (j == 0)
             this.svg
               .append("text")
               .attr("x", this.padding * 2 + curX)
@@ -125,6 +119,12 @@ export default class TimeStackChart extends Vue {
                   " - " +
                   this.loader.data[i].children[j].title
               );
+          else
+            this.svg
+              .append("text")
+              .attr("x", this.padding * 2 + curX)
+              .attr("y", this.padding + curY + curHeight / 2 + 6)
+              .text(this.loader.data[i].children[j].title);
         }
 
         curX += curWidth;
