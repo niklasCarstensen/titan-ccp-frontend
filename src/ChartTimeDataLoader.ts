@@ -47,18 +47,19 @@ export default class ChartTimeDataLoader extends ChartDataLoader {
     }
 
     private async addSensorData(sensor: AggregatedSensor): Promise<void> {
-        const response = await HTTP.get("http://localhost:8070/api/stats/sensor/" + sensor.identifier + "/hour-of-day?intervalStart=2019-12-22T00:00:00Z&intervalEnd=2020-01-21T00:00:00Z");
+        const response = await HTTP.get("http://localhost:8070/api/stats/sensor/" + sensor.identifier +
+            "/hour-of-day?intervalStart=2019-09-24T00:00:00Z&intervalEnd=2019-10-24T00:00:00Z");
 
         for (let i = 0; i < response.data.length; i++) {
             const value = response.data[i].mean;
             if (value > 0) { // Ignore Invalid data
-                this.data[i].children.push({
+                this.data[response.data[i].hourOfDay].children.push({
                     identifier: sensor.identifier,
                     title: sensor.title,
                     value: value,
                     valuePercent: 0
                 });
-                this.data[i].value += value;
+                this.data[response.data[i].hourOfDay].value += value;
             }
         }
     }

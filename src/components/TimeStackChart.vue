@@ -108,7 +108,7 @@ export default class TimeStackChart extends Vue {
           .attr("stroke", "white")
           .attr("stroke-width", "2px");
 
-        if (curWidth > 50 && curHeight > 1) {
+        if (curWidth > 50 && curHeight > 20) {
           if (curWidth < 250)
             this.svg
               .append("text")
